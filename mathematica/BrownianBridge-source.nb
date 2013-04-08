@@ -1,0 +1,596 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 6.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[     22240,        586]
+NotebookOptionsPosition[     21143,        545]
+NotebookOutlinePosition[     21747,        569]
+CellTagsIndexPosition[     21704,        566]
+WindowFrame->Normal
+ContainsDynamic->True *)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Brownian Bridge", "Section",
+ CellFrameColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108],
+ FontColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"BrownianBridge", "[", 
+   RowBox[{
+   "start_", ",", "finish_", ",", "steps_", ",", "paths_", ",", "opts___"}], 
+   "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"dt", "=", 
+       RowBox[{"N", "[", 
+        FractionBox["1", "steps"], "]"}]}], ",", "dW", ",", "ls", ",", "plot",
+       ",", "ms", ",", "colors"}], "}"}], ",", 
+    RowBox[{
+     RowBox[{"colors", "=", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"Last", "[", 
+         RowBox[{"ColorData", "[", 
+          RowBox[{"i", ",", "\"\<ColorList\>\""}], "]"}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "1", ",", "20"}], "}"}]}], "]"}]}], ";", 
+     RowBox[{"BlockRandom", "[", 
+      RowBox[{
+       RowBox[{"dW", "=", 
+        RowBox[{"RandomReal", "[", 
+         RowBox[{
+          RowBox[{"NormalDistribution", "[", 
+           RowBox[{"0", ",", 
+            SqrtBox["dt"]}], "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"paths", ",", "steps"}], "}"}]}], "]"}]}], ";", 
+       RowBox[{"ls", "=", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"FoldList", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{
+                 "#1", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}],
+                  "+", "dt"}], ",", 
+                RowBox[{
+                 RowBox[{
+                 "#1", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}],
+                  "+", "#2", "+", 
+                 FractionBox[
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{"finish", "-", 
+                    RowBox[{
+                    "#1", "\[LeftDoubleBracket]", "2", 
+                    "\[RightDoubleBracket]"}]}], ")"}], " ", "dt"}], 
+                  RowBox[{"1", "-", 
+                   RowBox[{
+                   "#1", "\[LeftDoubleBracket]", "1", 
+                    "\[RightDoubleBracket]"}]}]]}]}], "}"}], "&"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"0", ",", "start"}], "}"}], ",", "#1"}], "]"}], "&"}], 
+          ")"}], "/@", "dW"}]}], ";", 
+       RowBox[{"plot", "=", 
+        RowBox[{"ListPlot", "[", 
+         RowBox[{"ls", ",", 
+          RowBox[{"DataRange", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{"0", ",", "1"}], "}"}]}], ",", 
+          RowBox[{"Joined", "\[Rule]", "True"}], ",", 
+          RowBox[{"PlotStyle", "\[Rule]", 
+           RowBox[{"Take", "[", 
+            RowBox[{"colors", ",", "paths"}], "]"}]}]}], "]"}]}], ";", 
+       RowBox[{"ms", "=", 
+        RowBox[{"Plot", "[", 
+         RowBox[{
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{"start", "+", 
+             RowBox[{"t", " ", 
+              RowBox[{"(", 
+               RowBox[{"finish", "-", "start"}], ")"}]}], "+", 
+             RowBox[{"k", " ", 
+              SqrtBox[
+               RowBox[{"t", " ", 
+                RowBox[{"(", 
+                 RowBox[{"1", "-", "t"}], ")"}]}]]}]}], ",", 
+            RowBox[{"{", 
+             RowBox[{"k", ",", 
+              RowBox[{"-", "4"}], ",", "4"}], "}"}]}], "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"t", ",", "0", ",", "1"}], "}"}], ",", 
+          RowBox[{"PlotStyle", "\[Rule]", 
+           RowBox[{"Dashing", "[", "0.05", "]"}]}]}], "]"}]}], ";", 
+       RowBox[{"Show", "[", 
+        RowBox[{
+         RowBox[{"Graphics", "[", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"Thickness", "[", "0.005", "]"}], ",", 
+            RowBox[{"Arrow", "[", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"0", ",", "0"}], "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"0", ",", "start"}], "}"}]}], "}"}], "]"}], ",", 
+            RowBox[{"Arrow", "[", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"1", ",", "0"}], "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"1", ",", "finish"}], "}"}]}], "}"}], "]"}], ",", 
+            RowBox[{"Line", "[", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"0", ",", "0"}], "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"1", ",", "0"}], "}"}]}], "}"}], "]"}]}], "}"}], 
+          "]"}], ",", "plot", ",", "ms", ",", "opts", ",", 
+         RowBox[{"Axes", "\[Rule]", "False"}], ",", 
+         RowBox[{"AspectRatio", "\[Rule]", "1"}], ",", 
+         RowBox[{"PlotRange", "\[Rule]", "All"}]}], "]"}]}], "]"}]}]}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.406775926301753*^9, 3.406776008550314*^9}, {
+  3.4067761051848497`*^9, 3.4067761484986353`*^9}, {3.4232420181231804`*^9, 
+  3.423242025833951*^9}},
+ CellID->646211429],
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"BlockRandom", "[", 
+    RowBox[{
+     RowBox[{"SeedRandom", "[", "r", "]"}], ";", 
+     RowBox[{"BrownianBridge", "[", 
+      RowBox[{"start", ",", "finish", ",", "300", ",", "paths", ",", 
+       RowBox[{"ImageSize", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"400", ",", "400"}], "}"}]}]}], "]"}]}], "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"start", ",", "0", ",", "\"\<initial value\>\""}], "}"}], ",", 
+     "0", ",", "1", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"finish", ",", "0", ",", "\"\<final value\>\""}], "}"}], ",", 
+     "0", ",", "1", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"paths", ",", "1", ",", "\"\<number of paths\>\""}], "}"}], ",",
+      "1", ",", "20", ",", "1", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"r", ",", "0", ",", "\"\<\>\""}], "}"}], ",", 
+     RowBox[{
+      RowBox[{"Button", "[", 
+       RowBox[{"\"\<randomize\>\"", ",", 
+        RowBox[{"r", "=", 
+         RowBox[{"RandomInteger", "[", 
+          RowBox[{
+           RowBox[{"2", "^", "64"}], "-", "1"}], "]"}]}]}], "]"}], "&"}]}], 
+    "}"}], ",", 
+   RowBox[{"SaveDefinitions", "\[Rule]", "True"}], ",", 
+   RowBox[{"AutorunSequencing", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "2", ",", "3"}], "}"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{
+  3.35696210375764*^9, 3.404701374521476*^9, 3.40470566458428*^9, 
+   3.404705742361723*^9, {3.404708022724433*^9, 3.404708032444745*^9}, {
+   3.421566682487414*^9, 3.421566682857665*^9}, {3.421566748139164*^9, 
+   3.421566795104739*^9}, {3.421568638408011*^9, 3.4215686612515917`*^9}, {
+   3.42301600031009*^9, 3.423016013248082*^9}, {3.423241984423811*^9, 
+   3.423241995836952*^9}, {3.423242030990467*^9, 3.4232420476981373`*^9}, {
+   3.4239566349743557`*^9, 3.423956641968889*^9}, 3.42395667209973*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`finish$$ = 0, $CellContext`paths$$ = 
+    1, $CellContext`r$$ = 0, $CellContext`start$$ = 0, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`start$$], 0, "initial value"}, 0, 1}, {{
+       Hold[$CellContext`finish$$], 0, "final value"}, 0, 1}, {{
+       Hold[$CellContext`paths$$], 1, "number of paths"}, 1, 20, 1}, {{
+       Hold[$CellContext`r$$], 0, ""}, 
+      Dynamic[
+      Button["randomize", $CellContext`r$$ = RandomInteger[2^64 - 1]]& ]}}, 
+    Typeset`size$$ = {400., {198., 202.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    False, $CellContext`start$99095$$ = 0, $CellContext`finish$99096$$ = 
+    0, $CellContext`paths$99097$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`finish$$ = 0, $CellContext`paths$$ = 
+        1, $CellContext`r$$ = 0, $CellContext`start$$ = 0}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`start$$, $CellContext`start$99095$$, 0], 
+        Hold[$CellContext`finish$$, $CellContext`finish$99096$$, 0], 
+        Hold[$CellContext`paths$$, $CellContext`paths$99097$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> 
+      BlockRandom[
+       SeedRandom[$CellContext`r$$]; \
+$CellContext`BrownianBridge[$CellContext`start$$, $CellContext`finish$$, 
+          300, $CellContext`paths$$, ImageSize -> {400, 400}]], 
+      "Specifications" :> {{{$CellContext`start$$, 0, "initial value"}, 0, 1, 
+         Appearance -> "Labeled"}, {{$CellContext`finish$$, 0, "final value"},
+          0, 1, Appearance -> 
+         "Labeled"}, {{$CellContext`paths$$, 1, "number of paths"}, 1, 20, 1, 
+         Appearance -> "Labeled"}, {{$CellContext`r$$, 0, ""}, 
+         Dynamic[
+         Button["randomize", $CellContext`r$$ = RandomInteger[2^64 - 1]]& ]}},
+       "Options" :> {AutorunSequencing -> {1, 2, 3}}, 
+      "DefaultOptions" :> {ControllerLinking -> True}],
+     ImageSizeCache->{444., {281., 286.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    Initialization:>(({$CellContext`BrownianBridge[
+          Pattern[$CellContext`start, 
+           Blank[]], 
+          Pattern[$CellContext`finish, 
+           Blank[]], 
+          Pattern[$CellContext`steps, 
+           Blank[]], 
+          Pattern[$CellContext`paths, 
+           Blank[]]] := 
+        Module[{$CellContext`dt = 
+           N[1/$CellContext`steps], $CellContext`dW, $CellContext`ls, \
+$CellContext`plot, $CellContext`ms, $CellContext`colors}, $CellContext`colors = 
+           Table[
+             Last[
+              ColorData[$CellContext`i, "ColorList"]], {$CellContext`i, 1, 
+              20}]; BlockRandom[$CellContext`dW = RandomReal[
+               NormalDistribution[0, 
+                
+                Sqrt[$CellContext`dt]], {$CellContext`paths, \
+$CellContext`steps}]; $CellContext`ls = 
+             Map[FoldList[{
+                Part[#, 1] + $CellContext`dt, 
+                 Part[#, 
+                   2] + #2 + (($CellContext`finish - 
+                    Part[#, 2]) $CellContext`dt)/(1 - Part[#, 1])}& , {
+                0, $CellContext`start}, #]& , $CellContext`dW]; \
+$CellContext`plot = 
+             ListPlot[$CellContext`ls, DataRange -> {0, 1}, Joined -> True, 
+               PlotStyle -> 
+               Take[$CellContext`colors, $CellContext`paths]]; \
+$CellContext`ms = Plot[
+               
+               Table[$CellContext`start + $CellContext`t ($CellContext`finish - \
+$CellContext`start) + $CellContext`k 
+                 Sqrt[$CellContext`t (
+                    1 - $CellContext`t)], {$CellContext`k, -4, 
+                 4}], {$CellContext`t, 0, 1}, PlotStyle -> Dashing[0.05]]; 
+            Show[
+              Graphics[{
+                Thickness[0.005], 
+                Arrow[{{0, 0}, {0, $CellContext`start}}], 
+                Arrow[{{1, 0}, {1, $CellContext`finish}}], 
+                Line[{{0, 0}, {1, 0}}]}], $CellContext`plot, $CellContext`ms, 
+              Axes -> False, AspectRatio -> 1, PlotRange -> 
+              All]]], $CellContext`BrownianBridge[
+          Pattern[$CellContext`start, 
+           Blank[]], 
+          Pattern[$CellContext`finish, 
+           Blank[]], 
+          Pattern[$CellContext`steps, 
+           Blank[]], 
+          Pattern[$CellContext`paths, 
+           Blank[]], 
+          Pattern[$CellContext`opts, 
+           BlankNullSequence[]]] := 
+        Module[{$CellContext`dt = 
+           N[1/$CellContext`steps], $CellContext`dW, $CellContext`ls, \
+$CellContext`plot, $CellContext`ms, $CellContext`colors}, $CellContext`colors = 
+           Table[
+             Last[
+              ColorData[$CellContext`i, "ColorList"]], {$CellContext`i, 1, 
+              20}]; BlockRandom[$CellContext`dW = RandomReal[
+               NormalDistribution[0, 
+                
+                Sqrt[$CellContext`dt]], {$CellContext`paths, \
+$CellContext`steps}]; $CellContext`ls = 
+             Map[FoldList[{
+                Part[#, 1] + $CellContext`dt, 
+                 Part[#, 
+                   2] + #2 + (($CellContext`finish - 
+                    Part[#, 2]) $CellContext`dt)/(1 - Part[#, 1])}& , {
+                0, $CellContext`start}, #]& , $CellContext`dW]; \
+$CellContext`plot = 
+             ListPlot[$CellContext`ls, DataRange -> {0, 1}, Joined -> True, 
+               PlotStyle -> 
+               Take[$CellContext`colors, $CellContext`paths]]; \
+$CellContext`ms = Plot[
+               
+               Table[$CellContext`start + $CellContext`t ($CellContext`finish - \
+$CellContext`start) + $CellContext`k 
+                 Sqrt[$CellContext`t (
+                    1 - $CellContext`t)], {$CellContext`k, -4, 
+                 4}], {$CellContext`t, 0, 1}, PlotStyle -> Dashing[0.05]]; 
+            Show[
+              Graphics[{
+                Thickness[0.005], 
+                Arrow[{{0, 0}, {0, $CellContext`start}}], 
+                Arrow[{{1, 0}, {1, $CellContext`finish}}], 
+                
+                Line[{{0, 0}, {1, 
+                 0}}]}], $CellContext`plot, $CellContext`ms, \
+$CellContext`opts, Axes -> False, AspectRatio -> 1, PlotRange -> All]]], 
+        Attributes[PlotRange] = {ReadProtected}}; Typeset`initDone$$ = True); 
+     ReleaseHold[
+       HoldComplete[{$CellContext`BrownianBridge[
+           Pattern[$CellContext`start, 
+            Blank[]], 
+           Pattern[$CellContext`finish, 
+            Blank[]], 
+           Pattern[$CellContext`steps, 
+            Blank[]], 
+           Pattern[$CellContext`paths, 
+            Blank[]], 
+           Pattern[$CellContext`opts, 
+            BlankNullSequence[]]] := 
+         Module[{$CellContext`dt = 
+            N[1/$CellContext`steps], $CellContext`dW, $CellContext`ls, \
+$CellContext`plot, $CellContext`ms, $CellContext`colors}, $CellContext`colors = 
+            Table[
+              Last[
+               ColorData[$CellContext`i, "ColorList"]], {$CellContext`i, 1, 
+               20}]; BlockRandom[$CellContext`dW = RandomReal[
+                NormalDistribution[
+                0, $CellContext`dt^
+                 Rational[
+                  1, 2]], {$CellContext`paths, $CellContext`steps}]; \
+$CellContext`ls = 
+              Map[FoldList[{
+                 Part[#, 1] + $CellContext`dt, 
+                  Part[#, 2] + #2 + ($CellContext`finish - 
+                    Part[#, 2]) $CellContext`dt/(1 - Part[#, 1])}& , {
+                 0, $CellContext`start}, #]& , $CellContext`dW]; \
+$CellContext`plot = 
+              ListPlot[$CellContext`ls, DataRange -> {0, 1}, Joined -> True, 
+                PlotStyle -> 
+                Take[$CellContext`colors, $CellContext`paths]]; \
+$CellContext`ms = Plot[
+                
+                Table[$CellContext`start + $CellContext`t \
+($CellContext`finish - $CellContext`start) + $CellContext`k ($CellContext`t (
+                    1 - $CellContext`t))^Rational[1, 2], {$CellContext`k, -4, 
+                  4}], {$CellContext`t, 0, 1}, PlotStyle -> Dashing[0.05]]; 
+             Show[
+               Graphics[{
+                 Thickness[0.005], 
+                 Arrow[{{0, 0}, {0, $CellContext`start}}], 
+                 Arrow[{{1, 0}, {1, $CellContext`finish}}], 
+                 
+                 Line[{{0, 0}, {1, 
+                  0}}]}], $CellContext`plot, $CellContext`ms, \
+$CellContext`opts, Axes -> False, AspectRatio -> 1, PlotRange -> All]]]}]]; 
+     Typeset`initDone$$ = True),
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellID->579771623],
+
+Cell[CellGroupData[{
+
+Cell["THIS NOTEBOOK IS THE SOURCE CODE FROM", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[TextData[{
+ "\"",
+ ButtonBox["Brownian Bridge",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/BrownianBridge/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/BrownianBridge/"],
+ "\"",
+ " from ",
+ ButtonBox["The Wolfram Demonstrations Project",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+ "\[ParagraphSeparator]\[NonBreakingSpace]",
+ ButtonBox["http://demonstrations.wolfram.com/BrownianBridge/",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/BrownianBridge/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/BrownianBridge/"]
+}], "Text",
+ CellMargins->{{48, Inherited}, {0, Inherited}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.5]],
+
+Cell[" ", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[TextData[{
+ "Contributed by: ",
+ ButtonBox["Andrzej Kozlowski",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/author.html?author=Andrzej+\
+Kozlowski"], None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/author.html?author=Andrzej+Kozlowski"]
+}], "Text",
+ CellDingbat->"\[FilledSmallSquare]",
+ CellMargins->{{66, 48}, {2, 4}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.6]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "A full-function Wolfram ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " 6 system is required to edit this notebook.\n",
+ StyleBox[ButtonBox["GET WOLFRAM MATHEMATICA 6 \[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://www.wolfram.com/products/mathematica/"], None},
+  ButtonNote->"http://www.wolfram.com/products/mathematica/"],
+  FontFamily->"Helvetica",
+  FontWeight->"Bold",
+  FontSlant->"Italic",
+  FontColor->RGBColor[1, 0.42, 0]]
+}], "Text",
+ CellFrame->True,
+ CellMargins->{{48, 68}, {8, 28}},
+ CellFrameMargins->12,
+ CellFrameColor->RGBColor[0.865507, 0.90634, 0.680751],
+ CellChangeTimes->{3.3750111182355957`*^9},
+ ParagraphSpacing->{1., 1.},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.411765],
+ Background->RGBColor[0.986023, 0.991363, 0.969818]],
+
+Cell[TextData[{
+ "\[Copyright] ",
+ StyleBox[ButtonBox["The Wolfram Demonstrations Project & Contributors",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Terms of Use",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/termsofuse.html"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/termsofuse.html"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Make a new version of this Demonstration \
+\[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/participate/upload.jsp?id=\
+BrownianBridge"], None},
+  ButtonNote->None],
+  FontColor->GrayLevel[0.6]]
+}], "Text",
+ CellFrame->{{0, 0}, {0, 0.5}},
+ CellMargins->{{48, 10}, {20, 50}},
+ CellFrameMargins->{{6, 0}, {6, 6}},
+ CellFrameColor->GrayLevel[0.6],
+ FontFamily->"Verdana",
+ FontSize->9,
+ FontColor->GrayLevel[0.6]]
+}, Open  ]]
+}, Open  ]]
+},
+Editable->True,
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{710, 650},
+WindowMargins->{{Inherited, Inherited}, {Inherited, 0}},
+WindowElements->{
+ "StatusArea", "MemoryMonitor", "MagnificationPopUp", "VerticalScrollBar", 
+  "MenuBar"},
+WindowTitle->"Brownian Bridge - Source",
+DockedCells->{},
+CellContext->Notebook,
+FrontEndVersion->"6.0 for Microsoft Windows (32-bit) (June 19, 2007)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[590, 23, 207, 4, 70, "Section"],
+Cell[800, 29, 4901, 130, 70, "Input",
+ CellID->646211429],
+Cell[5704, 161, 2171, 52, 70, "Input"]
+}, Open  ]],
+Cell[7890, 216, 9127, 196, 70, "Output",
+ CellID->579771623],
+Cell[CellGroupData[{
+Cell[17042, 416, 373, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[17418, 427, 862, 24, 70, "Text"],
+Cell[18283, 453, 337, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[18623, 464, 445, 14, 70, "Text"],
+Cell[CellGroupData[{
+Cell[19093, 482, 829, 24, 70, "Text"],
+Cell[19925, 508, 1190, 33, 70, "Text"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+(* NotebookSignature sRNYTWwCUolh6DDxgbtzrvjG *)

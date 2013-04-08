@@ -1,0 +1,414 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 6.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[     14870,        404]
+NotebookOptionsPosition[     13794,        364]
+NotebookOutlinePosition[     14420,        388]
+CellTagsIndexPosition[     14377,        385]
+WindowFrame->Normal
+ContainsDynamic->True *)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Power Law Tails in Log Normal Data", "Section",
+ CellFrameColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108],
+ FontColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108]],
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"Block", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"data", ",", "logdata", ",", "rules"}], "}"}], ",", 
+     RowBox[{
+      RowBox[{"data", "=", 
+       RowBox[{"BlockRandom", "[", 
+        RowBox[{
+         RowBox[{"SeedRandom", "[", "sr", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"Reverse", "[", 
+          RowBox[{"Sort", "[", 
+           RowBox[{"RandomReal", "[", 
+            RowBox[{
+             RowBox[{"LogNormalDistribution", "[", 
+              RowBox[{"\[Mu]", ",", "\[Sigma]"}], "]"}], ",", "1000"}], "]"}],
+            "]"}], "]"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"logdata", "=", 
+       RowBox[{"Log", "[", 
+        RowBox[{"Transpose", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"Range", "[", 
+            RowBox[{"n", " ", "10"}], "]"}], ",", 
+           RowBox[{"Take", "[", 
+            RowBox[{"data", ",", 
+             RowBox[{"n", " ", "10"}]}], "]"}]}], "}"}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"rules", "=", 
+       RowBox[{"LinearRegression`Regress", "[", 
+        RowBox[{"logdata", ",", 
+         RowBox[{"{", 
+          RowBox[{"1", ",", "x"}], "}"}], ",", "x", ",", 
+         RowBox[{"RegressionCommon`RegressionReport", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{
+           "RegressionCommon`BestFit", ",", "RegressionCommon`RSquared"}], 
+           "}"}]}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Show", "[", 
+       RowBox[{
+        RowBox[{"ListLogLogPlot", "[", 
+         RowBox[{
+          RowBox[{"Take", "[", 
+           RowBox[{"data", ",", 
+            RowBox[{"n", " ", "10"}]}], "]"}], ",", 
+          RowBox[{"AxesLabel", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{"\"\<rank\>\"", ",", "\"\<size\>\""}], "}"}]}], ",", 
+          RowBox[{"PlotLabel", "\[Rule]", 
+           RowBox[{"TableForm", "[", "rules", "]"}]}]}], "]"}], ",", 
+        RowBox[{"Plot", "[", 
+         RowBox[{
+          RowBox[{"Evaluate", "[", 
+           RowBox[{"RegressionCommon`BestFit", "/.", "rules"}], "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"x", ",", "0", ",", 
+            RowBox[{"Log", "[", 
+             RowBox[{"10", " ", "n"}], "]"}]}], "}"}], ",", 
+          RowBox[{"PlotStyle", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"Thickness", "[", ".005", "]"}], ",", "Purple"}], 
+            "}"}]}]}], "]"}], ",", 
+        RowBox[{"ImageSize", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{"550", ",", "350"}], "}"}]}], ",", 
+        RowBox[{"ImagePadding", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"35", ",", "25"}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"10", ",", "60"}], "}"}]}], "}"}]}]}], "]"}]}]}], "]"}], 
+   ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"n", " ", ",", "5", ",", "\"\<percentile from top\>\""}], "}"}],
+      ",", " ", "1", ",", " ", "100", ",", "1", ",", " ", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "Delimiter", ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\[Mu]", ",", "8", ",", " ", "\"\<mean\>\""}], "}"}], ",", " ", 
+     "2", ",", " ", "12", ",", "1"}], "}"}], ",", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\[Sigma]", ",", "2.5", ",", "\"\<standard deviation\>\""}], 
+      "}"}], ",", " ", ".5", ",", " ", "5", ",", ".1"}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"sr", ",", " ", "112", ",", " ", "\"\<random seed\>\""}], "}"}],
+      ",", " ", "5", ",", " ", "5555", ",", "1"}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"TrackedSymbols", "\[RuleDelayed]", "Manipulate"}], ",", 
+   RowBox[{"Initialization", "\[RuleDelayed]", 
+    RowBox[{"{", 
+     RowBox[{"Get", "[", "\"\<LinearRegression`\>\"", "]"}], "}"}]}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.405516011921875*^9, 3.405516014484375*^9}, {
+   3.405521030046875*^9, 3.4055210775625*^9}, {3.405521138578125*^9, 
+   3.405521143484375*^9}, 3.4056864635114813`*^9, {3.4056865894473696`*^9, 
+   3.405686589884864*^9}, {3.4056896542362647`*^9, 3.4056896562987385`*^9}, {
+   3.405692237421875*^9, 3.405692255171875*^9}, {3.405692582109375*^9, 
+   3.40569262778125*^9}, 3.405692682234375*^9, {3.405692759046875*^9, 
+   3.405692771625*^9}, {3.405693385953125*^9, 3.40569338853125*^9}, {
+   3.40570611287315*^9, 3.405706177201687*^9}, {3.405706212358162*^9, 
+   3.40570622693638*^9}, {3.4057081238346567`*^9, 3.405708124084402*^9}, {
+   3.405708642652605*^9, 3.405708642777505*^9}, {3.405712034611661*^9, 
+   3.4057120355983925`*^9}},
+ CellID->251938575]
+}, Open  ]],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`n$$ = 5, $CellContext`sr$$ = 
+    112, $CellContext`\[Mu]$$ = 8, $CellContext`\[Sigma]$$ = 2.5, 
+    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`n$$], 5, "percentile from top"}, 1, 100, 1}, {{
+       Hold[$CellContext`\[Mu]$$], 8, "mean"}, 2, 12, 1}, {{
+       Hold[$CellContext`\[Sigma]$$], 2.5, "standard deviation"}, 0.5, 5, 
+      0.1}, {{
+       Hold[$CellContext`sr$$], 112, "random seed"}, 5, 5555, 1}}, 
+    Typeset`size$$ = {550., {173., 177.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    False, $CellContext`n$622625$$ = 0, $CellContext`\[Mu]$622626$$ = 
+    0, $CellContext`\[Sigma]$622627$$ = 0, $CellContext`sr$622628$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`n$$ = 5, $CellContext`sr$$ = 
+        112, $CellContext`\[Mu]$$ = 8, $CellContext`\[Sigma]$$ = 2.5}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`n$$, $CellContext`n$622625$$, 0], 
+        Hold[$CellContext`\[Mu]$$, $CellContext`\[Mu]$622626$$, 0], 
+        Hold[$CellContext`\[Sigma]$$, $CellContext`\[Sigma]$622627$$, 0], 
+        Hold[$CellContext`sr$$, $CellContext`sr$622628$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> 
+      Block[{$CellContext`data, $CellContext`logdata, $CellContext`rules}, \
+$CellContext`data = BlockRandom[SeedRandom[$CellContext`sr$$]; Reverse[
+             Sort[
+              RandomReal[
+               
+               LogNormalDistribution[$CellContext`\[Mu]$$, $CellContext`\
+\[Sigma]$$], 1000]]]]; $CellContext`logdata = Log[
+           Transpose[{
+             Range[$CellContext`n$$ 10], 
+             
+             Take[$CellContext`data, $CellContext`n$$ 
+              10]}]]; $CellContext`rules = 
+         LinearRegression`Regress[$CellContext`logdata, {
+           1, $CellContext`x}, $CellContext`x, 
+           RegressionCommon`RegressionReport -> {
+            RegressionCommon`BestFit, RegressionCommon`RSquared}]; Show[
+          ListLogLogPlot[
+           Take[$CellContext`data, $CellContext`n$$ 10], 
+           AxesLabel -> {"rank", "size"}, PlotLabel -> 
+           TableForm[$CellContext`rules]], 
+          Plot[
+           Evaluate[
+            ReplaceAll[
+            RegressionCommon`BestFit, $CellContext`rules]], {$CellContext`x, 
+            0, 
+            Log[10 $CellContext`n$$]}, PlotStyle -> {
+             Thickness[0.005], Purple}], ImageSize -> {550, 350}, 
+          ImagePadding -> {{35, 25}, {10, 60}}]], 
+      "Specifications" :> {{{$CellContext`n$$, 5, "percentile from top"}, 1, 
+         100, 1, Appearance -> "Labeled"}, 
+        Delimiter, {{$CellContext`\[Mu]$$, 8, "mean"}, 2, 12, 
+         1}, {{$CellContext`\[Sigma]$$, 2.5, "standard deviation"}, 0.5, 5, 
+         0.1}, {{$CellContext`sr$$, 112, "random seed"}, 5, 5555, 1}}, 
+      "Options" :> {TrackedSymbols :> Manipulate}, 
+      "DefaultOptions" :> {ControllerLinking -> True}],
+     ImageSizeCache->{594., {265., 270.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    Initialization:>({
+       Get["LinearRegression`"]}; Typeset`initDone$$ = True),
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellID->303372964],
+
+Cell[CellGroupData[{
+
+Cell["THIS NOTEBOOK IS THE SOURCE CODE FROM", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[TextData[{
+ "\"",
+ ButtonBox["Power Law Tails in Log Normal Data",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/PowerLawTailsInLogNormalData/"], 
+    None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/PowerLawTailsInLogNormalData/"],
+ "\"",
+ " from ",
+ ButtonBox["The Wolfram Demonstrations Project",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+ "\[ParagraphSeparator]\[NonBreakingSpace]",
+ ButtonBox["http://demonstrations.wolfram.com/PowerLawTailsInLogNormalData/",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/PowerLawTailsInLogNormalData/"], 
+    None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/PowerLawTailsInLogNormalData/"]
+}], "Text",
+ CellMargins->{{48, Inherited}, {0, Inherited}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.5]],
+
+Cell[" ", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[TextData[{
+ "Contributed by: ",
+ ButtonBox["Fiona Maclachlan",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/author.html?author=Fiona+\
+Maclachlan"], None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/author.html?author=Fiona+Maclachlan"]
+}], "Text",
+ CellDingbat->"\[FilledSmallSquare]",
+ CellMargins->{{66, 48}, {2, 4}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.6]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "A full-function Wolfram ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " 6 system is required to edit this notebook.\n",
+ StyleBox[ButtonBox["GET WOLFRAM MATHEMATICA 6 \[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://www.wolfram.com/products/mathematica/"], None},
+  ButtonNote->"http://www.wolfram.com/products/mathematica/"],
+  FontFamily->"Helvetica",
+  FontWeight->"Bold",
+  FontSlant->"Italic",
+  FontColor->RGBColor[1, 0.42, 0]]
+}], "Text",
+ CellFrame->True,
+ CellMargins->{{48, 68}, {8, 28}},
+ CellFrameMargins->12,
+ CellFrameColor->RGBColor[0.865507, 0.90634, 0.680751],
+ CellChangeTimes->{3.3750111182355957`*^9},
+ ParagraphSpacing->{1., 1.},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.411765],
+ Background->RGBColor[0.986023, 0.991363, 0.969818]],
+
+Cell[TextData[{
+ "\[Copyright] ",
+ StyleBox[ButtonBox["The Wolfram Demonstrations Project & Contributors",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Terms of Use",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/termsofuse.html"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/termsofuse.html"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Make a new version of this Demonstration \
+\[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/participate/upload.jsp?id=\
+PowerLawTailsInLogNormalData"], None},
+  ButtonNote->None],
+  FontColor->GrayLevel[0.6]]
+}], "Text",
+ CellFrame->{{0, 0}, {0, 0.5}},
+ CellMargins->{{48, 10}, {20, 50}},
+ CellFrameMargins->{{6, 0}, {6, 6}},
+ CellFrameColor->GrayLevel[0.6],
+ FontFamily->"Verdana",
+ FontSize->9,
+ FontColor->GrayLevel[0.6]]
+}, Open  ]]
+}, Open  ]]
+},
+Editable->True,
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{774, 650},
+WindowMargins->{{Inherited, Inherited}, {Inherited, 0}},
+WindowElements->{
+ "StatusArea", "MemoryMonitor", "MagnificationPopUp", "VerticalScrollBar", 
+  "MenuBar"},
+WindowTitle->"Power Law Tails in Log Normal Data - Source",
+DockedCells->{},
+CellContext->Notebook,
+FrontEndVersion->"6.0 for Microsoft Windows (32-bit) (February 7, 2008)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[590, 23, 226, 4, 70, "Section"],
+Cell[819, 29, 4846, 117, 70, "Input",
+ CellID->251938575]
+}, Open  ]],
+Cell[5680, 149, 3870, 78, 70, "Output",
+ CellID->303372964],
+Cell[CellGroupData[{
+Cell[9575, 231, 373, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[9951, 242, 969, 28, 70, "Text"],
+Cell[10923, 272, 337, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[11263, 283, 442, 14, 70, "Text"],
+Cell[CellGroupData[{
+Cell[11730, 301, 829, 24, 70, "Text"],
+Cell[12562, 327, 1204, 33, 70, "Text"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+(* NotebookSignature 8TNbo0hTRESP7ATgpFS4e8p4 *)

@@ -1,0 +1,440 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 6.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[     15179,        430]
+NotebookOptionsPosition[     14125,        391]
+NotebookOutlinePosition[     14748,        415]
+CellTagsIndexPosition[     14705,        412]
+WindowFrame->Normal
+ContainsDynamic->True *)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Polynomial Fits of Random Walks", "Section",
+ CellFrameColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108],
+ FontColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108]],
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"SeedRandom", "[", "seed", "]"}], ";", 
+    RowBox[{"With", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"v", "=", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"#", "-", 
+           RowBox[{"Min", "[", "#", "]"}]}], "&"}], "[", 
+         RowBox[{"Accumulate", "[", 
+          RowBox[{"RandomReal", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", "s"}], "]"}], "]"}],
+          "]"}]}], "}"}], ",", 
+      RowBox[{"With", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"f", "=", 
+          RowBox[{"Evaluate", "[", 
+           RowBox[{"Table", "[", 
+            RowBox[{
+             RowBox[{"Fit", "[", 
+              RowBox[{
+               RowBox[{"Take", "[", 
+                RowBox[{"v", ",", 
+                 RowBox[{"1", "+", 
+                  RowBox[{"Ceiling", "[", 
+                   RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"s", "-", "1"}], ")"}], " ", "z"}], "]"}]}]}], 
+                "]"}], ",", " ", 
+               RowBox[{"x", "^", 
+                RowBox[{"Range", "[", "k", "]"}]}], ",", " ", "x"}], "]"}], 
+             ",", 
+             RowBox[{"{", 
+              RowBox[{"k", ",", 
+               RowBox[{"If", "[", 
+                RowBox[{"one", ",", "d", ",", "1"}], "]"}], ",", "d"}], 
+              "}"}]}], "]"}], "]"}]}], "}"}], ",", 
+        RowBox[{"Plot", "[", 
+         RowBox[{"f", ",", 
+          RowBox[{"{", 
+           RowBox[{"x", ",", "s", ",", "1"}], "}"}], ",", 
+          RowBox[{"Epilog", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"Line", "[", 
+              RowBox[{"MapIndexed", "[", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"#2", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], ",", "#1"}], "}"}], "&"}],
+                 ",", "v"}], "]"}], "]"}], ",", 
+             RowBox[{"Opacity", "[", ".1", "]"}], ",", 
+             RowBox[{"Polygon", "[", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"0", ",", "0"}], "}"}], ",", 
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"1", "+", 
+                   RowBox[{"Ceiling", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"s", "-", "1"}], ")"}], " ", "z"}], "]"}]}], ",", 
+                  "0"}], "}"}], ",", 
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"1", "+", 
+                   RowBox[{"Ceiling", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"s", "-", "1"}], ")"}], " ", "z"}], "]"}]}], ",", 
+                  
+                  RowBox[{"Max", "[", "v", "]"}]}], "}"}], ",", 
+                RowBox[{"{", 
+                 RowBox[{"0", ",", 
+                  RowBox[{"Max", "[", "v", "]"}]}], "}"}]}], "}"}], "]"}]}], 
+            "}"}]}], ",", 
+          RowBox[{"PlotRange", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"1", ",", "s"}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"0", ",", 
+               RowBox[{"Max", "[", "v", "]"}]}], "}"}]}], "}"}]}], ",", 
+          RowBox[{"ImageSize", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{"500", ",", "300"}], "}"}]}]}], "]"}]}], "]"}]}], "]"}]}],
+    ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"d", ",", "10", ",", "\"\<order\>\""}], "}"}], ",", "1", ",", 
+     "20", ",", "1", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"one", ",", "False", ",", 
+       RowBox[{"Dynamic", "@", 
+        RowBox[{"Column", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"\"\<only\>\"", ",", "d"}], "}"}], ",", "Center"}], 
+         "]"}]}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"False", ",", "True"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"z", ",", ".66", ",", "\"\<available\>\""}], "}"}], ",", ".5", 
+     ",", "1", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"s", ",", "60", ",", "\"\<history\>\""}], "}"}], ",", "30", ",",
+      "200", ",", "1", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"seed", ",", "0"}], "}"}], ",", "0", ",", 
+     RowBox[{
+      RowBox[{"-", "1"}], "+", 
+      RowBox[{"2", "^", "31"}]}], ",", "1"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{
+  3.35696210375764*^9, 3.396952494563219*^9, {3.3973893945467606`*^9, 
+   3.397389394781136*^9}}]
+}, Open  ]],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`d$$ = 10, $CellContext`one$$ = 
+    False, $CellContext`s$$ = 60, $CellContext`seed$$ = 0, $CellContext`z$$ = 
+    0.66, Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`d$$], 10, "order"}, 1, 20, 1}, {{
+       Hold[$CellContext`one$$], False, 
+       Dynamic[
+        Column[{"only", $CellContext`d$$}, Center]]}, {False, True}}, {{
+       Hold[$CellContext`z$$], 0.66, "available"}, 0.5, 1}, {{
+       Hold[$CellContext`s$$], 60, "history"}, 30, 200, 1}, {{
+       Hold[$CellContext`seed$$], 0}, 0, 2147483647, 1}}, Typeset`size$$ = {
+    500., {148., 152.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`d$6482$$ = 
+    0, $CellContext`one$6483$$ = False, $CellContext`z$6484$$ = 
+    0, $CellContext`s$6485$$ = 0, $CellContext`seed$6486$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`d$$ = 10, $CellContext`one$$ = 
+        False, $CellContext`s$$ = 60, $CellContext`seed$$ = 
+        0, $CellContext`z$$ = 0.66}, "ControllerVariables" :> {
+        Hold[$CellContext`d$$, $CellContext`d$6482$$, 0], 
+        Hold[$CellContext`one$$, $CellContext`one$6483$$, False], 
+        Hold[$CellContext`z$$, $CellContext`z$6484$$, 0], 
+        Hold[$CellContext`s$$, $CellContext`s$6485$$, 0], 
+        Hold[$CellContext`seed$$, $CellContext`seed$6486$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> (SeedRandom[$CellContext`seed$$]; 
+       With[{$CellContext`v$ = (# - Min[#]& )[
+            Accumulate[
+             RandomReal[{-1, 1}, $CellContext`s$$]]]}, 
+         With[{$CellContext`f$ = Evaluate[
+             Table[
+              Fit[
+               
+               Take[$CellContext`v$, 1 + 
+                Ceiling[($CellContext`s$$ - 
+                   1) $CellContext`z$$]], $CellContext`x^
+               Range[$CellContext`k], $CellContext`x], {$CellContext`k, 
+               
+               If[$CellContext`one$$, $CellContext`d$$, 
+                1], $CellContext`d$$}]]}, 
+          
+          Plot[$CellContext`f$, {$CellContext`x, $CellContext`s$$, 1}, 
+           Epilog -> {
+             Line[
+              MapIndexed[{
+                Part[#2, 1], #}& , $CellContext`v$]], 
+             Opacity[0.1], 
+             
+             Polygon[{{0, 0}, {
+               1 + Ceiling[($CellContext`s$$ - 1) $CellContext`z$$], 0}, {
+               1 + Ceiling[($CellContext`s$$ - 1) $CellContext`z$$], 
+                Max[$CellContext`v$]}, {0, 
+                Max[$CellContext`v$]}}]}, 
+           PlotRange -> {{1, $CellContext`s$$}, {0, 
+              Max[$CellContext`v$]}}, ImageSize -> {500, 300}]]]), 
+      "Specifications" :> {{{$CellContext`d$$, 10, "order"}, 1, 20, 1, 
+         Appearance -> "Labeled"}, {{$CellContext`one$$, False, 
+          Dynamic[
+           Column[{"only", $CellContext`d$$}, Center]]}, {
+         False, True}}, {{$CellContext`z$$, 0.66, "available"}, 0.5, 1, 
+         Appearance -> "Labeled"}, {{$CellContext`s$$, 60, "history"}, 30, 
+         200, 1, Appearance -> "Labeled"}, {{$CellContext`seed$$, 0}, 0, 
+         2147483647, 1}}, "Options" :> {}, 
+      "DefaultOptions" :> {ControllerLinking -> True}],
+     ImageSizeCache->{544., {246., 251.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellID->345711502],
+
+Cell[CellGroupData[{
+
+Cell["THIS NOTEBOOK IS THE SOURCE CODE FROM", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[TextData[{
+ "\"",
+ ButtonBox["Polynomial Fits of Random Walks",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/PolynomialFitsOfRandomWalks/"], 
+    None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/PolynomialFitsOfRandomWalks/"],
+ "\"",
+ " from ",
+ ButtonBox["The Wolfram Demonstrations Project",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+ "\[ParagraphSeparator]\[NonBreakingSpace]",
+ ButtonBox["http://demonstrations.wolfram.com/PolynomialFitsOfRandomWalks/",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/PolynomialFitsOfRandomWalks/"], 
+    None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/PolynomialFitsOfRandomWalks/"]
+}], "Text",
+ CellMargins->{{48, Inherited}, {0, Inherited}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.5]],
+
+Cell[" ", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[TextData[{
+ "Contributed by: ",
+ ButtonBox["Michael Schreiber",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/author.html?author=Michael+\
+Schreiber"], None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/author.html?author=Michael+Schreiber"]
+}], "Text",
+ CellDingbat->"\[FilledSmallSquare]",
+ CellMargins->{{66, 48}, {2, 4}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.6]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "A full-function Wolfram ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " 6 system is required to edit this notebook.\n",
+ StyleBox[ButtonBox["GET WOLFRAM MATHEMATICA 6 \[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://www.wolfram.com/products/mathematica/"], None},
+  ButtonNote->"http://www.wolfram.com/products/mathematica/"],
+  FontFamily->"Helvetica",
+  FontWeight->"Bold",
+  FontSlant->"Italic",
+  FontColor->RGBColor[1, 0.42, 0]]
+}], "Text",
+ CellFrame->True,
+ CellMargins->{{48, 68}, {8, 28}},
+ CellFrameMargins->12,
+ CellFrameColor->RGBColor[0.865507, 0.90634, 0.680751],
+ CellChangeTimes->{3.3750111182355957`*^9},
+ ParagraphSpacing->{1., 1.},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.411765],
+ Background->RGBColor[0.986023, 0.991363, 0.969818]],
+
+Cell[TextData[{
+ "\[Copyright] ",
+ StyleBox[ButtonBox["The Wolfram Demonstrations Project & Contributors",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Terms of Use",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/termsofuse.html"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/termsofuse.html"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Make a new version of this Demonstration \
+\[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/participate/upload.jsp?id=\
+PolynomialFitsOfRandomWalks"], None},
+  ButtonNote->None],
+  FontColor->GrayLevel[0.6]]
+}], "Text",
+ CellFrame->{{0, 0}, {0, 0.5}},
+ CellMargins->{{48, 10}, {20, 50}},
+ CellFrameMargins->{{6, 0}, {6, 6}},
+ CellFrameColor->GrayLevel[0.6],
+ FontFamily->"Verdana",
+ FontSize->9,
+ FontColor->GrayLevel[0.6]]
+}, Open  ]]
+}, Open  ]]
+},
+Editable->True,
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{710, 650},
+WindowMargins->{{Inherited, Inherited}, {Inherited, 0}},
+WindowElements->{
+ "StatusArea", "MemoryMonitor", "MagnificationPopUp", "VerticalScrollBar", 
+  "MenuBar"},
+WindowTitle->"Polynomial Fits of Random Walks - Source",
+DockedCells->{},
+CellContext->Notebook,
+FrontEndVersion->"6.0 for Microsoft Windows (32-bit) (February 7, 2008)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[590, 23, 223, 4, 70, "Section"],
+Cell[816, 29, 5014, 139, 70, "Input"]
+}, Open  ]],
+Cell[5845, 171, 4042, 83, 70, "Output",
+ CellID->345711502],
+Cell[CellGroupData[{
+Cell[9912, 258, 373, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[10288, 269, 961, 28, 70, "Text"],
+Cell[11252, 299, 337, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[11592, 310, 445, 14, 70, "Text"],
+Cell[CellGroupData[{
+Cell[12062, 328, 829, 24, 70, "Text"],
+Cell[12894, 354, 1203, 33, 70, "Text"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+(* NotebookSignature 4TzuX7cM1IB0BBpk5z46uX4U *)

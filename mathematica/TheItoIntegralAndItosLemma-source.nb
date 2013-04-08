@@ -1,0 +1,1197 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 7.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[     43895,       1187]
+NotebookOptionsPosition[     41406,       1099]
+NotebookOutlinePosition[     42043,       1123]
+CellTagsIndexPosition[     42000,       1120]
+WindowTitle->The It\364 Integral and It\364's Lemma - Source
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["\<\
+The It\[OHat] Integral and It\[OHat]'s Lemma\
+\>", "Section",
+ CellFrameColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108],
+ FontColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"steps", "=", 
+   SuperscriptBox["10", "3"]}], ";"}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{3.35696210375764*^9, 3.43755445233564*^9},
+ CellID->1724110150],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"fixLengths", "[", "ls_List", "]"}], "/;", 
+   RowBox[{
+    RowBox[{"Length", "[", "ls", "]"}], "\[Equal]", "2"}]}], ":=", 
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"m", "=", 
+      RowBox[{"Min", "[", 
+       RowBox[{"Length", "/@", "ls"}], "]"}]}], "}"}], ",", 
+    RowBox[{"Take", "[", 
+     RowBox[{"ls", ",", "2", ",", "m"}], "]"}]}], "]"}]}]], "Input",
+ InitializationCell->True,
+ CellID->1415839239],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Brownian", "[", 
+   RowBox[{"dB_", ",", "T_"}], "]"}], ":=", 
+  RowBox[{"Quiet", "[", 
+   RowBox[{"Interpolation", "[", 
+    RowBox[{
+     RowBox[{"Transpose", "[", 
+      RowBox[{"fixLengths", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"Range", "[", 
+          RowBox[{"0", ",", "T", ",", 
+           RowBox[{"N", "[", 
+            RowBox[{"T", "/", "steps"}], "]"}]}], "]"}], ",", 
+         RowBox[{"Prepend", "[", 
+          RowBox[{
+           RowBox[{"Accumulate", "[", "dB", "]"}], ",", "0"}], "]"}]}], "}"}],
+        "]"}], "]"}], ",", 
+     RowBox[{"InterpolationOrder", "\[Rule]", "1"}]}], "]"}], 
+   "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.437042642265931*^9, 3.437042647357752*^9}, 
+   3.4371005479795856`*^9, {3.4371151415615253`*^9, 3.437115147407579*^9}, {
+   3.437119464506638*^9, 3.4371194723435717`*^9}, {3.437537502658709*^9, 
+   3.4375375240584993`*^9}},
+ CellID->506627372],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ItoIntegral", "[", 
+   RowBox[{"f_", ",", "dB_", ",", "T_", ",", "dt_"}], "]"}], ":=", 
+  RowBox[{"Quiet", "[", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"BB", "=", 
+       RowBox[{"Brownian", "[", 
+        RowBox[{"dB", ",", "T"}], "]"}]}], "}"}], ",", 
+     RowBox[{"Interpolation", "[", 
+      RowBox[{
+       RowBox[{"Transpose", "[", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"Range", "[", 
+           RowBox[{"0", ",", "T", ",", "dt"}], "]"}], ",", 
+          RowBox[{"Prepend", "[", 
+           RowBox[{
+            RowBox[{"Accumulate", "[", 
+             RowBox[{
+              RowBox[{"Table", "[", 
+               RowBox[{
+                RowBox[{"f", "[", 
+                 RowBox[{"BB", "[", 
+                  RowBox[{"i", " ", "dt"}], "]"}], "]"}], ",", 
+                RowBox[{"{", 
+                 RowBox[{"i", ",", "0", ",", 
+                  RowBox[{
+                   RowBox[{"T", "/", "dt"}], "-", "1"}]}], "}"}]}], "]"}], 
+              "*", 
+              RowBox[{"Differences", "[", 
+               RowBox[{"Table", "[", 
+                RowBox[{
+                 RowBox[{"BB", "[", 
+                  RowBox[{"i", " ", "dt"}], "]"}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{"i", ",", "0", ",", 
+                   RowBox[{"T", "/", "dt"}]}], "}"}]}], "]"}], "]"}]}], "]"}],
+             ",", "0"}], "]"}]}], "}"}], "]"}], ",", 
+       RowBox[{"InterpolationOrder", "\[Rule]", "0"}]}], "]"}]}], "]"}], 
+   "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.4370426507942257`*^9, 3.4370426774657803`*^9}, 
+   3.437101951867608*^9, {3.437119478009663*^9, 3.437119482368408*^9}, {
+   3.437538858349633*^9, 3.437538858798574*^9}, 3.437548498120556*^9, {
+   3.4375517719936943`*^9, 3.437551804017827*^9}, 3.437553565853424*^9, {
+   3.437555348830529*^9, 3.437555353107904*^9}},
+ CellID->113580849],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"TimeIntegral", "[", 
+   RowBox[{"f_", ",", "T_", ",", "dt_"}], "]"}], ":=", 
+  RowBox[{"Quiet", "[", 
+   RowBox[{"Interpolation", "[", 
+    RowBox[{"Transpose", "[", 
+     RowBox[{"fixLengths", "[", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"Range", "[", 
+         RowBox[{"0", ",", "T", ",", "dt"}], "]"}], ",", 
+        RowBox[{"Prepend", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Accumulate", "[", 
+            RowBox[{"f", "/@", 
+             RowBox[{"Range", "[", 
+              RowBox[{"dt", ",", "T", ",", "dt"}], "]"}]}], "]"}], " ", 
+           "dt"}], ",", "0"}], "]"}]}], "}"}], "]"}], "]"}], "]"}], 
+   "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.43704260625869*^9, 3.437042628511826*^9}, 
+   3.437101966974012*^9, {3.437118253802347*^9, 3.4371182690148277`*^9}, {
+   3.437118804514408*^9, 3.437118805727148*^9}, {3.437119486336335*^9, 
+   3.437119490847827*^9}},
+ CellID->422990068],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"left", "[", 
+   RowBox[{
+    RowBox[{"Cos", "[", "W", "]"}], ",", "dB_", ",", "T_", ",", "dt_"}], 
+   "]"}], ":=", 
+  RowBox[{"ItoIntegral", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Cos", "[", "#", "]"}], "&"}], ",", "dB", ",", "T", ",", "dt"}], 
+   "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.437037781342478*^9, 3.437037782092135*^9}, 
+   3.437042502567795*^9, {3.437042754160679*^9, 3.4370427728246193`*^9}, 
+   3.4371019807416477`*^9, 3.4375484810726852`*^9},
+ CellID->1023201306],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"left", "[", 
+   RowBox[{"W", ",", "dB_", ",", "T_", ",", "dt_"}], "]"}], ":=", 
+  RowBox[{"ItoIntegral", "[", 
+   RowBox[{
+    RowBox[{"#", "&"}], ",", "dB", ",", "T", ",", "dt"}], "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.4370377978927727`*^9, 3.437037802388917*^9}, 
+   3.4370425056518087`*^9, {3.437042778569859*^9, 3.437042783801239*^9}, 
+   3.437101991780208*^9, 3.437548484167082*^9},
+ CellID->2042788413],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"left", "[", 
+   RowBox[{
+    RowBox[{"Exp", "[", "W", "]"}], ",", "dB_", ",", "T_", ",", "dt_"}], 
+   "]"}], ":=", 
+  RowBox[{"ItoIntegral", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Exp", "[", "#", "]"}], "&"}], ",", "dB", ",", "T", ",", "dt"}], 
+   "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.437037829405828*^9, 3.437037829995647*^9}, 
+   3.437042508469097*^9, {3.437042788074601*^9, 3.437042792440662*^9}, 
+   3.437102003534363*^9, 3.437548487015127*^9},
+ CellID->1323792702],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"right", "[", 
+   RowBox[{
+    RowBox[{"Cos", "[", "W", "]"}], ",", "dB_", ",", "T_", ",", "dt_"}], 
+   "]"}], ":=", 
+  RowBox[{"Function", "[", 
+   RowBox[{"t", ",", 
+    RowBox[{"Evaluate", "[", 
+     RowBox[{
+      RowBox[{"Sin", "[", 
+       RowBox[{
+        RowBox[{"Brownian", "[", 
+         RowBox[{"dB", ",", "T"}], "]"}], "[", "t", "]"}], "]"}], "+", 
+      RowBox[{
+       RowBox[{"TimeIntegral", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           FractionBox["1", "2"], " ", 
+           RowBox[{"Sin", "[", 
+            RowBox[{
+             RowBox[{"Brownian", "[", 
+              RowBox[{"dB", ",", "T"}], "]"}], "[", "#1", "]"}], "]"}]}], 
+          "&"}], ",", "T", ",", "dt"}], "]"}], "[", "t", "]"}]}], "]"}]}], 
+   "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.437037907921916*^9, 3.437037908473372*^9}, 
+   3.437042514085209*^9, {3.437042814318336*^9, 3.437042839050253*^9}, 
+   3.43708665034662*^9, 3.437102021144579*^9, 3.437546663692625*^9, {
+   3.437547716269607*^9, 3.4375477179828863`*^9}},
+ CellID->245121529],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"right", "[", 
+   RowBox[{"W", ",", "dB_", ",", "T_", ",", "dt_"}], "]"}], ":=", 
+  RowBox[{"Function", "[", 
+   RowBox[{"x", ",", 
+    RowBox[{"Evaluate", "[", 
+     RowBox[{
+      RowBox[{
+       FractionBox["1", "2"], " ", 
+       SuperscriptBox[
+        RowBox[{
+         RowBox[{"Brownian", "[", 
+          RowBox[{"dB", ",", "T"}], "]"}], "[", "x", "]"}], "2"]}], "-", 
+      FractionBox["x", "2"]}], "]"}]}], "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.437037886840967*^9, 3.437037887435986*^9}, 
+   3.437042516899225*^9, {3.4370428530368137`*^9, 3.437042863498787*^9}, 
+   3.437102034998168*^9, 3.4375477337500887`*^9},
+ CellID->2106994137],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"right", "[", 
+   RowBox[{
+    RowBox[{"Exp", "[", "W", "]"}], ",", "dB_", ",", "T_", ",", "dt_"}], 
+   "]"}], ":=", 
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"b", "=", 
+      RowBox[{"Brownian", "[", 
+       RowBox[{"dB", ",", "T"}], "]"}]}], "}"}], ",", 
+    RowBox[{"Function", "[", 
+     RowBox[{"t", ",", 
+      RowBox[{"Evaluate", "[", 
+       RowBox[{
+        RowBox[{"Exp", "[", 
+         RowBox[{"b", "[", "t", "]"}], "]"}], "-", 
+        RowBox[{
+         RowBox[{"TimeIntegral", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             FractionBox["1", "2"], " ", 
+             RowBox[{"Exp", "[", 
+              RowBox[{"b", "[", "#1", "]"}], "]"}]}], "&"}], ",", "T", ",", 
+           "dt"}], "]"}], "[", "t", "]"}], "-", "1"}], "]"}]}], "]"}]}], 
+   "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.4370378548156443`*^9, 3.437037855334483*^9}, 
+   3.437042519781228*^9, {3.4370428799324217`*^9, 3.437043003822681*^9}, 
+   3.437043463820682*^9, 3.43710204695155*^9, 3.4375477418404827`*^9},
+ CellID->1053359594],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"FF", "[", 
+   RowBox[{"expr_", ",", "dB_", ",", "T_", ",", "dt_"}], "]"}], ":=", 
+  RowBox[{"Function", "[", 
+   RowBox[{"Evaluate", "[", 
+    RowBox[{"expr", "/.", 
+     RowBox[{"W", "\[Rule]", 
+      RowBox[{
+       RowBox[{"Brownian", "[", 
+        RowBox[{"dB", ",", "T"}], "]"}], "[", "#", "]"}]}]}], "]"}], 
+   "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.437103133748678*^9, 3.4371031457141533`*^9}, 
+   3.4375477564889803`*^9},
+ CellID->1939371806],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"leftLabel", "[", "expr_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{"HoldForm", "[", 
+    RowBox[{"Integrate", "[", 
+     RowBox[{"expr", ",", 
+      SubscriptBox["B", "t"]}], "]"}], "]"}], "/.", 
+   RowBox[{"W", "\[Rule]", 
+    SubscriptBox["B", "t"]}]}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.4371044343375473`*^9, 3.437104443020461*^9}, 
+   3.4371046942452583`*^9, {3.437105595910095*^9, 3.4371056030039988`*^9}, {
+   3.437106233081524*^9, 3.437106237445593*^9}},
+ CellID->1179109789],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"rightLabel", "[", "W", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"1", "/", "2"}], " ", 
+    RowBox[{
+     SubscriptBox["B", "t"], "^", "2"}]}], "-", "t"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.4371074578717623`*^9, 3.43710747108774*^9}, {
+   3.437110039706986*^9, 3.437110040280944*^9}},
+ CellID->595025742],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"rightLabel", "[", 
+   RowBox[{"Exp", "[", "W", "]"}], "]"}], ":=", 
+  RowBox[{"TraditionalForm", "[", 
+   RowBox[{"HoldForm", "[", 
+    RowBox[{
+     RowBox[{"E", "^", 
+      SubscriptBox["B", "t"]}], "-", "1", "-", 
+     RowBox[{
+      FractionBox["1", "2"], " ", 
+      RowBox[{"\[Integral]", 
+       RowBox[{
+        RowBox[{"E", "^", 
+         SubscriptBox["B", "t"]}], 
+        RowBox[{"\[DifferentialD]", "t"}]}]}]}]}], "]"}], "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{
+  3.35696210375764*^9, 3.437107225768652*^9, {3.437109943592668*^9, 
+   3.4371099495329657`*^9}, {3.437110029506916*^9, 3.437110030080718*^9}, {
+   3.437110073323371*^9, 3.437110073938249*^9}, {3.437110134564766*^9, 
+   3.4371101403635187`*^9}, {3.437110181338943*^9, 3.4371102124920893`*^9}},
+ CellID->1913785362],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"rightLabel", "[", 
+   RowBox[{"Cos", "[", "W", "]"}], "]"}], ":=", 
+  RowBox[{"TraditionalForm", "[", 
+   RowBox[{"HoldForm", "[", 
+    RowBox[{
+     RowBox[{"Sin", "[", 
+      SubscriptBox["B", "t"], "]"}], "+", 
+     RowBox[{
+      RowBox[{"1", "/", "2"}], 
+      RowBox[{"Integrate", "[", 
+       RowBox[{
+        RowBox[{"Sin", "[", "B", "]"}], ",", "B"}], "]"}]}]}], "]"}], 
+   "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.437109954035328*^9, 3.437109956372693*^9}, {
+   3.437110021552513*^9, 3.437110022723708*^9}, {3.437110078371511*^9, 
+   3.437110078929223*^9}, {3.437110144792697*^9, 3.437110148125902*^9}},
+ CellID->2127998015],
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"BlockRandom", "[", 
+    RowBox[{
+     RowBox[{"SeedRandom", "[", "r", "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"dB", ",", "f", ",", "g", ",", "h", ",", "k"}], "}"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"dB", "=", 
+         RowBox[{"RandomReal", "[", 
+          RowBox[{
+           RowBox[{"NormalDistribution", "[", 
+            RowBox[{"0", ",", 
+             SqrtBox[
+              RowBox[{"N", "[", 
+               RowBox[{"T", "/", "steps"}], "]"}]]}], "]"}], ",", "steps"}], 
+          "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"h", "=", 
+         RowBox[{"Brownian", "[", 
+          RowBox[{"dB", ",", "T"}], "]"}]}], ";", 
+        RowBox[{"f", "=", 
+         RowBox[{"left", "[", 
+          RowBox[{"expr", ",", "dB", ",", "T", ",", "dt"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"g", "=", 
+         RowBox[{"right", "[", 
+          RowBox[{"expr", ",", "dB", ",", "T", ",", "dt"}], "]"}]}], ";", 
+        RowBox[{"k", "=", 
+         RowBox[{"FF", "[", 
+          RowBox[{"expr", ",", "dB", ",", "T", ",", "dt"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Plot", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"Tooltip", "[", 
+             RowBox[{
+              RowBox[{"f", "[", "x", "]"}], ",", 
+              RowBox[{"leftLabel", "[", "expr", "]"}]}], "]"}], ",", 
+            RowBox[{"Tooltip", "[", 
+             RowBox[{
+              RowBox[{"g", "[", "x", "]"}], ",", 
+              RowBox[{"rightLabel", "[", "expr", "]"}]}], "]"}], ",", 
+            RowBox[{"Tooltip", "[", 
+             RowBox[{
+              RowBox[{"h", "[", "x", "]"}], ",", 
+              SubscriptBox["B", "t"]}], "]"}], ",", 
+            RowBox[{"Tooltip", "[", 
+             RowBox[{
+              RowBox[{"k", "[", "x", "]"}], ",", 
+              RowBox[{"expr", "/.", 
+               RowBox[{"W", "\[Rule]", 
+                SubscriptBox["B", "t"]}]}]}], "]"}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"x", ",", "0", ",", 
+            RowBox[{"T", "-", "dt"}]}], "}"}], ",", 
+          RowBox[{"PlotStyle", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"RGBColor", "[", 
+              RowBox[{".49", ",", "0", ",", "0"}], "]"}], ",", 
+             RowBox[{"RGBColor", "[", 
+              RowBox[{".45", ",", ".7", ",", ".55"}], "]"}], ",", 
+             RowBox[{"RGBColor", "[", 
+              RowBox[{".25", ",", ".43", ",", ".82"}], "]"}], ",", 
+             RowBox[{"RGBColor", "[", 
+              RowBox[{".79", ",", ".71", ",", ".26"}], "]"}]}], "}"}]}], ",", 
+          
+          RowBox[{"AxesLabel", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{"\"\<time\>\"", ",", "None"}], "}"}]}], ",", 
+          RowBox[{"PlotRange", "\[Rule]", "5"}], ",", 
+          RowBox[{"ImageSize", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{"500", ",", "300"}], "}"}]}]}], "]"}]}]}], "]"}]}], "]"}],
+    ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"dt", ",", "0.1", ",", "\"\<step size\>\""}], "}"}], ",", 
+     "0.005", ",", "0.1", ",", "0.001", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"T", ",", "1", ",", "\"\<time\>\""}], "}"}], ",", "1", ",", "2",
+      ",", "0.01", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"expr", ",", "W", ",", "\"\<integrand\>\""}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"W", "\[Rule]", 
+        RowBox[{"ToString", "[", 
+         RowBox[{
+          SubscriptBox["B", "t"], ",", "TraditionalForm"}], "]"}]}], ",", 
+       RowBox[{
+        RowBox[{"Exp", "[", "W", "]"}], "\[Rule]", 
+        RowBox[{"ToString", "[", 
+         RowBox[{
+          RowBox[{"Exp", "[", 
+           SubscriptBox["B", "t"], "]"}], ",", "TraditionalForm"}], "]"}]}], 
+       ",", 
+       RowBox[{
+        RowBox[{"Cos", "[", "W", "]"}], "\[Rule]", 
+        RowBox[{"ToString", "[", 
+         RowBox[{
+          RowBox[{"Cos", "[", 
+           SubscriptBox["B", "t"], "]"}], ",", "TraditionalForm"}], "]"}]}]}],
+       "}"}], ",", 
+     RowBox[{"ControlType", "\[Rule]", "PopupMenu"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"r", ",", "0", ",", "\"\<\>\""}], "}"}], ",", 
+     RowBox[{
+      RowBox[{"Button", "[", 
+       RowBox[{"\"\<new path\>\"", ",", 
+        RowBox[{"r", "=", 
+         RowBox[{"RandomInteger", "[", 
+          RowBox[{
+           RowBox[{"2", "^", "64"}], "-", "1"}], "]"}]}]}], "]"}], "&"}]}], 
+    "}"}], ",", 
+   RowBox[{"SaveDefinitions", "\[Rule]", "True"}], ",", 
+   RowBox[{"AutorunSequencing", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "2", ",", "3"}], "}"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{
+  3.4370872342743893`*^9, {3.43708822497904*^9, 3.437088229835917*^9}, {
+   3.4370882907558107`*^9, 3.437088332487055*^9}, {3.437089313544754*^9, 
+   3.437089318670649*^9}, {3.437102075197613*^9, 3.437102090013775*^9}, {
+   3.43710303585913*^9, 3.437103071554216*^9}, {3.437103153971943*^9, 
+   3.437103159037095*^9}, {3.437103249864182*^9, 3.4371032580935*^9}, {
+   3.437103319291933*^9, 3.437103334981779*^9}, {3.437103522761528*^9, 
+   3.437103547900044*^9}, {3.437103676420726*^9, 3.437103716953093*^9}, {
+   3.437106154547975*^9, 3.437106177560852*^9}, {3.4371062610134373`*^9, 
+   3.4371062978832617`*^9}, {3.4371072725113277`*^9, 
+   3.4371072934515333`*^9}, {3.437108585361124*^9, 3.437108592333006*^9}, {
+   3.4371086930611486`*^9, 3.4371087171738567`*^9}, {3.437110261874371*^9, 
+   3.437110270688826*^9}, 3.43711213444486*^9, {3.437118307483447*^9, 
+   3.437118308272888*^9}, {3.437118513983819*^9, 3.43711854439649*^9}, {
+   3.4371186804980164`*^9, 3.437118705827857*^9}, 3.437118849233735*^9, 
+   3.437118943574988*^9, {3.4371190404122887`*^9, 3.437119046542803*^9}, 
+   3.437119550073443*^9, {3.437119632117641*^9, 3.437119653902569*^9}, {
+   3.437166089903463*^9, 3.437166095274329*^9}, {3.437329585844471*^9, 
+   3.437329642814167*^9}, {3.43741071812*^9, 3.437410718815*^9}, {
+   3.437534576612409*^9, 3.437534581167858*^9}, {3.4375347479324636`*^9, 
+   3.4375347595404177`*^9}, {3.437534855256483*^9, 3.437534858161969*^9}, {
+   3.4375368760691423`*^9, 3.437536879682016*^9}, 3.43753744899437*^9, 
+   3.4375478102072983`*^9, 3.4375480248741827`*^9, {3.437554436257262*^9, 
+   3.437554444575576*^9}, 3.437555071658238*^9, {3.4377523293637652`*^9, 
+   3.4377523390027294`*^9}},
+ CellID->1774501385]
+}, Open  ]],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`dt$$ = 
+    0.1, $CellContext`expr$$ = $CellContext`W, $CellContext`r$$ = 
+    0, $CellContext`T$$ = 1, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`dt$$], 0.1, "step size"}, 0.005, 0.1, 0.001}, {{
+       Hold[$CellContext`T$$], 1, "time"}, 1, 2, 0.01}, {{
+       Hold[$CellContext`expr$$], $CellContext`W, 
+       "integrand"}, {$CellContext`W -> "\!\(TraditionalForm\`B\_t\)", 
+       E^$CellContext`W -> "\!\(TraditionalForm\`\[ExponentialE]\^\(B\_t\)\)",
+        Cos[$CellContext`W] -> "\!\(TraditionalForm\`\(cos(B\_t)\)\)"}}, {{
+       Hold[$CellContext`r$$], 0, ""}, 
+      Dynamic[
+      Button["new path", $CellContext`r$$ = RandomInteger[2^64 - 1]]& ]}}, 
+    Typeset`size$$ = {500., {148., 152.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    False, $CellContext`dt$48485$$ = 0, $CellContext`T$48486$$ = 
+    0, $CellContext`expr$48487$$ = False}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`dt$$ = 
+        0.1, $CellContext`expr$$ = $CellContext`W, $CellContext`r$$ = 
+        0, $CellContext`T$$ = 1}, "ControllerVariables" :> {
+        Hold[$CellContext`dt$$, $CellContext`dt$48485$$, 0], 
+        Hold[$CellContext`T$$, $CellContext`T$48486$$, 0], 
+        Hold[$CellContext`expr$$, $CellContext`expr$48487$$, False]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> 
+      BlockRandom[
+       SeedRandom[$CellContext`r$$]; 
+        Module[{$CellContext`dB$, $CellContext`f$, $CellContext`g$, \
+$CellContext`h$, $CellContext`k$}, $CellContext`dB$ = RandomReal[
+             NormalDistribution[
+             0, N[$CellContext`T$$/$CellContext`steps]^
+              Rational[
+               1, 2]], $CellContext`steps]; $CellContext`h$ = \
+$CellContext`Brownian[$CellContext`dB$, $CellContext`T$$]; $CellContext`f$ = \
+$CellContext`left[$CellContext`expr$$, $CellContext`dB$, $CellContext`T$$, \
+$CellContext`dt$$]; $CellContext`g$ = $CellContext`right[$CellContext`expr$$, \
+$CellContext`dB$, $CellContext`T$$, $CellContext`dt$$]; $CellContext`k$ = \
+$CellContext`FF[$CellContext`expr$$, $CellContext`dB$, $CellContext`T$$, \
+$CellContext`dt$$]; Plot[{
+             Tooltip[
+              $CellContext`f$[$CellContext`x], 
+              $CellContext`leftLabel[$CellContext`expr$$]], 
+             Tooltip[
+              $CellContext`g$[$CellContext`x], 
+              $CellContext`rightLabel[$CellContext`expr$$]], 
+             Tooltip[
+              $CellContext`h$[$CellContext`x], 
+              Subscript[$CellContext`B, $CellContext`t]], 
+             Tooltip[
+              $CellContext`k$[$CellContext`x], 
+              
+              ReplaceAll[$CellContext`expr$$, $CellContext`W -> 
+               Subscript[$CellContext`B, $CellContext`t]]]}, {$CellContext`x, 
+             0, $CellContext`T$$ - $CellContext`dt$$}, PlotStyle -> {
+              RGBColor[0.49, 0, 0], 
+              RGBColor[0.45, 0.7, 0.55], 
+              RGBColor[0.25, 0.43, 0.82], 
+              RGBColor[0.79, 0.71, 0.26]}, AxesLabel -> {"time", None}, 
+            PlotRange -> 5, ImageSize -> {500, 300}]]], 
+      "Specifications" :> {{{$CellContext`dt$$, 0.1, "step size"}, 0.005, 0.1,
+          0.001, Appearance -> "Labeled"}, {{$CellContext`T$$, 1, "time"}, 1, 
+         2, 0.01, Appearance -> 
+         "Labeled"}, {{$CellContext`expr$$, $CellContext`W, 
+          "integrand"}, {$CellContext`W -> "\!\(TraditionalForm\`B\_t\)", 
+          E^$CellContext`W -> 
+          "\!\(TraditionalForm\`\[ExponentialE]\^\(B\_t\)\)", 
+          Cos[$CellContext`W] -> "\!\(TraditionalForm\`\(cos(B\_t)\)\)"}, 
+         ControlType -> PopupMenu}, {{$CellContext`r$$, 0, ""}, 
+         Dynamic[
+         Button["new path", $CellContext`r$$ = RandomInteger[2^64 - 1]]& ]}}, 
+      "Options" :> {AutorunSequencing -> {1, 2, 3}}, 
+      "DefaultOptions" :> {ControllerLinking -> True}],
+     ImageSizeCache->{545., {232., 237.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    Initialization:>(({$CellContext`steps = 1000, $CellContext`Brownian[
+          Pattern[$CellContext`dB, 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]]] := Quiet[
+          Interpolation[
+           Transpose[
+            $CellContext`fixLengths[{
+              Range[0, $CellContext`T, 
+               N[$CellContext`T/$CellContext`steps]], 
+              Prepend[
+               Accumulate[$CellContext`dB], 0]}]], InterpolationOrder -> 1]], 
+        Condition[
+          $CellContext`fixLengths[
+           Pattern[$CellContext`ls, 
+            Blank[List]]], Length[$CellContext`ls] == 2] := 
+        With[{$CellContext`m = Min[
+             Map[Length, $CellContext`ls]]}, 
+          Take[$CellContext`ls, 2, $CellContext`m]], $CellContext`left[
+          Cos[$CellContext`W], 
+          Pattern[$CellContext`dB, 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]], 
+          Pattern[$CellContext`dt, 
+           Blank[]]] := $CellContext`ItoIntegral[
+         Cos[#]& , $CellContext`dB, $CellContext`T, $CellContext`dt], \
+$CellContext`left[$CellContext`W, 
+          Pattern[$CellContext`dB, 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]], 
+          Pattern[$CellContext`dt, 
+           
+           Blank[]]] := $CellContext`ItoIntegral[#& , $CellContext`dB, \
+$CellContext`T, $CellContext`dt], $CellContext`left[E^$CellContext`W, 
+          Pattern[$CellContext`dB, 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]], 
+          Pattern[$CellContext`dt, 
+           Blank[]]] := $CellContext`ItoIntegral[
+         Exp[#]& , $CellContext`dB, $CellContext`T, $CellContext`dt], \
+$CellContext`ItoIntegral[
+          Pattern[$CellContext`f, 
+           Blank[]], 
+          Pattern[$CellContext`dB, 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]], 
+          Pattern[$CellContext`dt, 
+           Blank[]]] := Quiet[
+          
+          With[{$CellContext`BB = $CellContext`Brownian[$CellContext`dB, \
+$CellContext`T]}, 
+           Interpolation[
+            Transpose[{
+              Range[0, $CellContext`T, $CellContext`dt], 
+              Prepend[
+               Accumulate[Table[
+                  $CellContext`f[
+                   $CellContext`BB[$CellContext`i $CellContext`dt]], \
+{$CellContext`i, 0, $CellContext`T/$CellContext`dt - 1}] Differences[
+                  Table[
+                   $CellContext`BB[$CellContext`i $CellContext`dt], \
+{$CellContext`i, 0, $CellContext`T/$CellContext`dt}]]], 0]}], 
+            InterpolationOrder -> 0]]], $CellContext`right[
+          Cos[$CellContext`W], 
+          Pattern[$CellContext`dB, 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]], 
+          Pattern[$CellContext`dt, 
+           Blank[]]] := Function[$CellContext`t, 
+          Evaluate[Sin[
+             $CellContext`Brownian[$CellContext`dB, \
+$CellContext`T][$CellContext`t]] + $CellContext`TimeIntegral[(1/2) Sin[
+               $CellContext`Brownian[$CellContext`dB, $CellContext`T][#]]& , \
+$CellContext`T, $CellContext`dt][$CellContext`t]]], \
+$CellContext`right[$CellContext`W, 
+          Pattern[$CellContext`dB, 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]], 
+          Pattern[$CellContext`dt, 
+           Blank[]]] := Function[$CellContext`x, 
+          
+          Evaluate[(1/
+             2) $CellContext`Brownian[$CellContext`dB, \
+$CellContext`T][$CellContext`x]^2 - $CellContext`x/2]], $CellContext`right[
+         E^$CellContext`W, 
+          Pattern[$CellContext`dB, 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]], 
+          Pattern[$CellContext`dt, 
+           Blank[]]] := 
+        With[{$CellContext`b = $CellContext`Brownian[$CellContext`dB, \
+$CellContext`T]}, 
+          Function[$CellContext`t, 
+           Evaluate[Exp[
+              $CellContext`b[$CellContext`t]] - $CellContext`TimeIntegral[(1/
+              2) Exp[
+               $CellContext`b[#]]& , $CellContext`T, \
+$CellContext`dt][$CellContext`t] - 1]]], $CellContext`TimeIntegral[
+          Pattern[$CellContext`f, 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]], 
+          Pattern[$CellContext`dt, 
+           Blank[]]] := Quiet[
+          Interpolation[
+           Transpose[
+            $CellContext`fixLengths[{
+              Range[0, $CellContext`T, $CellContext`dt], 
+              Prepend[Accumulate[
+                 Map[$CellContext`f, 
+                  
+                  Range[$CellContext`dt, $CellContext`T, $CellContext`dt]]] \
+$CellContext`dt, 0]}]]]], $CellContext`FF[
+          Pattern[$CellContext`expr, 
+           Blank[]], 
+          Pattern[$CellContext`dB, 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]], 
+          Pattern[$CellContext`dt, 
+           Blank[]]] := Evaluate[
+          
+          ReplaceAll[$CellContext`expr, $CellContext`W -> \
+$CellContext`Brownian[$CellContext`dB, $CellContext`T][#]]]& , \
+$CellContext`leftLabel[
+          Pattern[$CellContext`expr, 
+           Blank[]]] := ReplaceAll[
+          HoldForm[
+           Integrate[$CellContext`expr, 
+            Subscript[$CellContext`B, $CellContext`t]]], $CellContext`W -> 
+          Subscript[$CellContext`B, $CellContext`t]], 
+        Attributes[Subscript] = {NHoldRest}, $CellContext`rightLabel[
+         E^$CellContext`W] := TraditionalForm[
+          HoldForm[
+          E^Subscript[$CellContext`B, $CellContext`t] - 1 - (1/2) 
+           Integrate[
+            E^Subscript[$CellContext`B, $CellContext`t], $CellContext`t]]], \
+$CellContext`rightLabel[$CellContext`W] := (1/2) 
+          Subscript[$CellContext`B, $CellContext`t]^2 - $CellContext`t, \
+$CellContext`rightLabel[
+          Cos[$CellContext`W]] := TraditionalForm[
+          HoldForm[Sin[
+             Subscript[$CellContext`B, $CellContext`t]] + (1/2) Integrate[
+              Sin[$CellContext`B], $CellContext`B]]], 
+        Attributes[PlotRange] = {ReadProtected}}; Typeset`initDone$$ = True); 
+     ReleaseHold[
+       HoldComplete[{$CellContext`steps = 10^3; Null, Condition[
+           $CellContext`fixLengths[
+            Pattern[$CellContext`ls, 
+             Blank[List]]], Length[$CellContext`ls] == 2] := 
+         With[{$CellContext`m = Min[
+              Map[Length, $CellContext`ls]]}, 
+           Take[$CellContext`ls, 2, $CellContext`m]], $CellContext`Brownian[
+           Pattern[$CellContext`dB, 
+            Blank[]], 
+           Pattern[$CellContext`T, 
+            Blank[]]] := Quiet[
+           Interpolation[
+            Transpose[
+             $CellContext`fixLengths[{
+               Range[0, $CellContext`T, 
+                N[$CellContext`T/$CellContext`steps]], 
+               Prepend[
+                Accumulate[$CellContext`dB], 0]}]], InterpolationOrder -> 
+            1]], $CellContext`ItoIntegral[
+           Pattern[$CellContext`f, 
+            Blank[]], 
+           Pattern[$CellContext`dB, 
+            Blank[]], 
+           Pattern[$CellContext`T, 
+            Blank[]], 
+           Pattern[$CellContext`dt, 
+            Blank[]]] := Quiet[
+           
+           With[{$CellContext`BB = $CellContext`Brownian[$CellContext`dB, \
+$CellContext`T]}, 
+            Interpolation[
+             Transpose[{
+               Range[0, $CellContext`T, $CellContext`dt], 
+               Prepend[
+                Accumulate[Table[
+                   $CellContext`f[
+                    $CellContext`BB[$CellContext`i $CellContext`dt]], \
+{$CellContext`i, 0, $CellContext`T/$CellContext`dt - 1}] Differences[
+                   Table[
+                    $CellContext`BB[$CellContext`i $CellContext`dt], \
+{$CellContext`i, 0, $CellContext`T/$CellContext`dt}]]], 0]}], 
+             InterpolationOrder -> 0]]], $CellContext`TimeIntegral[
+           Pattern[$CellContext`f, 
+            Blank[]], 
+           Pattern[$CellContext`T, 
+            Blank[]], 
+           Pattern[$CellContext`dt, 
+            Blank[]]] := Quiet[
+           Interpolation[
+            Transpose[
+             $CellContext`fixLengths[{
+               Range[0, $CellContext`T, $CellContext`dt], 
+               Prepend[Accumulate[
+                  Map[$CellContext`f, 
+                   
+                   Range[$CellContext`dt, $CellContext`T, $CellContext`dt]]] \
+$CellContext`dt, 0]}]]]], $CellContext`left[
+           Cos[$CellContext`W], 
+           Pattern[$CellContext`dB, 
+            Blank[]], 
+           Pattern[$CellContext`T, 
+            Blank[]], 
+           Pattern[$CellContext`dt, 
+            Blank[]]] := $CellContext`ItoIntegral[
+          Cos[#]& , $CellContext`dB, $CellContext`T, $CellContext`dt], \
+$CellContext`left[$CellContext`W, 
+           Pattern[$CellContext`dB, 
+            Blank[]], 
+           Pattern[$CellContext`T, 
+            Blank[]], 
+           Pattern[$CellContext`dt, 
+            
+            Blank[]]] := $CellContext`ItoIntegral[#& , $CellContext`dB, \
+$CellContext`T, $CellContext`dt], $CellContext`left[
+           Exp[$CellContext`W], 
+           Pattern[$CellContext`dB, 
+            Blank[]], 
+           Pattern[$CellContext`T, 
+            Blank[]], 
+           Pattern[$CellContext`dt, 
+            Blank[]]] := $CellContext`ItoIntegral[
+          Exp[#]& , $CellContext`dB, $CellContext`T, $CellContext`dt], \
+$CellContext`right[
+           Cos[$CellContext`W], 
+           Pattern[$CellContext`dB, 
+            Blank[]], 
+           Pattern[$CellContext`T, 
+            Blank[]], 
+           Pattern[$CellContext`dt, 
+            Blank[]]] := Function[$CellContext`t, 
+           Evaluate[Sin[
+              $CellContext`Brownian[$CellContext`dB, \
+$CellContext`T][$CellContext`t]] + $CellContext`TimeIntegral[(1/2) Sin[
+                $CellContext`Brownian[$CellContext`dB, $CellContext`T][#]]& , \
+$CellContext`T, $CellContext`dt][$CellContext`t]]], \
+$CellContext`right[$CellContext`W, 
+           Pattern[$CellContext`dB, 
+            Blank[]], 
+           Pattern[$CellContext`T, 
+            Blank[]], 
+           Pattern[$CellContext`dt, 
+            Blank[]]] := Function[$CellContext`x, 
+           
+           Evaluate[(1/
+              2) $CellContext`Brownian[$CellContext`dB, \
+$CellContext`T][$CellContext`x]^2 - $CellContext`x/2]], $CellContext`right[
+           Exp[$CellContext`W], 
+           Pattern[$CellContext`dB, 
+            Blank[]], 
+           Pattern[$CellContext`T, 
+            Blank[]], 
+           Pattern[$CellContext`dt, 
+            Blank[]]] := 
+         With[{$CellContext`b = $CellContext`Brownian[$CellContext`dB, \
+$CellContext`T]}, 
+           Function[$CellContext`t, 
+            Evaluate[Exp[
+               $CellContext`b[$CellContext`t]] - $CellContext`TimeIntegral[(1/
+               2) Exp[
+                $CellContext`b[#]]& , $CellContext`T, \
+$CellContext`dt][$CellContext`t] - 1]]], $CellContext`FF[
+           Pattern[$CellContext`expr, 
+            Blank[]], 
+           Pattern[$CellContext`dB, 
+            Blank[]], 
+           Pattern[$CellContext`T, 
+            Blank[]], 
+           Pattern[$CellContext`dt, 
+            Blank[]]] := Evaluate[
+           
+           ReplaceAll[$CellContext`expr, $CellContext`W -> \
+$CellContext`Brownian[$CellContext`dB, $CellContext`T][#]]]& , \
+$CellContext`leftLabel[
+           Pattern[$CellContext`expr, 
+            Blank[]]] := ReplaceAll[
+           HoldForm[
+            Integrate[$CellContext`expr, 
+             Subscript[$CellContext`B, $CellContext`t]]], $CellContext`W -> 
+           Subscript[$CellContext`B, $CellContext`t]], \
+$CellContext`rightLabel[$CellContext`W] := (1/2) 
+           Subscript[$CellContext`B, $CellContext`t]^2 - $CellContext`t, \
+$CellContext`rightLabel[
+           Exp[$CellContext`W]] := TraditionalForm[
+           HoldForm[
+           E^Subscript[$CellContext`B, $CellContext`t] - 1 - (1/2) 
+            Integrate[
+             E^Subscript[$CellContext`B, $CellContext`t], $CellContext`t]]], \
+$CellContext`rightLabel[
+           Cos[$CellContext`W]] := TraditionalForm[
+           HoldForm[Sin[
+              Subscript[$CellContext`B, $CellContext`t]] + (1/2) Integrate[
+               Sin[$CellContext`B], $CellContext`B]]]}]]; 
+     Typeset`initDone$$ = True),
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellID->47196063],
+
+Cell[CellGroupData[{
+
+Cell["THIS NOTEBOOK IS THE SOURCE CODE FROM", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[TextData[{
+ "\"",
+ ButtonBox["The It\[OHat] Integral and It\[OHat]'s Lemma",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/TheItoIntegralAndItosLemma/"], 
+    None},
+  ButtonNote->"http://demonstrations.wolfram.com/TheItoIntegralAndItosLemma/"],
+ "\"",
+ " from ",
+ ButtonBox["The Wolfram Demonstrations Project",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+ "\[ParagraphSeparator]\[NonBreakingSpace]",
+ ButtonBox["http://demonstrations.wolfram.com/TheItoIntegralAndItosLemma/",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/TheItoIntegralAndItosLemma/"], 
+    None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/TheItoIntegralAndItosLemma/"]
+}], "Text",
+ CellMargins->{{48, Inherited}, {0, Inherited}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.5]],
+
+Cell[" ", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[TextData[{
+ "Contributed by: ",
+ ButtonBox["Andrzej Kozlowski",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/author.html?author=Andrzej+\
+Kozlowski"], None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/author.html?author=Andrzej+Kozlowski"]
+}], "Text",
+ CellDingbat->"\[FilledSmallSquare]",
+ CellMargins->{{66, 48}, {2, 4}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.6]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "A full-function Wolfram ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " system (Version 6 or higher) is required to edit this notebook.\n",
+ StyleBox[ButtonBox["GET WOLFRAM MATHEMATICA \[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://www.wolfram.com/products/mathematica/"], None},
+  ButtonNote->"http://www.wolfram.com/products/mathematica/"],
+  FontFamily->"Helvetica",
+  FontWeight->"Bold",
+  FontSlant->"Italic",
+  FontColor->RGBColor[1, 0.42, 0]]
+}], "Text",
+ CellFrame->True,
+ CellMargins->{{48, 68}, {8, 28}},
+ CellFrameMargins->12,
+ CellFrameColor->RGBColor[0.865507, 0.90634, 0.680751],
+ CellChangeTimes->{3.3750111182355957`*^9},
+ ParagraphSpacing->{1., 1.},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.411765],
+ Background->RGBColor[0.986023, 0.991363, 0.969818]],
+
+Cell[TextData[{
+ "\[Copyright] ",
+ StyleBox[ButtonBox["The Wolfram Demonstrations Project & Contributors",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Terms of Use",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/termsofuse.html"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/termsofuse.html"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Make a new version of this Demonstration \
+\[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/participate/upload.jsp?id=\
+TheItoIntegralAndItosLemma"], None},
+  ButtonNote->None],
+  FontColor->GrayLevel[0.6]]
+}], "Text",
+ CellFrame->{{0, 0}, {0, 0.5}},
+ CellMargins->{{48, 10}, {20, 50}},
+ CellFrameMargins->{{6, 0}, {6, 6}},
+ CellFrameColor->GrayLevel[0.6],
+ FontFamily->"Verdana",
+ FontSize->9,
+ FontColor->GrayLevel[0.6]]
+}, Open  ]]
+}, Open  ]]
+},
+Editable->True,
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{710, 650},
+WindowMargins->{{Inherited, Inherited}, {Inherited, 0}},
+WindowElements->{
+ "StatusArea", "MemoryMonitor", "MagnificationPopUp", "VerticalScrollBar", 
+  "MenuBar"},
+WindowTitle->"The It\[OHat] Integral and It\[OHat]'s Lemma - Source",
+DockedCells->{},
+CellContext->Notebook,
+FrontEndVersion->"7.0 for Microsoft Windows (32-bit) (November 10, 2008)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[628, 23, 244, 6, 70, "Section"],
+Cell[875, 31, 207, 6, 70, "Input",
+ InitializationCell->True,
+ CellID->1724110150],
+Cell[1085, 39, 478, 15, 70, "Input",
+ InitializationCell->True,
+ CellID->1415839239],
+Cell[1566, 56, 998, 27, 70, "Input",
+ InitializationCell->True,
+ CellID->506627372],
+Cell[2567, 85, 1966, 50, 70, "Input",
+ InitializationCell->True,
+ CellID->113580849],
+Cell[4536, 137, 1010, 27, 70, "Input",
+ InitializationCell->True,
+ CellID->422990068],
+Cell[5549, 166, 571, 16, 70, "Input",
+ InitializationCell->True,
+ CellID->1023201306],
+Cell[6123, 184, 496, 12, 70, "Input",
+ InitializationCell->True,
+ CellID->2042788413],
+Cell[6622, 198, 565, 16, 70, "Input",
+ InitializationCell->True,
+ CellID->1323792702],
+Cell[7190, 216, 1135, 32, 70, "Input",
+ InitializationCell->True,
+ CellID->245121529],
+Cell[8328, 250, 730, 20, 70, "Input",
+ InitializationCell->True,
+ CellID->2106994137],
+Cell[9061, 272, 1149, 33, 70, "Input",
+ InitializationCell->True,
+ CellID->1053359594],
+Cell[10213, 307, 538, 16, 70, "Input",
+ InitializationCell->True,
+ CellID->1939371806],
+Cell[10754, 325, 563, 15, 70, "Input",
+ InitializationCell->True,
+ CellID->1179109789],
+Cell[11320, 342, 397, 12, 70, "Input",
+ InitializationCell->True,
+ CellID->595025742],
+Cell[11720, 356, 848, 22, 70, "Input",
+ InitializationCell->True,
+ CellID->1913785362],
+Cell[12571, 380, 720, 20, 70, "Input",
+ InitializationCell->True,
+ CellID->2127998015],
+Cell[13294, 402, 6860, 160, 70, "Input",
+ CellID->1774501385]
+}, Open  ]],
+Cell[20169, 565, 16978, 398, 70, "Output",
+ CellID->47196063],
+Cell[CellGroupData[{
+Cell[37172, 967, 373, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[37548, 978, 965, 27, 70, "Text"],
+Cell[38516, 1007, 337, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[38856, 1018, 445, 14, 70, "Text"],
+Cell[CellGroupData[{
+Cell[39326, 1036, 847, 24, 70, "Text"],
+Cell[40176, 1062, 1202, 33, 70, "Text"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+(* NotebookSignature 4R4tffD5E#kB0BTSLW9LMLOG *)

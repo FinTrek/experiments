@@ -1,0 +1,952 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 6.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[     36309,        942]
+NotebookOptionsPosition[     34825,        888]
+NotebookOutlinePosition[     35443,        912]
+CellTagsIndexPosition[     35400,        909]
+WindowFrame->Normal
+ContainsDynamic->True *)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Markov Volatility Random Walks", "Section",
+ CellFrameColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108],
+ FontColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"next", "[", 
+   RowBox[{"mat_", ",", " ", "current_Integer"}], "]"}], ":=", " ", 
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"a", "=", 
+      RowBox[{"Random", "[", "Real", "]"}]}], "}"}], ",", "\n", "  ", 
+    RowBox[{"For", "[", 
+     RowBox[{
+      RowBox[{"j", "=", "1"}], ",", 
+      RowBox[{"j", "\[LessEqual]", "  ", 
+       RowBox[{"Length", "[", "mat", "]"}]}], ",", 
+      RowBox[{"j", "++"}], ",", "\n", "   ", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"a", "<", " ", 
+         RowBox[{"Total", "[", 
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{"mat", "[", 
+             RowBox[{"[", 
+              RowBox[{"i", ",", "current"}], "]"}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"i", ",", "1", ",", "j"}], "}"}]}], "]"}], "]"}]}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Return", "[", "j", "]"}]}], "\n", "    ", "]"}]}], "]"}]}], 
+   "]"}]}]], "Input",
+ InitializationCell->True,
+ CellID->374319913],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"trajectory", "[", 
+   RowBox[{"mat_", ",", " ", "start_Integer", ",", "steps_Integer"}], "]"}], ":=",
+   " ", 
+  RowBox[{"NestList", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"next", "[", 
+      RowBox[{"mat", ",", "#"}], "]"}], "&"}], ",", "start", ",", "steps"}], 
+   "]"}]}]], "Input",
+ InitializationCell->True,
+ CellID->289715471],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"LogNormalseries", "[", 
+   RowBox[{"start_", ",", "  ", "vols_", ",", " ", 
+    RowBox[{"dailytrend_:", "0.00"}]}], "]"}], ":=", "  ", 
+  RowBox[{"FoldList", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"#1", " ", "*", " ", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"1", "+", "dailytrend"}], ")"}], "^", 
+       RowBox[{"(", 
+        RowBox[{"1", "/", "251"}], ")"}]}], " ", "*", " ", 
+      RowBox[{"RandomReal", "[", 
+       RowBox[{"LogNormalDistribution", "[", 
+        RowBox[{"0", ",", " ", "#2"}], "]"}], "]"}]}], "&"}], ",", " ", 
+    "start", ",", " ", "vols"}], "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.4246063398120003`*^9, 3.424606359429*^9}, {
+   3.424606582377*^9, 3.424606614053*^9}, {3.42460672449*^9, 
+   3.424606728418*^9}, {3.424606786823*^9, 3.424606822664*^9}, {
+   3.4246068674040003`*^9, 3.4246068693120003`*^9}, {3.424615324995*^9, 
+   3.4246153369758*^9}, {3.4246153817166*^9, 3.4246153855854*^9}, {
+   3.424637472165*^9, 3.42463751154*^9}, {3.4250266622868*^9, 
+   3.4250266659216003`*^9}, {3.4250268689088*^9, 3.4250270211336*^9}, {
+   3.4250272717164*^9, 3.4250272755072002`*^9}, 3.4250276434488*^9},
+ CellID->64003312],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MakeVols", "[", 
+   RowBox[{"basevolatility_", ",", " ", 
+    RowBox[{"{", 
+     RowBox[{
+     "spikechance_", ",", " ", "spikelength_", ",", " ", "spikestrength_"}], 
+     "}"}], ",", " ", "steps_"}], "]"}], ":=", " ", 
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"volmat", " ", "=", " ", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"1", "-", " ", "spikechance"}], ",", " ", 
+          RowBox[{"1", "/", 
+           RowBox[{"N", "[", "spikelength", "]"}]}]}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"spikechance", ",", 
+          RowBox[{"1", " ", "-", " ", 
+           RowBox[{"1", "/", 
+            RowBox[{"N", "[", "spikelength", "]"}]}]}]}], "}"}]}], "}"}]}], 
+     "}"}], ",", " ", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"trajectory", "[", 
+        RowBox[{"volmat", ",", "1", ",", 
+         RowBox[{"steps", "-", "1"}]}], "]"}], "/.", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"1", "\[Rule]", "basevolatility"}], ",", " ", 
+         RowBox[{"2", "\[Rule]", " ", 
+          RowBox[{"spikestrength", "*", "basevolatility"}]}]}], "}"}]}], 
+      ")"}], "*", " ", 
+     RowBox[{"(", 
+      RowBox[{"1", "/", 
+       RowBox[{"Sqrt", "[", "251", "]"}]}], ")"}]}]}], "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.4250270260944*^9, 3.4250271768996*^9}, {
+  3.42502721916*^9, 3.4250272195811996`*^9}, {3.425027267832*^9, 
+  3.4250272680036*^9}},
+ CellID->427374026],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"report", "[", 
+   RowBox[{"data_", ",", " ", 
+    RowBox[{"period_:", "1"}]}], "]"}], ":=", "  ", 
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"returns", " ", "=", " ", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"Drop", "[", 
+            RowBox[{"#", ",", " ", "period"}], "]"}], "/", 
+           RowBox[{"Drop", "[", 
+            RowBox[{"#", ",", " ", 
+             RowBox[{"-", "period"}]}], "]"}]}], " ", "-", "1"}], "&"}], 
+        ")"}], "/@", "data"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Join", "[", 
+       RowBox[{
+        RowBox[{"{", "\"\<total change\>\"", "}"}], ",", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"NumberForm", "[", 
+           RowBox[{
+            RowBox[{"Chop", "[", 
+             RowBox[{"#", ",", " ", 
+              RowBox[{"10", "^", 
+               RowBox[{"-", "5"}]}]}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"10", ",", "4"}], "}"}]}], "]"}], "&"}], "/@", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"Last", "/@", "data"}], ")"}], "/", 
+           RowBox[{"data", "[", 
+            RowBox[{"[", 
+             RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ")"}]}]}], "]"}], ",", 
+      RowBox[{"Join", "[", 
+       RowBox[{
+        RowBox[{"{", "\"\<annual rate of return\>\"", "}"}], ",", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"NumberForm", "[", 
+           RowBox[{
+            RowBox[{"Chop", "[", 
+             RowBox[{"#", ",", 
+              RowBox[{"10", "^", 
+               RowBox[{"-", "5"}]}]}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"10", ",", "4"}], "}"}]}], "]"}], "&"}], "/@", 
+         RowBox[{"(", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"Last", "/@", "data"}], ")"}], "/", 
+               RowBox[{"data", "[", 
+                RowBox[{"[", 
+                 RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ")"}], "^", 
+             RowBox[{"(", 
+              RowBox[{"251", "/", 
+               RowBox[{"Length", "[", 
+                RowBox[{"data", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}], "]"}]}], ")"}]}], "-", "1"}],
+            ")"}], ")"}]}]}], "]"}], ",", "  ", 
+      RowBox[{"Join", "[", 
+       RowBox[{
+        RowBox[{"{", "\"\<annual standard deviation\>\"", "}"}], ",", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"NumberForm", "[", 
+           RowBox[{
+            RowBox[{"Chop", "[", 
+             RowBox[{"#", ",", " ", 
+              RowBox[{"10", "^", 
+               RowBox[{"-", "5"}]}]}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"10", ",", "4"}], "}"}]}], "]"}], "&"}], "/@", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"Sqrt", "[", "251", "]"}], "*", 
+           RowBox[{"StandardDeviation", "/@", "returns"}]}], ")"}]}]}], "]"}],
+       ",", 
+      RowBox[{"Join", "[", 
+       RowBox[{
+        RowBox[{"{", "\"\<mean daily return\>\"", "}"}], ",", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"NumberForm", "[", 
+           RowBox[{
+            RowBox[{"Chop", "[", 
+             RowBox[{"#", ",", 
+              RowBox[{"10", "^", 
+               RowBox[{"-", "5"}]}]}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"10", ",", "4"}], "}"}]}], "]"}], "&"}], "/@", 
+         RowBox[{"(", 
+          RowBox[{"Mean", "/@", "returns"}], ")"}]}]}], "]"}], ",", " ", 
+      RowBox[{"Join", "[", 
+       RowBox[{
+        RowBox[{"{", "\"\<daily standard deviation\>\"", "}"}], ",", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"NumberForm", "[", 
+           RowBox[{
+            RowBox[{"Chop", "[", 
+             RowBox[{"#", ",", 
+              RowBox[{"10", "^", 
+               RowBox[{"-", "5"}]}]}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"10", ",", "4"}], "}"}]}], "]"}], "&"}], "/@", 
+         RowBox[{"(", 
+          RowBox[{"StandardDeviation", "/@", "returns"}], ")"}]}]}], "]"}], 
+      ",", " ", 
+      RowBox[{"Join", "[", 
+       RowBox[{
+        RowBox[{"{", "\"\<daily return skewness\>\"", "}"}], ",", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"NumberForm", "[", 
+           RowBox[{
+            RowBox[{"Chop", "[", 
+             RowBox[{"#", ",", 
+              RowBox[{"10", "^", 
+               RowBox[{"-", "5"}]}]}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"10", ",", "4"}], "}"}]}], "]"}], "&"}], "/@", 
+         RowBox[{"(", 
+          RowBox[{"Skewness", "/@", "returns"}], ")"}]}]}], "]"}], ",", 
+      RowBox[{"Join", "[", 
+       RowBox[{
+        RowBox[{"{", "\"\<daily return kurtosis\>\"", "}"}], ",", " ", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"NumberForm", "[", 
+           RowBox[{
+            RowBox[{"Chop", "[", 
+             RowBox[{"#", ",", 
+              RowBox[{"10", "^", 
+               RowBox[{"-", "5"}]}]}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"10", ",", "4"}], "}"}]}], "]"}], "&"}], "/@", 
+         RowBox[{"(", 
+          RowBox[{"Kurtosis", "/@", "returns"}], ")"}]}]}], "]"}]}], "}"}]}], 
+   "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.42460723206*^9, 3.424607345559*^9}, {
+  3.4246073974960003`*^9, 3.4246075363380003`*^9}, {3.424632413295*^9, 
+  3.4246325780150003`*^9}, {3.424635780422*^9, 3.424635792409*^9}, {
+  3.424635973053*^9, 3.424635983679*^9}, {3.424636058675*^9, 
+  3.424636073233*^9}, {3.4246375773310003`*^9, 3.42463757785*^9}, {
+  3.424637609903*^9, 3.424637680165*^9}, {3.4246377212130003`*^9, 
+  3.4246377952980003`*^9}, {3.424637828738*^9, 3.424637866144*^9}, {
+  3.424637903336*^9, 3.4246379343*^9}, {3.424637974925*^9, 
+  3.424637987623*^9}, {3.4250283122208*^9, 3.4250283169164*^9}, {
+  3.4251302180727997`*^9, 3.4251302973098*^9}, {3.4251303545008*^9, 
+  3.4251303647098*^9}, {3.4251305158098*^9, 3.4251305164877996`*^9}, {
+  3.4251310183378*^9, 3.4251310543627996`*^9}, {3.4251311267338*^9, 
+  3.4251311365058002`*^9}, {3.4251322057808*^9, 3.4251322517098*^9}, {
+  3.4251323307268*^9, 3.4251323453968*^9}},
+ CellID->33991316],
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"data", ",", " ", "quantiles"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"data", " ", "=", " ", 
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{"LogNormalseries", "[", 
+          RowBox[{"100", ",", " ", 
+           RowBox[{"MakeVols", "[", 
+            RowBox[{"basevolatility", ",", " ", 
+             RowBox[{"{", 
+              RowBox[{
+              "spikechance", ",", " ", "spikelength", ",", " ", 
+               "spikestrength"}], "}"}], ",", " ", "steps"}], "]"}], ",", " ",
+            "basetrend"}], "]"}], ",", " ", 
+         RowBox[{"{", "19", "}"}]}], "]"}]}], " ", ";", "\[IndentingNewLine]",
+       
+      RowBox[{"quantiles", " ", "=", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"Reverse", "[", 
+           RowBox[{"SortBy", "[", 
+            RowBox[{"#", ",", " ", "Last"}], "]"}], "]"}], "[", 
+          RowBox[{"[", 
+           RowBox[{"2", ";;", "18", ";;", "4"}], "]"}], "]"}], "&"}], "@", 
+        "data"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Column", "[", 
+       RowBox[{"{", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"ListLinePlot", "[", 
+          RowBox[{"quantiles", ",", " ", 
+           RowBox[{"Filling", "\[Rule]", "Bottom"}], ",", " ", 
+           RowBox[{"PlotRange", "\[Rule]", " ", 
+            RowBox[{"{", 
+             RowBox[{"0", ",", "All"}], "}"}]}], ",", " ", 
+           RowBox[{"ImageSize", "\[Rule]", " ", 
+            RowBox[{"{", 
+             RowBox[{"400", ",", "275"}], "}"}]}], ",", " ", 
+           RowBox[{"PlotLabel", "\[Rule]", " ", 
+            RowBox[{"Text", "[", 
+             RowBox[{"Style", "[", 
+              RowBox[{"\"\<90 70 50 30 10 percentile runs\>\"", ",", "18"}], 
+              "]"}], "]"}]}], ",", 
+           RowBox[{"ImagePadding", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"35", ",", "10"}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"20", ",", "20"}], "}"}]}], "}"}]}]}], "]"}], ",", " ",
+          
+         RowBox[{"Spacer", "[", "80", "]"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"Pane", "[", 
+          RowBox[{
+           RowBox[{"Text", "[", 
+            RowBox[{"Style", "[", 
+             RowBox[{
+              RowBox[{"Grid", "[", 
+               RowBox[{
+                RowBox[{"report", "[", 
+                 RowBox[{"quantiles", ",", "1"}], "]"}], ",", 
+                RowBox[{"Alignment", "\[Rule]", "Left"}], ",", 
+                RowBox[{"ItemSize", "\[Rule]", 
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{
+                    "12", ",", "3.5", ",", "3.5", ",", "3.5", ",", "3.5", ",",
+                     "3.5"}], "}"}], ",", "Automatic"}], "}"}]}]}], "]"}], 
+              ",", "13"}], "]"}], "]"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{"400", ",", "115"}], "}"}]}], "]"}]}], "}"}], "]"}]}]}], 
+    "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"basevolatility", ",", "0.20", ",", "\"\<base volatility\>\""}],
+       "}"}], ",", "0.01", ",", "0.50", ",", "0.01", ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Tiny"}], ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"basetrend", ",", " ", "0.10", ",", "\"\<base trend\>\""}], 
+      "}"}], ",", " ", "0.00", ",", "0.30", ",", ".01", ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Tiny"}], ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", " ", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Style", "[", 
+    RowBox[{"\"\<spike\>\"", ",", "Bold"}], "]"}], ",", "\[IndentingNewLine]",
+    
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"spikechance", ",", ".010", ",", "\"\<chance\>\""}], "}"}], ",",
+      " ", "0.00", ",", ".050", ",", ".001", ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Tiny"}], ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"spikelength", ",", "20", ",", "\"\<length\>\""}], "}"}], ",", 
+     "1", ",", "100", ",", "1", ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Tiny"}], ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"spikestrength", ",", " ", "3.00", ",", "\"\<strength\>\""}], 
+      "}"}], ",", " ", "1.00", ",", "5.00", ",", "0.10", ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Tiny"}], ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", "Delimiter", ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"steps", ",", "250"}], "}"}], ",", " ", "20", ",", "1000", ",", 
+     "1", ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Tiny"}], ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", " ", 
+   
+   RowBox[{"ControlPlacement", "\[Rule]", " ", "Left"}], ",", " ", 
+   RowBox[{"SaveDefinitions", "\[Rule]", "True"}]}], "]"}]], "Input",
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.4250587109554*^9, 3.4250587190674*^9}, {
+   3.4250595117502003`*^9, 3.425059511875*^9}, {3.4251264646076746`*^9, 
+   3.42512653026824*^9}, {3.4251271823264394`*^9, 3.425127444539658*^9}, {
+   3.4251274760408077`*^9, 3.425127513438547*^9}, {3.4251278522444243`*^9, 
+   3.425127880887288*^9}, {3.4251303156518*^9, 3.4251303347388*^9}, {
+   3.4251304115668*^9, 3.4251304128227997`*^9}, {3.4251304931088*^9, 
+   3.4251304932268*^9}, {3.4251306312658*^9, 3.4251306348638*^9}, {
+   3.4251306955838003`*^9, 3.4251307791728*^9}, {3.4251308402888002`*^9, 
+   3.4251309347548*^9}, {3.4251309662078*^9, 3.4251310014968*^9}, {
+   3.4251321902128*^9, 3.4251321909728003`*^9}, {3.4251322807288*^9, 
+   3.4251323215438004`*^9}, {3.4251323634508*^9, 3.4251324109407997`*^9}, {
+   3.4251324972658*^9, 3.4251325188118*^9}, {3.4252165767856855`*^9, 
+   3.4252166060046067`*^9}, {3.427722636661113*^9, 3.4277227949159365`*^9}, {
+   3.427722827630208*^9, 3.427722893590803*^9}, {3.4278202558558145`*^9, 
+   3.4278202998542137`*^9}}]
+}, Open  ]],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`basetrend$$ = 
+    0.1, $CellContext`basevolatility$$ = 0.2, $CellContext`spikechance$$ = 
+    0.01, $CellContext`spikelength$$ = 20, $CellContext`spikestrength$$ = 
+    3., $CellContext`steps$$ = 250, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`basevolatility$$], 0.2, "base volatility"}, 0.01, 
+      0.5, 0.01}, {{
+       Hold[$CellContext`basetrend$$], 0.1, "base trend"}, 0., 0.3, 0.01}, {
+      Hold[
+       Style["spike", Bold]], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`spikechance$$], 0.01, "chance"}, 0., 0.05, 0.001}, {{
+      
+       Hold[$CellContext`spikelength$$], 20, "length"}, 1, 100, 1}, {{
+       Hold[$CellContext`spikestrength$$], 3., "strength"}, 1., 5., 0.1}, {{
+       Hold[$CellContext`steps$$], 250}, 20, 1000, 1}}, Typeset`size$$ = {
+    400., {202.5, 207.5}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = False, $CellContext`basevolatility$12734$$ = 
+    0, $CellContext`basetrend$12735$$ = 0, $CellContext`spikechance$12736$$ = 
+    0, $CellContext`spikelength$12737$$ = 
+    0, $CellContext`spikestrength$12738$$ = 0, $CellContext`steps$12739$$ = 
+    0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`basetrend$$ = 
+        0.1, $CellContext`basevolatility$$ = 0.2, $CellContext`spikechance$$ = 
+        0.01, $CellContext`spikelength$$ = 20, $CellContext`spikestrength$$ = 
+        3., $CellContext`steps$$ = 250}, "ControllerVariables" :> {
+        Hold[$CellContext`basevolatility$$, \
+$CellContext`basevolatility$12734$$, 0], 
+        Hold[$CellContext`basetrend$$, $CellContext`basetrend$12735$$, 0], 
+        Hold[$CellContext`spikechance$$, $CellContext`spikechance$12736$$, 0],
+         
+        Hold[$CellContext`spikelength$$, $CellContext`spikelength$12737$$, 0],
+         
+        Hold[$CellContext`spikestrength$$, $CellContext`spikestrength$12738$$,
+          0], 
+        Hold[$CellContext`steps$$, $CellContext`steps$12739$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> 
+      Module[{$CellContext`data$, $CellContext`quantiles$}, \
+$CellContext`data$ = Table[
+           $CellContext`LogNormalseries[100, 
+            $CellContext`MakeVols[$CellContext`basevolatility$$, \
+{$CellContext`spikechance$$, $CellContext`spikelength$$, \
+$CellContext`spikestrength$$}, $CellContext`steps$$], \
+$CellContext`basetrend$$], {19}]; $CellContext`quantiles$ = (Part[
+           Reverse[
+            SortBy[#, Last]], 
+           Span[2, 18, 4]]& )[$CellContext`data$]; Column[{
+           
+           ListLinePlot[$CellContext`quantiles$, Filling -> Bottom, 
+            PlotRange -> {0, All}, ImageSize -> {400, 275}, PlotLabel -> 
+            Text[
+              Style["90 70 50 30 10 percentile runs", 18]], 
+            ImagePadding -> {{35, 10}, {20, 20}}], 
+           Spacer[80], 
+           Pane[
+            Text[
+             Style[
+              Grid[
+               $CellContext`report[$CellContext`quantiles$, 1], Alignment -> 
+               Left, ItemSize -> {{12, 3.5, 3.5, 3.5, 3.5, 3.5}, Automatic}], 
+              13]], {400, 115}]}]], 
+      "Specifications" :> {{{$CellContext`basevolatility$$, 0.2, 
+          "base volatility"}, 0.01, 0.5, 0.01, ImageSize -> Tiny, Appearance -> 
+         "Labeled"}, {{$CellContext`basetrend$$, 0.1, "base trend"}, 0., 0.3, 
+         0.01, ImageSize -> Tiny, Appearance -> "Labeled"}, 
+        Style[
+        "spike", Bold], {{$CellContext`spikechance$$, 0.01, "chance"}, 0., 
+         0.05, 0.001, ImageSize -> Tiny, Appearance -> 
+         "Labeled"}, {{$CellContext`spikelength$$, 20, "length"}, 1, 100, 1, 
+         ImageSize -> Tiny, Appearance -> 
+         "Labeled"}, {{$CellContext`spikestrength$$, 3., "strength"}, 1., 5., 
+         0.1, ImageSize -> Tiny, Appearance -> "Labeled"}, 
+        Delimiter, {{$CellContext`steps$$, 250}, 20, 1000, 1, ImageSize -> 
+         Tiny, Appearance -> "Labeled"}}, 
+      "Options" :> {ControlPlacement -> Left}, 
+      "DefaultOptions" :> {ControllerLinking -> True}],
+     ImageSizeCache->{631., {230., 235.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    Initialization:>(({$CellContext`LogNormalseries[
+          Pattern[$CellContext`start, 
+           Blank[]], 
+          Pattern[$CellContext`vols, 
+           Blank[]], 
+          Optional[
+           Pattern[$CellContext`dailytrend, 
+            Blank[]], 0.]] := 
+        FoldList[# (1 + $CellContext`dailytrend)^(1/251) RandomReal[
+            LogNormalDistribution[
+            0, #2]]& , $CellContext`start, $CellContext`vols], \
+$CellContext`MakeVols[
+          Pattern[$CellContext`basevolatility, 
+           Blank[]], {
+           Pattern[$CellContext`spikechance, 
+            Blank[]], 
+           Pattern[$CellContext`spikelength, 
+            Blank[]], 
+           Pattern[$CellContext`spikestrength, 
+            Blank[]]}, 
+          Pattern[$CellContext`steps, 
+           Blank[]]] := 
+        With[{$CellContext`volmat = {{
+             1 - $CellContext`spikechance, 1/
+              N[$CellContext`spikelength]}, {$CellContext`spikechance, 1 - 1/
+              N[$CellContext`spikelength]}}}, ReplaceAll[
+            $CellContext`trajectory[$CellContext`volmat, 
+             1, $CellContext`steps - 1], {
+            1 -> $CellContext`basevolatility, 
+             2 -> $CellContext`spikestrength $CellContext`basevolatility}] (1/
+           Sqrt[251])], $CellContext`trajectory[
+          Pattern[$CellContext`mat, 
+           Blank[]], 
+          Pattern[$CellContext`start, 
+           Blank[Integer]], 
+          Pattern[$CellContext`steps, 
+           Blank[Integer]]] := 
+        NestList[$CellContext`next[$CellContext`mat, #]& , $CellContext`start,
+           $CellContext`steps], $CellContext`next[
+          Pattern[$CellContext`mat, 
+           Blank[]], 
+          Pattern[$CellContext`current, 
+           Blank[Integer]]] := With[{$CellContext`a = Random[Real]}, 
+          
+          For[$CellContext`j = 1, $CellContext`j <= Length[$CellContext`mat], 
+           
+           Increment[$CellContext`j], 
+           If[$CellContext`a < Total[
+              Table[
+               
+               Part[$CellContext`mat, $CellContext`i, $CellContext`current], \
+{$CellContext`i, 1, $CellContext`j}]], 
+            Return[$CellContext`j]]]], $CellContext`j = 1, 
+        Attributes[PlotRange] = {ReadProtected}, $CellContext`report[
+          Pattern[$CellContext`data, 
+           Blank[]], 
+          Optional[
+           Pattern[$CellContext`period, 
+            Blank[]], 1]] := 
+        With[{$CellContext`returns = 
+           Map[Drop[#, $CellContext`period]/Drop[#, -$CellContext`period] - 
+             1& , $CellContext`data]}, {
+           Join[{"total change"}, 
+            Map[NumberForm[
+              Chop[#, 10^(-5)], {10, 4}]& , Map[Last, $CellContext`data]/
+             Part[$CellContext`data, 1, 1]]], 
+           Join[{"annual rate of return"}, 
+            Map[NumberForm[
+              Chop[#, 10^(-5)], {10, 
+              4}]& , (Map[Last, $CellContext`data]/
+               Part[$CellContext`data, 1, 1])^(251/Length[
+                Part[$CellContext`data, 1]]) - 1]], 
+           Join[{"annual standard deviation"}, 
+            Map[NumberForm[
+              Chop[#, 10^(-5)], {10, 4}]& , Sqrt[251] 
+             Map[StandardDeviation, $CellContext`returns]]], 
+           Join[{"mean daily return"}, 
+            Map[NumberForm[
+              Chop[#, 10^(-5)], {10, 4}]& , 
+             Map[Mean, $CellContext`returns]]], 
+           Join[{"daily standard deviation"}, 
+            Map[NumberForm[
+              Chop[#, 10^(-5)], {10, 4}]& , 
+             Map[StandardDeviation, $CellContext`returns]]], 
+           Join[{"daily return skewness"}, 
+            Map[NumberForm[
+              Chop[#, 10^(-5)], {10, 4}]& , 
+             Map[Skewness, $CellContext`returns]]], 
+           Join[{"daily return kurtosis"}, 
+            Map[NumberForm[
+              Chop[#, 10^(-5)], {10, 4}]& , 
+             Map[Kurtosis, $CellContext`returns]]]}]}; 
+      Typeset`initDone$$ = True); ReleaseHold[
+       HoldComplete[{$CellContext`next[
+           Pattern[$CellContext`mat, 
+            Blank[]], 
+           Pattern[$CellContext`current, 
+            Blank[Integer]]] := With[{$CellContext`a = Random[Real]}, 
+           
+           For[$CellContext`j = 1, $CellContext`j <= Length[$CellContext`mat],
+             
+            Increment[$CellContext`j], 
+            If[$CellContext`a < Total[
+               Table[
+                
+                Part[$CellContext`mat, $CellContext`i, $CellContext`current], \
+{$CellContext`i, 1, $CellContext`j}]], 
+             Return[$CellContext`j]]]], $CellContext`trajectory[
+           Pattern[$CellContext`mat, 
+            Blank[]], 
+           Pattern[$CellContext`start, 
+            Blank[Integer]], 
+           Pattern[$CellContext`steps, 
+            Blank[Integer]]] := 
+         NestList[$CellContext`next[$CellContext`mat, #]& , \
+$CellContext`start, $CellContext`steps], $CellContext`LogNormalseries[
+           Pattern[$CellContext`start, 
+            Blank[]], 
+           Pattern[$CellContext`vols, 
+            Blank[]], 
+           Optional[
+            Pattern[$CellContext`dailytrend, 
+             Blank[]], 0.]] := 
+         FoldList[# (1 + $CellContext`dailytrend)^(1/251) RandomReal[
+             LogNormalDistribution[
+             0, #2]]& , $CellContext`start, $CellContext`vols], \
+$CellContext`MakeVols[
+           Pattern[$CellContext`basevolatility, 
+            Blank[]], {
+            Pattern[$CellContext`spikechance, 
+             Blank[]], 
+            Pattern[$CellContext`spikelength, 
+             Blank[]], 
+            Pattern[$CellContext`spikestrength, 
+             Blank[]]}, 
+           Pattern[$CellContext`steps, 
+            Blank[]]] := 
+         With[{$CellContext`volmat = {{
+              1 - $CellContext`spikechance, 1/
+               N[$CellContext`spikelength]}, {$CellContext`spikechance, 1 - 1/
+               N[$CellContext`spikelength]}}}, ReplaceAll[
+             $CellContext`trajectory[$CellContext`volmat, 
+              1, $CellContext`steps - 1], {
+             1 -> $CellContext`basevolatility, 
+              2 -> $CellContext`spikestrength $CellContext`basevolatility}] (
+            1/Sqrt[251])], $CellContext`report[
+           Pattern[$CellContext`data, 
+            Blank[]], 
+           Optional[
+            Pattern[$CellContext`period, 
+             Blank[]], 1]] := 
+         With[{$CellContext`returns = 
+            Map[Drop[#, $CellContext`period]/Drop[#, -$CellContext`period] - 
+              1& , $CellContext`data]}, {
+            Join[{"total change"}, 
+             Map[NumberForm[
+               Chop[#, 10^(-5)], {10, 4}]& , Map[Last, $CellContext`data]/
+              Part[$CellContext`data, 1, 1]]], 
+            Join[{"annual rate of return"}, 
+             Map[NumberForm[
+               Chop[#, 10^(-5)], {10, 
+               4}]& , (Map[Last, $CellContext`data]/
+                Part[$CellContext`data, 1, 1])^(251/Length[
+                 Part[$CellContext`data, 1]]) - 1]], 
+            Join[{"annual standard deviation"}, 
+             Map[NumberForm[
+               Chop[#, 10^(-5)], {10, 4}]& , Sqrt[251] 
+              Map[StandardDeviation, $CellContext`returns]]], 
+            Join[{"mean daily return"}, 
+             Map[NumberForm[
+               Chop[#, 10^(-5)], {10, 4}]& , 
+              Map[Mean, $CellContext`returns]]], 
+            Join[{"daily standard deviation"}, 
+             Map[NumberForm[
+               Chop[#, 10^(-5)], {10, 4}]& , 
+              Map[StandardDeviation, $CellContext`returns]]], 
+            Join[{"daily return skewness"}, 
+             Map[NumberForm[
+               Chop[#, 10^(-5)], {10, 4}]& , 
+              Map[Skewness, $CellContext`returns]]], 
+            Join[{"daily return kurtosis"}, 
+             Map[NumberForm[
+               Chop[#, 10^(-5)], {10, 4}]& , 
+              Map[Kurtosis, $CellContext`returns]]]}]}]]; 
+     Typeset`initDone$$ = True),
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellID->50017103],
+
+Cell[CellGroupData[{
+
+Cell["THIS NOTEBOOK IS THE SOURCE CODE FROM", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[TextData[{
+ "\"",
+ ButtonBox["Markov Volatility Random Walks",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/MarkovVolatilityRandomWalks/"], 
+    None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/MarkovVolatilityRandomWalks/"],
+ "\"",
+ " from ",
+ ButtonBox["The Wolfram Demonstrations Project",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+ "\[ParagraphSeparator]\[NonBreakingSpace]",
+ ButtonBox["http://demonstrations.wolfram.com/MarkovVolatilityRandomWalks/",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/MarkovVolatilityRandomWalks/"], 
+    None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/MarkovVolatilityRandomWalks/"]
+}], "Text",
+ CellMargins->{{48, Inherited}, {0, Inherited}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.5]],
+
+Cell[" ", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[TextData[{
+ "Contributed by: ",
+ ButtonBox["Jason Cawley",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/author.html?author=Jason+Cawley"], 
+    None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/author.html?author=Jason+Cawley"]
+}], "Text",
+ CellDingbat->"\[FilledSmallSquare]",
+ CellMargins->{{66, 48}, {2, 4}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.6]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "A full-function Wolfram ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " 6 system is required to edit this notebook.\n",
+ StyleBox[ButtonBox["GET WOLFRAM MATHEMATICA 6 \[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://www.wolfram.com/products/mathematica/"], None},
+  ButtonNote->"http://www.wolfram.com/products/mathematica/"],
+  FontFamily->"Helvetica",
+  FontWeight->"Bold",
+  FontSlant->"Italic",
+  FontColor->RGBColor[1, 0.42, 0]]
+}], "Text",
+ CellFrame->True,
+ CellMargins->{{48, 68}, {8, 28}},
+ CellFrameMargins->12,
+ CellFrameColor->RGBColor[0.865507, 0.90634, 0.680751],
+ CellChangeTimes->{3.3750111182355957`*^9},
+ ParagraphSpacing->{1., 1.},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.411765],
+ Background->RGBColor[0.986023, 0.991363, 0.969818]],
+
+Cell[TextData[{
+ "\[Copyright] ",
+ StyleBox[ButtonBox["The Wolfram Demonstrations Project & Contributors",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Terms of Use",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/termsofuse.html"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/termsofuse.html"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Make a new version of this Demonstration \
+\[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/participate/upload.jsp?id=\
+MarkovVolatilityRandomWalks"], None},
+  ButtonNote->None],
+  FontColor->GrayLevel[0.6]]
+}], "Text",
+ CellFrame->{{0, 0}, {0, 0.5}},
+ CellMargins->{{48, 10}, {20, 50}},
+ CellFrameMargins->{{6, 0}, {6, 6}},
+ CellFrameColor->GrayLevel[0.6],
+ FontFamily->"Verdana",
+ FontSize->9,
+ FontColor->GrayLevel[0.6]]
+}, Open  ]]
+}, Open  ]]
+},
+Editable->True,
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{780, 650},
+WindowMargins->{{Inherited, Inherited}, {Inherited, 0}},
+WindowElements->{
+ "StatusArea", "MemoryMonitor", "MagnificationPopUp", "VerticalScrollBar", 
+  "MenuBar"},
+WindowTitle->"Markov Volatility Random Walks - Source",
+DockedCells->{},
+CellContext->Notebook,
+FrontEndVersion->"6.0 for Microsoft Windows (32-bit) (May 21, 2008)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[590, 23, 222, 4, 70, "Section"],
+Cell[815, 29, 1049, 30, 70, "Input",
+ InitializationCell->True,
+ CellID->374319913],
+Cell[1867, 61, 372, 12, 70, "Input",
+ InitializationCell->True,
+ CellID->289715471],
+Cell[2242, 75, 1219, 27, 70, "Input",
+ InitializationCell->True,
+ CellID->64003312],
+Cell[3464, 104, 1569, 44, 70, "Input",
+ InitializationCell->True,
+ CellID->427374026],
+Cell[5036, 150, 6274, 167, 70, "Input",
+ InitializationCell->True,
+ CellID->33991316],
+Cell[11313, 319, 6467, 148, 70, "Input"]
+}, Open  ]],
+Cell[17795, 470, 12805, 281, 70, "Output",
+ CellID->50017103],
+Cell[CellGroupData[{
+Cell[30625, 755, 373, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[31001, 766, 960, 28, 70, "Text"],
+Cell[31964, 796, 337, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[32304, 807, 433, 14, 70, "Text"],
+Cell[CellGroupData[{
+Cell[32762, 825, 829, 24, 70, "Text"],
+Cell[33594, 851, 1203, 33, 70, "Text"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+(* NotebookSignature OT4qtAbxpIMWABDxgtw1106@ *)

@@ -1,0 +1,455 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 6.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[     17414,        445]
+NotebookOptionsPosition[     16242,        401]
+NotebookOutlinePosition[     16870,        425]
+CellTagsIndexPosition[     16827,        422]
+WindowFrame->Normal
+ContainsDynamic->True *)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Explaining Real Estate Price Bubbles", "Section",
+ CellFrameColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108],
+ FontColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108]],
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"xdcr1", "=", 
+     RowBox[{
+      FractionBox[
+       RowBox[{"cr", " ", 
+        RowBox[{"(", 
+         RowBox[{"1", "-", 
+          FractionBox["1", 
+           SuperscriptBox[
+            RowBox[{"(", 
+             RowBox[{"1", "+", "i"}], ")"}], "360"]]}], ")"}]}], 
+       RowBox[{"12", " ", "i", " ", "ltv"}]], "-", "1"}]}], ";", 
+    RowBox[{"ParametricPlot3D", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"i", ",", "cr", ",", "xdcr1"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "cr", ",", "btcf"}], "}"}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", 
+        RowBox[{".05", "/", "12"}], ",", 
+        RowBox[{".15", "/", "12"}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"cr", ",", "0.05", ",", ".11"}], "}"}], ",", 
+      RowBox[{"PlotStyle", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"LightRed", ",", "LightBlue"}], "}"}]}], ",", 
+      RowBox[{"FaceGrids", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"0", ",", "0", ",", 
+           RowBox[{"-", "1"}]}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"-", "1"}], ",", "0", ",", "0"}], "}"}]}], "}"}]}], ",", 
+      RowBox[{"BoxRatios", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1", ",", ".8"}], "}"}]}], ",", 
+      RowBox[{"Mesh", "\[Rule]", "None"}], ",", 
+      RowBox[{"Ticks", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{".006", ",", "\"\<7.2%\>\""}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{".008", ",", "\"\<9.6%\>\""}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{".010", ",", "\"\<12%\>\""}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{".012", ",", "\"\<14.4%\>\""}], "}"}]}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{".06", ",", "\"\<6.0%\>\""}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{".08", ",", "\"\<8.0%\>\""}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{".10", ",", "\"\<10%\>\""}], "}"}]}], "}"}], ",", 
+         "Automatic"}], "}"}]}], ",", 
+      RowBox[{"AxesLabel", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+        "\"\<\\n interest rate           \\nper annum              \>\"", 
+         ",", "\"\<cap rate                                  \>\"", ",", 
+         "\"\<XDCR=BTCF    \>\""}], "}"}]}], ",", 
+      RowBox[{"PlotLabel", "\[Rule]", " ", 
+       RowBox[{"StringJoin", "[", 
+        RowBox[{"\"\<LTV = \>\"", ",", 
+         RowBox[{"ToString", "[", 
+          RowBox[{"IntegerPart", "[", 
+           RowBox[{"ltv", "*", "100"}], "]"}], "]"}], ",", "\"\<%\>\""}], 
+        "]"}]}], ",", 
+      RowBox[{"PlotRange", "\[Rule]", "All"}], ",", 
+      RowBox[{"ImageSize", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"425", ",", "425"}], "}"}]}]}], "]"}]}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"ltv", ",", ".8"}], "}"}], ",", ".3", ",", ".8"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"btcf", ",", "0"}], "}"}], ",", "0", ",", "1"}], "}"}], ",", 
+   RowBox[{"TrackedSymbols", "\[Rule]", "Manipulate"}]}], "]"}]], "Input",
+ CellChangeTimes->{
+  3.405898652867875*^9, {3.40589879485225*^9, 3.4058988046335*^9}, {
+   3.4058989060085*^9, 3.405898912836625*^9}, {3.405899274680375*^9, 
+   3.405899305946*^9}, {3.405899367617875*^9, 3.405899442321*^9}, {
+   3.405899499899125*^9, 3.40589956997725*^9}, 3.405899635180375*^9, {
+   3.405899676821*^9, 3.405899720821*^9}, {3.40589975910225*^9, 
+   3.40589976710225*^9}, {3.40589984472725*^9, 3.40589992416475*^9}, {
+   3.405899983930375*^9, 3.405900022961625*^9}, {3.405900078742875*^9, 
+   3.40590012935225*^9}, 3.40590018997725*^9, {3.405900308821*^9, 
+   3.40590032428975*^9}, {3.405900871492875*^9, 3.405900969742875*^9}, 
+   3.405901053836625*^9, 3.405901642196*^9, {3.4059017440085*^9, 
+   3.405901780071*^9}, 3.405901812242875*^9, {3.40590185478975*^9, 
+   3.405901902961625*^9}, 3.405901996336625*^9, 3.405902027321*^9, {
+   3.405902651992875*^9, 3.40590265522725*^9}, {3.405902693946*^9, 
+   3.4059027226335*^9}, {3.40590275428975*^9, 3.4059027751335*^9}, 
+   3.405902926867875*^9, {3.405902992117875*^9, 3.405903009305375*^9}, {
+   3.405903047586625*^9, 3.40590305516475*^9}, {3.405903098774125*^9, 
+   3.405903102430375*^9}, {3.405903394149125*^9, 3.405903400555375*^9}, {
+   3.40596347509375*^9, 3.405963502703125*^9}, {3.405963577109375*^9, 
+   3.405963592890625*^9}, {3.40596368665625*^9, 3.40596368884375*^9}, 
+   3.40596397815625*^9, {3.405964050453125*^9, 3.40596405353125*^9}, {
+   3.405964122015625*^9, 3.405964139171875*^9}, {3.405964174390625*^9, 
+   3.40596418*^9}, {3.405964269984375*^9, 3.40596430471875*^9}, {
+   3.405964362234375*^9, 3.405964380078125*^9}, {3.4059644303125*^9, 
+   3.405964432140625*^9}, {3.4059646169375*^9, 3.405964656546875*^9}, {
+   3.40596474378125*^9, 3.405964860140625*^9}, {3.405964940453125*^9, 
+   3.405964977140625*^9}, {3.40596502090625*^9, 3.40596502515625*^9}, {
+   3.405965121359375*^9, 3.4059651238125*^9}, {3.405970484234375*^9, 
+   3.405970494890625*^9}, {3.405970527140625*^9, 3.40597055296875*^9}, 
+   3.40597067721875*^9, {3.405970739078125*^9, 3.40597077125*^9}, 
+   3.4059709201875*^9, {3.405988506953125*^9, 3.4059885118125*^9}, {
+   3.4059885551875*^9, 3.40598855996875*^9}, 3.4059885925625*^9, 
+   3.40598903978125*^9, {3.405989499234375*^9, 3.405989562203125*^9}, {
+   3.405989632140625*^9, 3.405989664953125*^9}, {3.405989711*^9, 
+   3.4059897298125*^9}, {3.405989770359375*^9, 3.405989786875*^9}, 
+   3.405989827875*^9, {3.405989932265625*^9, 3.40598997240625*^9}, 
+   3.405990370109375*^9, 3.405990541359375*^9, 3.405990788828125*^9, {
+   3.405991269953125*^9, 3.40599127134375*^9}, {3.40599131059375*^9, 
+   3.405991311078125*^9}, 3.405991343234375*^9, {3.405991429984375*^9, 
+   3.405991481*^9}, {3.405991524234375*^9, 3.4059915525*^9}, {
+   3.40599159471875*^9, 3.405991764921875*^9}, {3.4059921628125*^9, 
+   3.405992200765625*^9}, {3.4059924204375*^9, 3.405992435109375*^9}, {
+   3.405992485203125*^9, 3.405992525984375*^9}, {3.405992578265625*^9, 
+   3.4059925844375*^9}, {3.40599286115625*^9, 3.405992890984375*^9}, 
+   3.40599293871875*^9, {3.405993005390625*^9, 3.4059930163125*^9}, {
+   3.405993075875*^9, 3.40599315228125*^9}, 3.405993216234375*^9, {
+   3.4059933391875*^9, 3.405993384953125*^9}, {3.405993421671875*^9, 
+   3.405993440328125*^9}, 3.4059935350625*^9, 3.405993585453125*^9, {
+   3.405993731125*^9, 3.405993744921875*^9}, {3.405993782015625*^9, 
+   3.40599380034375*^9}, {3.4059938551875*^9, 3.40599390803125*^9}, {
+   3.40599396125*^9, 3.40599396484375*^9}, {3.406118512421875*^9, 
+   3.406118526078125*^9}, 3.406118581296875*^9, {3.406118629375*^9, 
+   3.406118664125*^9}, {3.406118712484375*^9, 3.406118749*^9}, {
+   3.406118843515625*^9, 3.40611884403125*^9}, {3.4061189046875*^9, 
+   3.4061189623125*^9}, {3.406489598953125*^9, 3.4064896135625*^9}, {
+   3.406489675203125*^9, 3.406489693046875*^9}, {3.406489820078125*^9, 
+   3.406489844640625*^9}, {3.4064899155*^9, 3.406490067109375*^9}, {
+   3.406490249390625*^9, 3.406490311828125*^9}, {3.40649034346875*^9, 
+   3.4064903445625*^9}, 3.406490410953125*^9, 3.406490452515625*^9, 
+   3.406490530140625*^9, {3.40649316084375*^9, 3.406493185484375*^9}, {
+   3.40649374196875*^9, 3.40649375628125*^9}, {3.4065478453778257`*^9, 
+   3.4065478874403257`*^9}, {3.4065479219090757`*^9, 
+   3.4065479467684507`*^9}, {3.406584199688261*^9, 3.406584203125739*^9}, {
+   3.406939123625*^9, 3.406939137078125*^9}, {3.40693917859375*^9, 
+   3.406939185109375*^9}, {3.4069392291875*^9, 3.406939307015625*^9}, {
+   3.4069393895*^9, 3.406939400296875*^9}, {3.4069395095625*^9, 
+   3.406939656421875*^9}, {3.406939692453125*^9, 3.40693992825*^9}, {
+   3.407099851921875*^9, 3.4070998533125*^9}},
+ CellID->532358252]
+}, Open  ]],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`btcf$$ = 0, $CellContext`ltv$$ = 0.8, 
+    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`ltv$$], 0.8}, 0.3, 0.8}, {{
+       Hold[$CellContext`btcf$$], 0}, 0, 1}}, Typeset`size$$ = {
+    425., {210., 215.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`ltv$718$$ = 
+    0, $CellContext`btcf$719$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`btcf$$ = 0, $CellContext`ltv$$ = 0.8}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`ltv$$, $CellContext`ltv$718$$, 0], 
+        Hold[$CellContext`btcf$$, $CellContext`btcf$719$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`xdcr1 = $CellContext`cr ((1 - 
+            1/(1 + $CellContext`i)^360)/((
+            12 $CellContext`i) $CellContext`ltv$$)) - 1; 
+       ParametricPlot3D[{{$CellContext`i, $CellContext`cr, \
+$CellContext`xdcr1}, {$CellContext`i, $CellContext`cr, $CellContext`btcf$$}}, \
+{$CellContext`i, 0.05/12, 0.15/12}, {$CellContext`cr, 0.05, 0.11}, 
+         PlotStyle -> {LightRed, LightBlue}, 
+         FaceGrids -> {{0, 0, -1}, {-1, 0, 0}}, BoxRatios -> {1, 1, 0.8}, 
+         Mesh -> None, 
+         Ticks -> {{{0.006, "7.2%"}, {0.008, "9.6%"}, {0.01, "12%"}, {
+            0.012, "14.4%"}}, {{0.06, "6.0%"}, {0.08, "8.0%"}, {0.1, "10%"}}, 
+           Automatic}, 
+         AxesLabel -> {
+          "\n interest rate           \nper annum              ", 
+           "cap rate                                  ", "XDCR=BTCF    "}, 
+         PlotLabel -> StringJoin["LTV = ", 
+           ToString[
+            IntegerPart[$CellContext`ltv$$ 100]], "%"], PlotRange -> All, 
+         ImageSize -> {425, 425}]), 
+      "Specifications" :> {{{$CellContext`ltv$$, 0.8}, 0.3, 
+         0.8}, {{$CellContext`btcf$$, 0}, 0, 1}}, 
+      "Options" :> {TrackedSymbols -> Manipulate}, 
+      "DefaultOptions" :> {ControllerLinking -> True}],
+     ImageSizeCache->{469., {267., 272.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellID->646018866],
+
+Cell[CellGroupData[{
+
+Cell["THIS NOTEBOOK IS THE SOURCE CODE FROM", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[TextData[{
+ "\"",
+ ButtonBox["Explaining Real Estate Price Bubbles",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/ExplainingRealEstatePriceBubbles/"]\
+, None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/ExplainingRealEstatePriceBubbles/"],
+ "\"",
+ " from ",
+ ButtonBox["The Wolfram Demonstrations Project",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+ "\[ParagraphSeparator]\[NonBreakingSpace]",
+ ButtonBox["http://demonstrations.wolfram.com/\
+ExplainingRealEstatePriceBubbles/",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/ExplainingRealEstatePriceBubbles/"]\
+, None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/ExplainingRealEstatePriceBubbles/"]
+}], "Text",
+ CellMargins->{{48, Inherited}, {0, Inherited}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.5]],
+
+Cell[" ", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Contributed by: ",
+ ButtonBox["Roger J. Brown",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/author.html?author=Roger+J.+Brown"]\
+, None}]
+}], "Text",
+ CellDingbat->"\[FilledSmallSquare]",
+ CellMargins->{{66, 48}, {2, 4}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.6]],
+
+Cell[TextData[{
+ "Reproduced by permission of Academic Press from ",
+ StyleBox["Private Real Estate Investment",
+  FontSlant->"Italic"],
+ " \[Copyright]2005"
+}], "Text",
+ CellDingbat->"\[FilledSmallSquare]",
+ CellMargins->{{66, 48}, {2, 4}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.6],
+ CellID->121948345]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "A full-function Wolfram ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " 6 system is required to edit this notebook.\n",
+ StyleBox[ButtonBox["GET WOLFRAM MATHEMATICA 6 \[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://www.wolfram.com/products/mathematica/"], None},
+  ButtonNote->"http://www.wolfram.com/products/mathematica/"],
+  FontFamily->"Helvetica",
+  FontWeight->"Bold",
+  FontSlant->"Italic",
+  FontColor->RGBColor[1, 0.42, 0]]
+}], "Text",
+ CellFrame->True,
+ CellMargins->{{48, 68}, {8, 28}},
+ CellFrameMargins->12,
+ CellFrameColor->RGBColor[0.865507, 0.90634, 0.680751],
+ CellChangeTimes->{3.3750111182355957`*^9},
+ ParagraphSpacing->{1., 1.},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.411765],
+ Background->RGBColor[0.986023, 0.991363, 0.969818]],
+
+Cell[TextData[{
+ "\[Copyright] ",
+ StyleBox[ButtonBox["The Wolfram Demonstrations Project & Contributors",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Terms of Use",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/termsofuse.html"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/termsofuse.html"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Make a new version of this Demonstration \
+\[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/participate/upload.jsp?id=\
+ExplainingRealEstatePriceBubbles"], None},
+  ButtonNote->None],
+  FontColor->GrayLevel[0.6]]
+}], "Text",
+ CellFrame->{{0, 0}, {0, 0.5}},
+ CellMargins->{{48, 10}, {20, 50}},
+ CellFrameMargins->{{6, 0}, {6, 6}},
+ CellFrameColor->GrayLevel[0.6],
+ FontFamily->"Verdana",
+ FontSize->9,
+ FontColor->GrayLevel[0.6]]
+}, Open  ]]
+}, Open  ]]
+},
+Editable->True,
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{710, 650},
+WindowMargins->{{Inherited, Inherited}, {Inherited, 0}},
+WindowElements->{
+ "StatusArea", "MemoryMonitor", "MagnificationPopUp", "VerticalScrollBar", 
+  "MenuBar"},
+WindowTitle->"Explaining Real Estate Price Bubbles - Source",
+DockedCells->{},
+CellContext->Notebook,
+FrontEndVersion->"6.0 for Microsoft Windows (32-bit) (February 7, 2008)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[590, 23, 228, 4, 70, "Section"],
+Cell[821, 29, 8067, 161, 70, "Input",
+ CellID->532358252]
+}, Open  ]],
+Cell[8903, 193, 2803, 56, 70, "Output",
+ CellID->646018866],
+Cell[CellGroupData[{
+Cell[11731, 253, 373, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[12107, 264, 987, 29, 70, "Text"],
+Cell[13097, 295, 337, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[CellGroupData[{
+Cell[13459, 308, 347, 12, 70, "Text"],
+Cell[13809, 322, 328, 11, 70, "Text",
+ CellID->121948345]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[14174, 338, 829, 24, 70, "Text"],
+Cell[15006, 364, 1208, 33, 70, "Text"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+(* NotebookSignature 4QNJ8tXGLyjV@CTW6e8BYzYM *)

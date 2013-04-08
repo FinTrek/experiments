@@ -1,0 +1,2083 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 6.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[     97387,       2073]
+NotebookOptionsPosition[     95774,       2015]
+NotebookOutlinePosition[     96396,       2039]
+CellTagsIndexPosition[     96353,       2036]
+WindowFrame->Normal
+ContainsDynamic->True *)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Monte Carlo Valuation of an Option", "Section",
+ CellFrameColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108],
+ FontColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Monte", " ", "Carlo", " ", "engine", " ", "and", " ", "control", " ", 
+    "for", " ", "plots"}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"control", "[", 
+    RowBox[{
+    "nPaths_", ",", " ", "Tenor_", ",", " ", "detailFlag_", ",", "opts___"}], 
+    "]"}], " ", ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"i", ",", " ", 
+       RowBox[{"S0", " ", "=", " ", "100"}], ",", " ", 
+       RowBox[{"K", " ", "=", " ", "100"}], ",", " ", 
+       RowBox[{"r", " ", "=", " ", "0.05"}], ",", " ", 
+       RowBox[{"q", " ", "=", " ", "0"}], ",", " ", 
+       RowBox[{"\[Sigma]", " ", "=", " ", "0.2"}], ",", "T", ",", " ", "sqT", 
+       ",", " ", "ND", ",", "df", ",", "  ", "FVBlackScholes", ",", " ", 
+       "FVMC", ",", " ", "errorMC", ",", " ", "\[Epsilon]", ",", " ", "ST", 
+       ",", " ", "percentDiscrepancy", ",", " ", "summary"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"T", " ", "=", " ", 
+       RowBox[{"Tenor", "/", "52"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"FVBlackScholes", " ", "=", " ", 
+       RowBox[{"BlackScholesCall", "[", 
+        RowBox[{
+        "S0", ",", " ", "K", ",", " ", "r", ",", " ", "\[Sigma]", ",", " ", 
+         "T"}], "]"}]}], ";", " ", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"sqT", ",", " ", "df"}], "}"}], " ", "=", " ", 
+       RowBox[{"{", 
+        RowBox[{
+         SqrtBox["T"], ",", " ", 
+         RowBox[{"Exp", "[", 
+          RowBox[{
+           RowBox[{"-", "r"}], " ", "T"}], "]"}]}], "}"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"fPrice", " ", "=", " ", 
+       RowBox[{"fOption", " ", "=", " ", 
+        RowBox[{"Table", "[", 
+         RowBox[{
+          RowBox[{"-", "99"}], ",", " ", 
+          RowBox[{"{", "nPaths", "}"}]}], "]"}]}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"distND", " ", "=", " ", 
+       RowBox[{"NormalDistribution", "[", 
+        RowBox[{"0", ",", " ", "1"}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"(*", " ", 
+       RowBox[{"Monte", " ", "Carlo", " ", "simulation"}], " ", "*)"}], 
+      "\[IndentingNewLine]", 
+      RowBox[{"For", "[", 
+       RowBox[{
+        RowBox[{"i", " ", "=", " ", "1"}], ",", " ", 
+        RowBox[{"i", " ", "\[LessEqual]", " ", "nPaths"}], ",", " ", 
+        RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"\[Epsilon]", " ", "=", " ", 
+          RowBox[{"RandomReal", "[", "distND", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"(*", " ", 
+          RowBox[{
+          "propagate", " ", "price", " ", "from", " ", "0", " ", "to", " ", 
+           "T"}], " ", "*)"}], "\[IndentingNewLine]", 
+         RowBox[{"ST", " ", "=", " ", 
+          RowBox[{"S0", " ", 
+           RowBox[{"Exp", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{"r", " ", "-", " ", 
+                FractionBox[
+                 SuperscriptBox["\[Sigma]", "2"], "2"]}], ")"}], "T"}], " ", 
+             "+", " ", 
+             RowBox[{"\[Epsilon]", " ", "\[Sigma]", " ", "sqT"}]}], "]"}]}]}],
+          ";", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"fPrice", "[", 
+           RowBox[{"[", "i", "]"}], "]"}], " ", "=", " ", "ST"}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"fOption", "[", 
+           RowBox[{"[", "i", "]"}], "]"}], " ", "=", " ", 
+          RowBox[{"df", " ", 
+           RowBox[{"Max", "[", 
+            RowBox[{
+             RowBox[{"ST", " ", "-", " ", "K"}], ",", " ", "0"}], 
+            "]"}]}]}]}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"FVMC", ",", " ", "errorMC"}], "}"}], " ", "=", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"Mean", "[", "fOption", "]"}], ",", " ", 
+         RowBox[{
+          RowBox[{"StandardDeviation", "[", "fOption", "]"}], "/", 
+          SqrtBox["nPaths"]}]}], "}"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"percentDiscrepancy", " ", "=", " ", 
+       RowBox[{"100", " ", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"FVMC", " ", "-", " ", "FVBlackScholes"}], ")"}], "/", 
+         "FVBlackScholes"}]}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"summary", " ", "=", "\[IndentingNewLine]", " ", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"ToString", "[", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{"\"\<theory = $``\>\"", ",", " ", 
+            RowBox[{"NumberForm", "[", 
+             RowBox[{"FVBlackScholes", ",", " ", 
+              RowBox[{"{", 
+               RowBox[{"5", ",", "2"}], "}"}]}], "]"}]}], "]"}], "]"}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"ToString", "[", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{"\"\<MC = $`` \[PlusMinus] ``\>\"", ",", " ", 
+            RowBox[{"NumberForm", "[", 
+             RowBox[{"FVMC", ",", " ", 
+              RowBox[{"{", 
+               RowBox[{"5", ",", "2"}], "}"}]}], "]"}], ",", " ", 
+            RowBox[{"NumberForm", "[", 
+             RowBox[{"errorMC", ",", " ", 
+              RowBox[{"{", 
+               RowBox[{"5", ",", "2"}], "}"}]}], "]"}]}], "]"}], "]"}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"ToString", "[", 
+          RowBox[{"StringForm", "[", 
+           RowBox[{"\"\<diff = ``%\>\"", ",", " ", 
+            RowBox[{"NumberForm", "[", 
+             RowBox[{"percentDiscrepancy", ",", " ", 
+              RowBox[{"{", 
+               RowBox[{"5", ",", "2"}], "}"}]}], "]"}]}], "]"}], "]"}]}], 
+        "}"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"Not", "[", "detailFlag", "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"PerspectiveDisplay", "[", 
+         RowBox[{
+         "S0", ",", " ", "K", ",", " ", "r", ",", " ", "\[Sigma]", ",", " ", 
+          "T", ",", " ", "FVMC", ",", " ", "errorMC", ",", " ", "summary", 
+          ",", "opts"}], "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"DetailedDisplay", "[", 
+         RowBox[{
+         "S0", ",", " ", "K", ",", " ", "r", ",", " ", "\[Sigma]", ",", " ", 
+          "T", ",", "fPrice", ",", " ", "fOption", ",", " ", "summary", ",", 
+          "opts"}], "]"}]}], "]"}]}]}], "]"}]}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.413190446220625*^9, 3.413190582501875*^9}, {
+   3.413190617470625*^9, 3.41319071767375*^9}, {3.41319144073625*^9, 
+   3.413191476814375*^9}, {3.4131916902675*^9, 3.41319177729875*^9}, {
+   3.413191810908125*^9, 3.41319184717375*^9}, {3.413192088158125*^9, 
+   3.413192119439375*^9}, {3.41327620008*^9, 3.41327621336125*^9}, {
+   3.413276294501875*^9, 3.41327635898625*^9}, {3.41327675808*^9, 
+   3.41327684048625*^9}, {3.41327754604875*^9, 3.41327754758*^9}, {
+   3.4137085452911253`*^9, 3.4137085474317503`*^9}, {3.4137086445098753`*^9, 
+   3.4137086468692503`*^9}, {3.4137090586348753`*^9, 
+   3.4137090608848753`*^9}, {3.4137093338380003`*^9, 
+   3.4137093358223753`*^9}, {3.4137945420567503`*^9, 
+   3.4137947181817503`*^9}, {3.4137947827286253`*^9, 3.4137947849630003`*^9}, 
+   3.4137950849630003`*^9, {3.4137953067286253`*^9, 3.4137953417286253`*^9}, 
+   3.4137953802755003`*^9, {3.4137955035411253`*^9, 3.4137955059161253`*^9}, {
+   3.4137956225567503`*^9, 3.4137956237911253`*^9}, {3.4137957751973753`*^9, 
+   3.4137957818380003`*^9}, {3.4137958946192503`*^9, 
+   3.4137958985098753`*^9}, {3.4137963952442503`*^9, 
+   3.4137964183380003`*^9}, {3.414102328625*^9, 3.414102368875*^9}, {
+   3.414225236390625*^9, 3.414225257234375*^9}, 3.414225437421875*^9, {
+   3.414396971171875*^9, 3.41439697159375*^9}, 3.414482638296875*^9, {
+   3.4145173595447874`*^9, 3.4145173829508877`*^9}, {3.4349944177459974`*^9, 
+   3.4349944178400064`*^9}},
+ CellID->984939923],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Produces", " ", "plot", " ", "of", " ", "option", " ", "price", " ", "as",
+     " ", "function", " ", "of", " ", "strike", " ", "price"}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"PerspectiveDisplay", "[", 
+    RowBox[{
+    "ST_", ",", " ", "K0_", ",", " ", "r_", ",", " ", "\[Sigma]_", ",", " ", 
+     "T_", ",", "FVMC_", ",", " ", "errorMC_", ",", " ", "summary_", ",", 
+     "opts___"}], "]"}], " ", ":=", "\[IndentingNewLine]", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"min", " ", "=", " ", 
+        RowBox[{"0.6", " ", "K0"}]}], ",", " ", 
+       RowBox[{"max", " ", "=", " ", 
+        RowBox[{"1.4", " ", "K0"}]}]}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"Plot", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"Tooltip", "[", 
+          RowBox[{
+           RowBox[{"BlackScholesCall", "[", 
+            RowBox[{
+            "ST", ",", " ", "K", ",", " ", "r", ",", " ", "\[Sigma]", ",", 
+             " ", "T"}], "]"}], ",", "\"\<Black Scholes theory\>\""}], "]"}], 
+         ",", " ", 
+         RowBox[{"Tooltip", "[", 
+          RowBox[{
+           RowBox[{"Max", "[", 
+            RowBox[{
+             RowBox[{"ST", " ", "-", " ", "K"}], ",", " ", "0"}], "]"}], ",", 
+           " ", "\"\<value at expiration\>\""}], "]"}]}], "}"}], ",", " ", 
+       RowBox[{"{", 
+        RowBox[{"K", ",", " ", "min", ",", " ", "max"}], "}"}], ",", "opts", 
+       ",", " ", 
+       RowBox[{"PlotStyle", " ", "\[Rule]", " ", 
+        RowBox[{"{", 
+         RowBox[{"Black", ",", " ", 
+          RowBox[{"Directive", "[", 
+           RowBox[{"Black", ",", " ", "Thick"}], "]"}]}], "}"}]}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"AxesLabel", " ", "\[Rule]", " ", 
+        RowBox[{"{", 
+         RowBox[{"\"\<strike ($)\>\"", ",", "\"\<fair value ($)\>\""}], 
+         "}"}]}], ",", 
+       RowBox[{"Epilog", " ", "\[Rule]", " ", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"Tooltip", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"Directive", "[", 
+               RowBox[{"Red", ",", " ", "Thick"}], "]"}], ",", 
+              RowBox[{"Line", "[", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"K0", ",", " ", 
+                   RowBox[{"FVMC", " ", "-", " ", 
+                    RowBox[{"2", " ", "errorMC"}]}]}], "}"}], ",", " ", 
+                 RowBox[{"{", 
+                  RowBox[{"K0", ",", " ", 
+                   RowBox[{"FVMC", " ", "+", " ", 
+                    RowBox[{"2", " ", "errorMC"}]}]}], "}"}]}], "}"}], 
+               "]"}]}], "}"}], ",", " ", "\"\<95% confidence band\>\""}], 
+           "]"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"Inset", "[", 
+           RowBox[{
+            RowBox[{"Framed", "[", 
+             RowBox[{
+              RowBox[{"Column", "[", 
+               RowBox[{"Table", "[", 
+                RowBox[{
+                 RowBox[{"summary", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{"i", ",", " ", "1", ",", " ", 
+                   RowBox[{"Length", "[", "summary", "]"}]}], "}"}]}], "]"}], 
+               "]"}], ",", " ", 
+              RowBox[{"Background", " ", "\[Rule]", " ", 
+               RowBox[{"GrayLevel", "[", "0.99", "]"}]}]}], "]"}], ",", " ", 
+            RowBox[{"{", 
+             RowBox[{"110", ",", " ", "20"}], "}"}], ",", " ", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "1"}], ",", " ", "0"}], "}"}]}], "]"}]}], " ", 
+         "}"}]}]}], "]"}]}], "]"}]}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.413191619205*^9, 3.41319164492375*^9}, {
+   3.413191923595625*^9, 3.41319208104875*^9}, {3.41319215758*^9, 
+   3.41319220848625*^9}, {3.413192271314375*^9, 3.413192303408125*^9}, {
+   3.41327563633*^9, 3.41327569679875*^9}, {3.413275839501875*^9, 
+   3.413275846564375*^9}, {3.41327592654875*^9, 3.413275980501875*^9}, 
+   3.41327602608*^9, {3.413276064033125*^9, 3.41327609261125*^9}, {
+   3.4132761572675*^9, 3.413276178845625*^9}, {3.4132762167675*^9, 
+   3.41327622436125*^9}, {3.4137089409005003`*^9, 3.4137089645723753`*^9}, 
+   3.4137090433692503`*^9, {3.4137090913067503`*^9, 3.4137090955098753`*^9}, {
+   3.4137091837598753`*^9, 3.4137091939473753`*^9}, {3.4137955397598753`*^9, 
+   3.4137955446348753`*^9}, {3.4137955796973753`*^9, 
+   3.4137955979317503`*^9}, {3.4137956586348753`*^9, 
+   3.4137956908692503`*^9}, {3.4137957876192503`*^9, 
+   3.4137957954317503`*^9}, {3.4137958617286253`*^9, 
+   3.4137958856661253`*^9}, {3.4137959230255003`*^9, 
+   3.4137959313223753`*^9}, {3.414102300328125*^9, 3.41410232096875*^9}, {
+   3.414397000609375*^9, 3.41439700103125*^9}, {3.4145173672009883`*^9, 
+   3.414517399075784*^9}, {3.414517580043376*^9, 3.4145175817308655`*^9}, {
+   3.414517647542944*^9, 3.414517692808279*^9}, {3.4145177433860807`*^9, 
+   3.4145177467141843`*^9}, {3.414517789667034*^9, 3.4145177909170265`*^9}, {
+   3.41451783480737*^9, 3.414517835541741*^9}},
+ CellID->129434786],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Produces", " ", "plots", " ", "of", " ", "distributions", " ", "of", " ", 
+    "stock", " ", "price", " ", "and", " ", "option", " ", "value"}], " ", 
+   "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"DetailedDisplay", "[", 
+    RowBox[{
+    "S0_", ",", " ", "K0_", ",", " ", "r_", ",", " ", "\[Sigma]_", ",", " ", 
+     "T_", ",", " ", "fPrice_", ",", " ", "fOption_", ",", " ", "summary_", 
+     ",", "opts___"}], "]"}], " ", ":=", "\[IndentingNewLine]", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"min", " ", "=", " ", 
+        RowBox[{"0.6", " ", "K0"}]}], ",", " ", 
+       RowBox[{"max", " ", "=", " ", 
+        RowBox[{"1.4", " ", "K0"}]}], ",", " ", "dist", ",", " ", "LNCurve", 
+       ",", " ", "dx", ",", " ", 
+       RowBox[{"nBins", " ", "=", " ", "40"}], ",", " ", "OTMpercent", ",", 
+       "OTMlabel", ",", " ", "g1", ",", " ", "g2"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"dx", " ", "=", " ", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"max", " ", "-", " ", "min"}], ")"}], "/", "nBins"}]}], ";", 
+      " ", "\[IndentingNewLine]", 
+      RowBox[{"dist", " ", "=", " ", 
+       RowBox[{"LogNormalDistribution", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"r", " ", "-", " ", 
+            RowBox[{
+             SuperscriptBox["\[Sigma]", "2"], "/", "2"}]}], ")"}], " ", "T"}],
+          ",", " ", 
+         RowBox[{"\[Sigma]", " ", 
+          SqrtBox["T"]}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"LNCurve", " ", "=", " ", 
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"ST", ",", 
+           RowBox[{"100", " ", 
+            RowBox[{
+             RowBox[{"PDF", "[", 
+              RowBox[{"dist", ",", 
+               RowBox[{"ST", "/", "S0"}]}], "]"}], "/", "S0"}]}]}], "}"}], 
+         ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"ST", ",", " ", "min", ",", " ", "max", ",", " ", "1"}], 
+          "}"}]}], "]"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]",
+       
+      RowBox[{"g1", " ", "=", " ", 
+       RowBox[{"PlotDistribution", "[", 
+        RowBox[{"fPrice", ",", 
+         RowBox[{"{", 
+          RowBox[{"min", ",", " ", "max", ",", " ", "dx"}], "}"}], ",", 
+         "\[IndentingNewLine]", " ", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{
+           "PlotLabel", " ", "\[Rule]", " ", "\"\<price distribution\>\""}], 
+           ",", "\[IndentingNewLine]", 
+           RowBox[{"AxesLabel", " ", "\[Rule]", " ", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<\!\(\*SubscriptBox[\(S\), \(T\)]\)\>\"", ",", " ", 
+              "\"\<\>\""}], "}"}]}], ",", "\[IndentingNewLine]", 
+           RowBox[{"Epilog", " ", "\[Rule]", " ", 
+            RowBox[{"{", 
+             RowBox[{"Tooltip", "[", 
+              RowBox[{
+               RowBox[{"Line", "[", "LNCurve", "]"}], ",", 
+               "\"\<lognormal distribution\>\""}], "]"}], "}"}]}]}], "}"}]}], 
+        "]"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"OTMpercent", " ", "=", " ", 
+       RowBox[{"100.0", " ", 
+        RowBox[{
+         RowBox[{"Length", "[", 
+          RowBox[{"Select", "[", 
+           RowBox[{"fOption", ",", " ", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"#", " ", "\[LessEqual]", " ", "0"}], ")"}], "&"}]}], 
+           "]"}], "]"}], "/", 
+         RowBox[{"Length", "[", "fOption", "]"}]}]}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"OTMlabel", " ", "=", " ", 
+       RowBox[{"ToString", "[", 
+        RowBox[{"StringForm", "[", 
+         RowBox[{"\"\<OTM  ``%\>\"", ",", " ", 
+          RowBox[{"NumberForm", "[", 
+           RowBox[{"OTMpercent", ",", " ", 
+            RowBox[{"{", 
+             RowBox[{"5", ",", "1"}], "}"}]}], "]"}]}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"g2", " ", "=", " ", 
+       RowBox[{"PlotDistribution", "[", 
+        RowBox[{"fOption", ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"min", " ", "-", " ", "K0", " ", "+", "0.0001"}], ",", " ",
+            
+           RowBox[{"max", " ", "-", " ", "K0", " ", "+", " ", "0.0001"}], " ",
+            ",", " ", "dx"}], "}"}], ",", " ", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{
+           "PlotLabel", " ", "\[Rule]", " ", 
+            "\"\<option payoff distribution\>\""}], ",", 
+           RowBox[{"AxesLabel", " ", "\[Rule]", " ", 
+            RowBox[{"{", 
+             RowBox[{
+             "\"\<\!\(\*SubscriptBox[\(S\), \(T\)]\)-K\>\"", ",", " ", 
+              "\"\<%\>\""}], "}"}]}], ",", "\[IndentingNewLine]", 
+           RowBox[{"AxesOrigin", " ", "\[Rule]", " ", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"min", " ", "-", " ", "K0"}], " ", ",", " ", "0"}], 
+             "}"}]}], ",", 
+           RowBox[{"Epilog", " ", "\[Rule]", " ", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"Inset", "[", 
+               RowBox[{
+                RowBox[{"Framed", "[", 
+                 RowBox[{
+                  RowBox[{"Column", "[", 
+                   RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{"Style", "[", 
+                    RowBox[{
+                    RowBox[{"summary", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], ",", " ", "Smaller"}], 
+                    "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", " ", "1", ",", " ", 
+                    RowBox[{"Length", "[", "summary", "]"}]}], "}"}]}], "]"}],
+                    "]"}], ",", " ", 
+                  RowBox[{"Background", " ", "\[Rule]", " ", 
+                   RowBox[{"GrayLevel", "[", "0.99", "]"}]}]}], "]"}], ",", 
+                " ", 
+                RowBox[{"{", 
+                 RowBox[{"10", ",", " ", "10"}], "}"}], ",", " ", 
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"-", "1"}], ",", " ", "0"}], "}"}]}], "]"}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{"LabeledArrow", "[", 
+               RowBox[{
+                RowBox[{"Style", "[", 
+                 RowBox[{"OTMlabel", ",", " ", "Smaller"}], "]"}], ",", " ", 
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"-", "1"}], ",", " ", "15"}], "}"}], ",", " ", 
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"-", "20"}], ",", " ", "0"}], "}"}]}], "]"}]}], 
+             "}"}]}]}], "}"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"GraphicsColumn", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"g1", ",", " ", "g2"}], "}"}], ",", "opts"}], "]"}]}]}], 
+    "]"}]}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.41327639798625*^9, 3.41327642917375*^9}, 
+   3.413276476251875*^9, {3.4132765237675*^9, 3.413276600126875*^9}, {
+   3.413276635705*^9, 3.41327674058*^9}, {3.41327687336125*^9, 
+   3.41327688723625*^9}, 3.41327693858*^9, {3.413277177751875*^9, 
+   3.413277189408125*^9}, {3.413277367095625*^9, 3.413277391876875*^9}, {
+   3.413277464001875*^9, 3.413277474345625*^9}, {3.413277537783125*^9, 
+   3.4132776045175*^9}, {3.413277665470625*^9, 3.41327774029875*^9}, {
+   3.41327785336125*^9, 3.4132778725175*^9}, {3.413277954033125*^9, 
+   3.4132780041425*^9}, {3.413278128126875*^9, 3.413278141658125*^9}, {
+   3.413278229314375*^9, 3.413278233126875*^9}, {3.4132783430175*^9, 
+   3.41327839733*^9}, {3.413278473783125*^9, 3.413278474158125*^9}, {
+   3.4134571872442503`*^9, 3.4134572423848753`*^9}, {3.4134579200098753`*^9, 
+   3.4134579372130003`*^9}, {3.4134580104630003`*^9, 
+   3.4134580144317503`*^9}, {3.4134580737598753`*^9, 
+   3.4134581430567503`*^9}, {3.4135363277911253`*^9, 
+   3.4135363726817503`*^9}, {3.4135364360567503`*^9, 3.4135364418223753`*^9}, 
+   3.4135364830411253`*^9, {3.4135365982911253`*^9, 3.4135367043848753`*^9}, {
+   3.4135367554317503`*^9, 3.4135367760880003`*^9}, 3.4135368570255003`*^9, {
+   3.4135369143692503`*^9, 3.4135369372755003`*^9}, {3.4135369791973753`*^9, 
+   3.4135369844473753`*^9}, {3.4135371270098753`*^9, 
+   3.4135371373380003`*^9}, {3.4135372976817503`*^9, 
+   3.4135373731036253`*^9}, {3.4135374055723753`*^9, 
+   3.4135374800723753`*^9}, {3.4135375190567503`*^9, 
+   3.4135375530098753`*^9}, {3.4135375835255003`*^9, 
+   3.4135375863067503`*^9}, {3.4135376243067503`*^9, 
+   3.4135376244942503`*^9}, {3.4137087092911253`*^9, 3.4137087300880003`*^9}, 
+   3.4137093250567503`*^9, {3.4137095053223753`*^9, 3.4137095214473753`*^9}, {
+   3.4137095568848753`*^9, 3.4137095887598753`*^9}, {3.4137097588536253`*^9, 
+   3.4137097600567503`*^9}, {3.4137098425567503`*^9, 
+   3.4137100015880003`*^9}, {3.4137100559005003`*^9, 
+   3.4137100780255003`*^9}, {3.4137101109161253`*^9, 
+   3.4137101175880003`*^9}, {3.4137101849473753`*^9, 
+   3.4137102536505003`*^9}, {3.4137105070567503`*^9, 
+   3.4137105341661253`*^9}, {3.4137106205880003`*^9, 
+   3.4137106231661253`*^9}, {3.4137947726661253`*^9, 
+   3.4137947785880003`*^9}, {3.4137948396192503`*^9, 
+   3.4137948704630003`*^9}, {3.4137949649317503`*^9, 
+   3.4137950363848753`*^9}, {3.4137951264161253`*^9, 
+   3.4137952196036253`*^9}, {3.4137952891192503`*^9, 
+   3.4137952934317503`*^9}, {3.4137956783067503`*^9, 
+   3.4137956799786253`*^9}, {3.4137966236192503`*^9, 
+   3.4137966295411253`*^9}, {3.414102244453125*^9, 3.414102285328125*^9}, 
+   3.41422512721875*^9, 3.414225158359375*^9, {3.4143957429375*^9, 
+   3.41439574778125*^9}, {3.414397023640625*^9, 3.414397024015625*^9}, {
+   3.414397403171875*^9, 3.41439741290625*^9}, {3.414397581796875*^9, 
+   3.4143975903125*^9}, {3.4145173862164917`*^9, 3.4145174174506664`*^9}, {
+   3.414517588433947*^9, 3.414517642277353*^9}, {3.4145177023394685`*^9, 
+   3.414517703933208*^9}, {3.4145178203699627`*^9, 3.4145178529478793`*^9}, {
+   3.4145179770095854`*^9, 3.4145180221186714`*^9}},
+ CellID->49973686],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Utility", " ", "function", " ", "for", " ", "plotting", " ", "price", " ",
+     "distributions"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"PlotDistribution", "[", 
+    RowBox[{"f_", ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"xMin_", ",", " ", "xMax_", ",", " ", "dx_"}], "}"}], ",", "  ",
+      "ruleList_", ",", "opts___"}], "]"}], " ", ":=", "\[IndentingNewLine]", 
+   
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "binHeights", ",", " ", "binCenters", ",", " ", "bars", ",", " ", 
+       "norm", ",", " ", "rectangles", ",", " ", "color"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"binHeights", " ", "=", " ", 
+       RowBox[{"BinCounts", "[", 
+        RowBox[{"f", ",", 
+         RowBox[{"{", " ", 
+          RowBox[{"xMin", ",", " ", "xMax", ",", " ", "dx"}], "}"}]}], 
+        "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"binCenters", " ", "=", " ", 
+       RowBox[{"Range", "[", 
+        RowBox[{
+         RowBox[{"xMin", " ", "+", " ", 
+          FractionBox["dx", "2"]}], ",", 
+         RowBox[{"xMax", " ", "-", " ", 
+          FractionBox["dx", "2"]}], ",", " ", "dx"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"norm", " ", "=", " ", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"Plus", " ", "@@", " ", "binHeights"}], ")"}], " ", "dx"}]}],
+       ";", "\[IndentingNewLine]", 
+      RowBox[{"bars", " ", "=", " ", 
+       RowBox[{"MapThread", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"{", 
+            RowBox[{"#1", ",", 
+             RowBox[{"100", " ", 
+              RowBox[{"#2", "/", "norm"}]}], ",", " ", "dx"}], "}"}], ")"}], 
+          "&"}], ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"binCenters", ",", " ", "binHeights"}], "}"}]}], "]"}]}], 
+      ";", "\[IndentingNewLine]", 
+      RowBox[{"rectangles", " ", "=", " ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"color", " ", "=", " ", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{"#", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}], " ", "-", " ", 
+                RowBox[{
+                 RowBox[{"#", "[", 
+                  RowBox[{"[", "3", "]"}], "]"}], "/", "2"}]}], " ", "<", " ",
+                "0"}], ",", "LightRed", ",", " ", "LightBlue"}], "]"}]}], ";",
+            " ", 
+           RowBox[{"{", 
+            RowBox[{"color", ",", 
+             RowBox[{"Rectangle", "[", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"#", "[", 
+                   RowBox[{"[", "1", "]"}], "]"}], " ", "-", " ", 
+                  RowBox[{
+                   RowBox[{"#", "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "/", "2"}]}], ",", " ", 
+                 "0"}], "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"#", "[", 
+                   RowBox[{"[", "1", "]"}], "]"}], " ", "+", " ", 
+                  RowBox[{
+                   RowBox[{"#", "[", 
+                    RowBox[{"[", "3", "]"}], "]"}], "/", "2"}]}], ",", " ", 
+                 RowBox[{"#", "[", 
+                  RowBox[{"[", "2", "]"}], "]"}]}], "}"}]}], "]"}]}], "}"}]}],
+           ")"}], "&"}], " ", "/@", " ", "bars"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Graphics", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"{", 
+          RowBox[{"LightBlue", ",", " ", 
+           RowBox[{"EdgeForm", "[", "Black", "]"}], ",", " ", "rectangles"}], 
+          "}"}], "}"}], ",", "opts", ",", " ", 
+        RowBox[{"Axes", " ", "\[Rule]", " ", "Automatic"}], ",", " ", 
+        RowBox[{"AspectRatio", " ", "\[Rule]", " ", "0.5"}], ",", " ", 
+        "ruleList"}], " ", "]"}]}]}], "]"}]}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.41293170342375*^9, 3.4129317747675*^9}, {
+   3.412931818251875*^9, 3.412932024251875*^9}, 3.41293205479875*^9, {
+   3.412932085158125*^9, 3.41293211683*^9}, 3.4129323231425*^9, {
+   3.412932365876875*^9, 3.41293238654875*^9}, 3.4130178293925*^9, {
+   3.413018132033125*^9, 3.413018143345625*^9}, {3.413018251033125*^9, 
+   3.413018252189375*^9}, {3.41310273561125*^9, 3.413102914705*^9}, {
+   3.413103663220625*^9, 3.413103669751875*^9}, {3.413103760908125*^9, 
+   3.41310376467375*^9}, {3.413103872939375*^9, 3.4131038771425*^9}, {
+   3.413103924314375*^9, 3.41310392461125*^9}, 3.413104154470625*^9, {
+   3.413104197126875*^9, 3.413104228658125*^9}, {3.41310481604875*^9, 
+   3.41310483067375*^9}, {3.413104881408125*^9, 3.413105004751875*^9}, {
+   3.41310503942375*^9, 3.41310505786125*^9}, {3.41310511992375*^9, 
+   3.41310512529875*^9}, {3.41310535529875*^9, 3.413105361189375*^9}, {
+   3.413276975205*^9, 3.41327697923625*^9}, {3.413277069126875*^9, 
+   3.413277073533125*^9}, {3.413277164189375*^9, 3.413277167908125*^9}, {
+   3.413277233345625*^9, 3.4132772501425*^9}, {3.41327731842375*^9, 
+   3.41327733423625*^9}, {3.4134573827130003`*^9, 3.4134575854942503`*^9}, {
+   3.4137093061348753`*^9, 3.4137093070567503`*^9}, {3.4137966073067503`*^9, 
+   3.4137966105411253`*^9}, {3.4141021746875*^9, 3.414102208828125*^9}, {
+   3.414397039640625*^9, 3.4143970400625*^9}, {3.41439734475*^9, 
+   3.414397369296875*^9}, 3.414482676078125*^9, {3.414517432653694*^9, 
+   3.41451743799741*^9}},
+ CellID->21436022],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "Black", " ", "Scholes", " ", "formula", " ", "for", " ", "a", " ", 
+    "European", " ", "style", " ", "call", " ", "option"}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"BlackScholesCall", "[", 
+    RowBox[{
+    "S_", ",", " ", "K_", ",", " ", "r_", ",", " ", "\[Sigma]_", ",", " ", 
+     "T_"}], "]"}], " ", ":=", "\[IndentingNewLine]", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"s", ",", " ", "\[CapitalPhi]"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"d", " ", "=", " ", 
+       FractionBox[
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"Log", "[", 
+           FractionBox["S", "K"], "]"}], " ", "+", " ", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"r", " ", "+", 
+             FractionBox[
+              SuperscriptBox["\[Sigma]", "2"], "2"]}], ")"}], "T"}]}], ")"}], 
+        
+        RowBox[{"\[Sigma]", " ", 
+         SqrtBox["T"]}]]}], ";", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"\[CapitalPhi]", "[", "z_", "]"}], " ", ":=", " ", 
+       RowBox[{
+        FractionBox["1", "2"], 
+        RowBox[{"(", 
+         RowBox[{"1", " ", "+", " ", 
+          RowBox[{"Erf", "[", 
+           FractionBox["z", 
+            SqrtBox["2"]], "]"}]}], ")"}]}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"S", " ", 
+        RowBox[{"\[CapitalPhi]", "[", "d", "]"}]}], "-", " ", 
+       RowBox[{"K", " ", 
+        RowBox[{"Exp", "[", 
+         RowBox[{
+          RowBox[{"-", "r"}], " ", "T"}], "]"}], " ", 
+        RowBox[{"\[CapitalPhi]", "[", 
+         RowBox[{"d", " ", "-", " ", 
+          RowBox[{"\[Sigma]", " ", 
+           SqrtBox["T"]}]}], "]"}]}]}]}]}], "]"}], " "}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.413190851814375*^9, 3.413190945908125*^9}, {
+   3.41319097629875*^9, 3.413191047470625*^9}, {3.413191100720625*^9, 
+   3.413191243001875*^9}, {3.413191399908125*^9, 3.413191405939375*^9}, {
+   3.41410213665625*^9, 3.414102166859375*^9}, 3.414136809390625*^9},
+ CellID->116415328],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Utility", " ", "for", " ", "plotting", " ", "a", " ", "labeled", " ", 
+    "arrow"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"LabeledArrow", "[", 
+    RowBox[{"label_", ",", " ", "head_", ",", " ", "offset_"}], "]"}], " ", ":=",
+    "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tail", " ", "=", " ", 
+       RowBox[{"head", " ", "+", " ", "offset"}]}], "}"}], ",", 
+     "\[IndentingNewLine]", " ", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"Arrowheads", "[", "Small", "]"}], ",", 
+       RowBox[{"Arrow", "[", 
+        RowBox[{"{", 
+         RowBox[{"tail", ",", "head"}], "}"}], "]"}], ",", " ", 
+       RowBox[{"Inset", "[", 
+        RowBox[{
+         RowBox[{"Framed", "[", "label", "]"}], ",", " ", "tail", ",", " ", 
+         RowBox[{"Background", " ", "\[Rule]", " ", 
+          RowBox[{"GrayLevel", "[", "0.99", "]"}]}]}], "]"}]}], "}"}]}], 
+    "]"}]}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.4134722806192503`*^9, 3.4134724884161253`*^9}, {
+   3.4134728609942503`*^9, 3.4134728665255003`*^9}, {3.4134967356192503`*^9, 
+   3.4134967699161253`*^9}, {3.4134968002598753`*^9, 3.4134968009317503`*^9}, 
+   3.4135350975098753`*^9, {3.414102098578125*^9, 3.41410213125*^9}, {
+   3.414224849453125*^9, 3.414224873375*^9}, {3.4142249178125*^9, 
+   3.4142249495*^9}, {3.414224985765625*^9, 3.414225031234375*^9}, {
+   3.414225075234375*^9, 3.414225079015625*^9}, {3.4143970608125*^9, 
+   3.414397061078125*^9}, {3.4145177280580535`*^9, 3.4145177298080425`*^9}},
+ CellID->267408252],
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"control", "[", 
+    RowBox[{"nPaths", ",", " ", "Tenor", ",", " ", "detailFlag", ",", 
+     RowBox[{"ImageSize", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"500", ",", "350"}], "}"}]}]}], "]"}], ",", " ", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"detailFlag", ",", " ", "False", ",", "\"\<show detail?\>\""}], 
+      "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"True", ",", " ", "False"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"nPaths", ",", " ", "1000", ",", "  ", "\"\<paths\>\""}], "}"}],
+      ",", "1000", ",", " ", "10000", ",", " ", "1000", ",", " ", 
+     RowBox[{"Appearance", " ", "\[Rule]", " ", "\"\<Labeled\>\""}]}], "}"}], 
+   ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"Tenor", ",", " ", "12", ",", "  ", "\"\<tenor in weeks\>\""}], 
+      "}"}], ",", "1", ",", " ", "26", ",", " ", "1", ",", " ", 
+     RowBox[{"Appearance", " ", "\[Rule]", " ", "\"\<Labeled\>\""}]}], "}"}], 
+   ",", 
+   RowBox[{"SaveDefinitions", "\[Rule]", "True"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.4137961774317503`*^9, 3.4137962354317503`*^9}, {
+  3.4137963750411253`*^9, 3.4137963880723753`*^9}, {3.4137964310255003`*^9, 
+  3.4137964330723753`*^9}, {3.41439591284375*^9, 3.414395913828125*^9}, {
+  3.4144823740625*^9, 3.414482376859375*^9}, {3.4145172759515724`*^9, 
+  3.414517325420006*^9}, {3.414517448028596*^9, 3.4145174717159443`*^9}, {
+  3.414528016100945*^9, 3.4145280163045444`*^9}, {3.4349879837466617`*^9, 
+  3.434987984501737*^9}, {3.434994424506673*^9, 3.4349944245636787`*^9}},
+ CellID->159999646]
+}, Open  ]],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`detailFlag$$ = 
+    False, $CellContext`nPaths$$ = 1000, $CellContext`Tenor$$ = 12, 
+    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`detailFlag$$], False, "show detail?"}, {
+      True, False}}, {{
+       Hold[$CellContext`nPaths$$], 1000, "paths"}, 1000, 10000, 1000}, {{
+       Hold[$CellContext`Tenor$$], 12, "tenor in weeks"}, 1, 26, 1}}, 
+    Typeset`size$$ = {500., {173., 177.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    False, $CellContext`detailFlag$99621$$ = 
+    False, $CellContext`nPaths$99622$$ = 0, $CellContext`Tenor$99623$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`detailFlag$$ = 
+        False, $CellContext`nPaths$$ = 1000, $CellContext`Tenor$$ = 12}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`detailFlag$$, $CellContext`detailFlag$99621$$, 
+         False], 
+        Hold[$CellContext`nPaths$$, $CellContext`nPaths$99622$$, 0], 
+        Hold[$CellContext`Tenor$$, $CellContext`Tenor$99623$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> $CellContext`control[$CellContext`nPaths$$, \
+$CellContext`Tenor$$, $CellContext`detailFlag$$, ImageSize -> {500, 350}], 
+      "Specifications" :> {{{$CellContext`detailFlag$$, False, 
+          "show detail?"}, {
+         True, False}}, {{$CellContext`nPaths$$, 1000, "paths"}, 1000, 10000, 
+         1000, Appearance -> 
+         "Labeled"}, {{$CellContext`Tenor$$, 12, "tenor in weeks"}, 1, 26, 1, 
+         Appearance -> "Labeled"}}, "Options" :> {}, 
+      "DefaultOptions" :> {ControllerLinking -> True}],
+     ImageSizeCache->{544., {239., 244.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    Initialization:>(({$CellContext`control[
+          Pattern[$CellContext`nPaths, 
+           Blank[]], 
+          Pattern[$CellContext`Tenor, 
+           Blank[]], 
+          Pattern[$CellContext`detailFlag, 
+           Blank[]], 
+          Pattern[$CellContext`opts, 
+           BlankNullSequence[]]] := 
+        Module[{$CellContext`i, $CellContext`S0 = 100, K = 
+           100, $CellContext`r = 0.05, $CellContext`q = 
+           0, $CellContext`\[Sigma] = 
+           0.2, $CellContext`T, $CellContext`sqT, $CellContext`ND, \
+$CellContext`df, $CellContext`FVBlackScholes, $CellContext`FVMC, \
+$CellContext`errorMC, $CellContext`\[Epsilon], $CellContext`ST, \
+$CellContext`percentDiscrepancy, $CellContext`summary}, $CellContext`T = \
+$CellContext`Tenor/
+            52; $CellContext`FVBlackScholes = \
+$CellContext`BlackScholesCall[$CellContext`S0, 
+             K, $CellContext`r, $CellContext`\[Sigma], $CellContext`T]; \
+{$CellContext`sqT, $CellContext`df} = {
+             Sqrt[$CellContext`T], 
+             
+             Exp[(-$CellContext`r) $CellContext`T]}; $CellContext`fPrice = \
+($CellContext`fOption = 
+            Table[-99, {$CellContext`nPaths}]); $CellContext`distND = 
+           NormalDistribution[0, 1]; 
+          For[$CellContext`i = 1, $CellContext`i <= $CellContext`nPaths, 
+            
+            Increment[$CellContext`i], $CellContext`\[Epsilon] = 
+             RandomReal[$CellContext`distND]; $CellContext`ST = \
+$CellContext`S0 
+              Exp[($CellContext`r - $CellContext`\[Sigma]^2/
+                  2) $CellContext`T + $CellContext`\[Epsilon] $CellContext`\
+\[Sigma] $CellContext`sqT]; 
+            Part[$CellContext`fPrice, $CellContext`i] = $CellContext`ST; 
+            Part[$CellContext`fOption, $CellContext`i] = $CellContext`df 
+              Max[$CellContext`ST - K, 
+                0]]; {$CellContext`FVMC, $CellContext`errorMC} = {
+             Mean[$CellContext`fOption], 
+             StandardDeviation[$CellContext`fOption]/
+             Sqrt[$CellContext`nPaths]}; $CellContext`percentDiscrepancy = 
+           
+           100 (($CellContext`FVMC - \
+$CellContext`FVBlackScholes)/$CellContext`FVBlackScholes); \
+$CellContext`summary = {
+             ToString[
+              StringForm["theory = $``", 
+               NumberForm[$CellContext`FVBlackScholes, {5, 2}]]], 
+             ToString[
+              StringForm["MC = $`` \[PlusMinus] ``", 
+               NumberForm[$CellContext`FVMC, {5, 2}], 
+               NumberForm[$CellContext`errorMC, {5, 2}]]], 
+             ToString[
+              StringForm["diff = ``%", 
+               NumberForm[$CellContext`percentDiscrepancy, {5, 2}]]]}; If[
+            Not[$CellContext`detailFlag], 
+            $CellContext`PerspectiveDisplay[$CellContext`S0, 
+             K, $CellContext`r, $CellContext`\[Sigma], $CellContext`T, \
+$CellContext`FVMC, $CellContext`errorMC, $CellContext`summary, \
+$CellContext`opts], 
+            $CellContext`DetailedDisplay[$CellContext`S0, 
+             K, $CellContext`r, $CellContext`\[Sigma], $CellContext`T, \
+$CellContext`fPrice, $CellContext`fOption, $CellContext`summary, \
+$CellContext`opts]]], $CellContext`BlackScholesCall[
+          Pattern[$CellContext`S, 
+           Blank[]], 
+          Pattern[K, 
+           Blank[]], 
+          Pattern[$CellContext`r, 
+           Blank[]], 
+          Pattern[$CellContext`\[Sigma], 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]]] := 
+        Module[{$CellContext`s, $CellContext`\[CapitalPhi]}, $CellContext`d = \
+(Log[$CellContext`S/
+               K] + ($CellContext`r + $CellContext`\[Sigma]^2/
+                2) $CellContext`T)/($CellContext`\[Sigma] 
+            Sqrt[$CellContext`T]); $CellContext`\[CapitalPhi][
+             Pattern[$CellContext`z, 
+              Blank[]]] := (1/2) (1 + 
+             Erf[$CellContext`z/Sqrt[
+               2]]); $CellContext`S \
+$CellContext`\[CapitalPhi][$CellContext`d] - K 
+           Exp[(-$CellContext`r) $CellContext`T] \
+$CellContext`\[CapitalPhi][$CellContext`d - $CellContext`\[Sigma] 
+             Sqrt[$CellContext`T]]], $CellContext`d = -3.3339201554990003`, \
+$CellContext`fPrice = CompressedData["
+1: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
+
+         "], $CellContext`fOption = {
+         8.605046972471827, 0, 3.8721272292476, 0, 9.739567636724322, 0, 
+          13.307297294010462`, 11.080694147059083`, 0.6683159945909902, 0, 0, 
+          0, 0, 0, 17.808711840773956`, 9.854699052442871, 6.051556064498103, 
+          1.6503227494524653`, 2.223268867480413, 0, 4.510052924429002, 0, 0, 
+          0, 0, 0, 0, 7.102507954488726, 0, 0, 12.323194141911637`, 0, 0, 0, 
+          2.3267759502262555`, 0, 2.670894370803773, 0, 6.863903059542002, 
+          11.37857383129874, 0, 0, 18.67633238114712, 10.711791129459566`, 0, 
+          0, 0, 0, 33.21805867586464, 15.772443514309371`, 
+          10.930970446099579`, 10.036153506419948`, 0, 8.711512932703878, 
+          6.829346083198179, 6.975211844113125, 0, 0, 0, 0, 0, 
+          12.426863641891403`, 0, 0, 0.34317342870932904`, 19.62398282612468, 
+          9.877366143981698, 9.022384343079645, 1.5447179761032697`, 
+          0.6018477593157185, 2.1295706839289346`, 0, 13.812876337989126`, 0, 
+          10.200530716804693`, 0, 0, 0, 0, 0, 0, 0, 15.353461754157351`, 0, 0,
+           29.697284929698533`, 0, 5.903898304016604, 1.4558315310360426`, 
+          2.3945333967193925`, 19.554679537729882`, 0, 9.788853533556951, 0, 
+          0, 22.084061583304113`, 6.660323579888505, 23.948685195890555`, 0, 
+          0, 7.6149560315449225`, 0, 0, 0.8295078991989617, 0, 
+          15.082435840285173`, 0, 15.447071729952643`, 0.19042133829822144`, 
+          0, 0, 6.481415758186615, 4.799535335744923, 0, 9.30462090720059, 
+          10.907703568028893`, 0, 0, 0, 0, 14.72248257480168, 
+          14.369650406809715`, 2.2287102378044215`, 0, 0, 0, 0, 0, 
+          15.453754597475335`, 0, 0.11566659694959848`, 6.066435366814008, 
+          0.34082140439064096`, 2.5482210279794852`, 7.041566987955009, 0, 0, 
+          4.393880430673506, 0, 0, 1.6841748589272394`, 9.785482100700182, 
+          10.265889734838703`, 13.39523997706062, 6.005938757714805, 0, 
+          4.02529335069708, 0, 0, 21.411307944668653`, 0, 2.6830013745008543`,
+           10.767208128707592`, 14.779782657261576`, 5.918837968290608, 0, 0, 
+          0, 0.6803519201818645, 0.7150309273336829, 0, 0, 0, 
+          12.7207320825863, 6.1714633992047405`, 25.73335914376637, 
+          9.192504076783072, 0, 9.352947991159791, 0, 0, 5.498198991570445, 
+          14.261279836893205`, 14.043662468121191`, 0, 0, 4.177998571161222, 
+          2.86939713036893, 0, 0.5512580488756551, 0, 0, 12.710847240892635`, 
+          0, 7.0595255596350075`, 0, 4.31692087339944, 0, 6.945545954384047, 
+          12.578624185338196`, 0, 10.480013917699408`, 0, 22.390718759168134`,
+           0, 0.04334756130266054, 24.033177689326173`, 0, 0, 
+          12.354498179426342`, 14.307698524004692`, 5.175735897797443, 0, 0, 
+          0, 17.567385096569197`, 0, 0, 0, 0, 0, 0, 4.3561713129340776`, 0, 
+          5.921865875073026, 0, 1.7727126690712416`, 0, 0, 4.213149050477969, 
+          0, 0, 0, 2.1194703264923036`, 0, 0, 0, 0.4979040740668019, 
+          2.327952072380208, 4.589051592064452, 9.308575341191757, 0, 0, 0, 
+          6.843983129818486, 0, 1.4797104113026713`, 2.2237764514854237`, 
+          2.369549907524506, 0, 0, 3.5004826923309422`, 0, 0, 
+          23.582537679188345`, 0, 0, 10.667784095469296`, 7.6544184463116824`,
+           2.984708301024244, 7.63862753156061, 3.327348190601753, 0, 
+          1.680838383237875, 0, 0, 9.482507051715483, 2.2291178906648277`, 0, 
+          0, 0, 0, 8.421075032659132, 0, 1.7138288692062618`, 0, 0, 0, 0, 
+          6.790610066306696, 2.0903384101898, 10.834887586036254`, 
+          5.1715422682395324`, 3.234976841011436, 10.672164738575981`, 
+          17.52291068889706, 0, 2.38513950126053, 0, 0, 2.5921031983961793`, 
+          0, 0, 2.255217361459626, 4.130922522408946, 1.8124615445172567`, 
+          20.111293997734833`, 0, 1.9502096444317865`, 0, 0, 0, 
+          13.345047910975385`, 0, 3.755683653204336, 14.171850722640631`, 0, 
+          3.695015798894427, 7.444841813546757, 4.017545306259075, 0, 0, 
+          2.8838547515761683`, 0, 0, 10.396943686334724`, 0, 
+          6.284268628117971, 0, 10.798000935247298`, 3.0103438653587156`, 0, 
+          0, 2.6216368619671875`, 27.68384543524201, 5.774214742884413, 
+          5.800554131796668, 3.8517316702178235`, 0.0426252048300709, 
+          1.3706646092100065`, 2.584773245684412, 0, 0, 1.9374656633196758`, 
+          0, 0, 0, 0, 0, 20.914288951413837`, 9.939157710125041, 
+          1.759434336467456, 0, 0, 5.179406071209587, 0.24078236832263025`, 0,
+           0, 1.9198555932671728`, 11.274320451815784`, 2.6230057970701597`, 
+          2.0809299680342406`, 10.849878487791157`, 0, 8.768273640248923, 0, 
+          0, 0, 0.7441482677726777, 0, 0, 0, 0.4915213731088243, 
+          2.1379077288606223`, 10.895199877057385`, 0, 0, 0, 0, 
+          11.117304936616813`, 0, 4.585610989131132, 7.72902062944982, 0, 
+          0.2873939345500672, 12.117874539780594`, 0, 0.10056230017648764`, 0,
+           2.451661109520042, 0, 5.754515924469904, 8.374444526473443, 
+          3.867476361392591, 0, 11.643326082113608`, 2.919736515048838, 
+          2.834070690555587, 0, 14.379415496491522`, 0, 16.51717180746888, 
+          12.39509641911608, 0, 0, 0, 4.620045478358364, 0, 0, 0, 
+          13.16486693223849, 3.0868048005356385`, 0, 10.852198153673003`, 0, 
+          0, 0, 0, 0, 0, 0, 0, 14.069821135036788`, 0, 4.986444736367499, 
+          7.78950661544274, 5.287878602001235, 12.011090551399429`, 
+          23.678838587914115`, 7.3785573054083855`, 0, 0, 10.565928135839048`,
+           0, 8.00586591072252, 0, 13.144372346192931`, 1.5049740552764137`, 
+          2.523135731015419, 16.74226224883642, 6.761619509675109, 0, 0, 
+          3.1337135588126914`, 4.671158094202938, 5.710570463486327, 
+          17.353802861346757`, 0, 0.9894772263485206, 4.9613811480414665`, 0, 
+          16.631729259447198`, 15.317913963794545`, 3.1555602828213685`, 
+          17.517884958398454`, 0.6234279890546524, 1.8517695568613637`, 
+          3.2095489866789095`, 31.60886730107296, 0, 0, 11.840296651514235`, 
+          5.581262254859237, 0, 2.5224397991445318`, 0, 3.389006944378102, 
+          0.7854068609051919, 2.1055118718101316`, 3.2153325826413877`, 
+          8.400710116884193, 5.812813123091895, 0, 13.329218777256807`, 0, 
+          14.671843503651967`, 0, 0, 6.319299933057076, 0, 4.15955940067622, 
+          0, 9.543042312390657, 0, 0, 4.304251578691854, 7.4156855447231225`, 
+          1.2277335286419844`, 0.2487775984504242, 0, 0, 12.05712737417744, 0,
+           9.344720120319113, 0, 27.207324054924356`, 7.907043343970619, 
+          12.504777393840342`, 4.41517478632383, 3.8810580361610487`, 0, 
+          9.802763387952073, 0, 0, 1.7561050124785211`, 16.851903196111163`, 
+          0, 4.200227092351819, 0, 9.273041711647176, 10.120411606782842`, 
+          0.8038167254749294, 0, 10.093650296779836`, 0, 2.14128729433658, 
+          1.7182146644313876`, 0, 3.021873672380193, 0, 12.33318141847876, 0, 
+          12.188399084848259`, 18.017285142443967`, 1.0273490279872246`, 0, 
+          12.562393250959685`, 0, 0, 16.220996800001753`, 0, 
+          24.751473053452724`, 16.85249446545296, 0, 9.54534811430862, 
+          2.747827052219435, 0, 3.5111522254789156`, 7.325274383243493, 0, 
+          2.459366872714191, 0, 6.37774943226482, 0, 0, 3.8739994001822944`, 
+          5.897119515013926, 5.062071949185412, 3.4660639247267326`, 0, 
+          1.2653060866812025`, 2.516107230957876, 0, 16.992199679925584`, 0, 
+          0, 2.81400320749694, 21.003006358517307`, 0, 0, 4.618279532133053, 
+          2.5903959455699836`, 4.048925924605211, 0, 0, 0, 0, 
+          4.196732194665075, 3.7307098363869855`, 4.156045641670574, 0, 0, 
+          1.909725995917034, 15.081200622525705`, 0, 0, 9.861341708603735, 
+          11.65437035462163, 0, 0, 0, 4.058544725543054, 16.785190056080474`, 
+          0, 0, 0, 7.818528594777367, 0, 0, 2.74642573687578, 
+          1.2103741422291918`, 0, 0, 9.872791174529809, 0, 0.5371089022932959,
+           18.557018303533244`, 0, 8.506054944776379, 10.085815572681785`, 
+          10.789398732169616`, 0, 9.53859336308252, 18.816928465681535`, 
+          4.291062489842332, 9.258408478557119, 13.6494317460052, 
+          6.524197996975241, 0, 1.0718514778748363`, 0, 5.732925178309636, 
+          24.371339077673603`, 0, 0.8838174164479675, 0, 4.210913370162997, 0,
+           0, 0, 0, 0, 33.48485393669448, 10.700264220134507`, 
+          0.8029992123064502, 0, 2.6878939155315376`, 12.176436713228613`, 0, 
+          0, 0, 8.756090367290058, 0, 0, 12.8054338305406, 20.0449365865122, 
+          0, 0.3824361492122485, 0, 16.60346031087333, 0, 0, 
+          7.631612210663714, 1.8717382465112522`, 13.417095294926197`, 
+          11.395944753948537`, 0, 0, 2.795482381496478, 0, 
+          18.803910227630812`, 0, 0, 15.486750764743501`, 13.299735409410859`,
+           0, 0, 7.900085873271445, 1.9346988143408181`, 19.895321979192936`, 
+          4.263252476813974, 0, 8.62806605999878, 0, 28.87112548572076, 
+          25.01186389572829, 0, 0.40735459642533856`, 0, 0, 
+          1.9094761234553905`, 5.049429387404943, 9.111012547469212, 
+          36.822723556927, 7.355788202481038, 10.412747520480483`, 
+          14.40100552105304, 1.684782850562258, 11.761270081850132`, 0, 
+          8.2338263351172, 0, 0, 13.064186668196175`, 0, 3.638085381755245, 
+          2.3298750613555965`, 6.388626899888584, 28.071981955678655`, 
+          5.81753233941308, 0, 5.585798732293155, 18.229949567676673`, 
+          6.164444321871285, 9.136078982024502, 0, 3.72495449176083, 0, 0, 
+          4.314210060457837, 0, 0, 0, 14.139030356924529`, 
+          3.0074992131116933`, 1.6547567581390503`, 1.7639579903974802`, 
+          16.309150343164482`, 0, 16.51575769576312, 0.6121488511993544, 
+          8.049273460611403, 3.131557999941897, 4.960860684550783, 
+          1.072393198220084, 0, 0, 0, 4.4043687644234595`, 0, 0, 
+          1.7416769353531585`, 0, 0, 0.6247468102045456, 1.502646060470711, 
+          4.028591242121191, 0, 0, 15.435109808984928`, 18.181217828691036`, 
+          0, 0, 7.324808745682391, 10.441677919887953`, 11.915753414265952`, 
+          11.383616186867968`, 1.9587083349807612`, 0, 12.177348466375271`, 
+          18.96974518863355, 13.448610800299752`, 2.195461062697848, 0, 0, 0, 
+          0, 0.9795098830843983, 2.573972777899218, 0, 0, 6.2924329187638515`,
+           0, 0, 0.9074898556775255, 0, 0, 9.82611110614128, 0, 
+          0.9674195405592366, 0, 7.853670633295285, 1.3126887335718163`, 
+          11.0446269642141, 0, 8.648695815478739, 21.351640364702927`, 0, 
+          11.55560793669475, 0.315293376251622, 0, 5.9726739464964735`, 0, 0, 
+          0, 0, 0, 0, 10.48579620582807, 23.51243685611089, 0, 
+          11.961319579477493`, 4.220862513211493, 0, 0, 18.14285755711841, 
+          6.697028337669214, 0, 5.330503243176489, 0, 8.15779008113565, 
+          3.7608389015161916`, 4.738161117004111, 0, 0, 0, 3.009238078090397, 
+          0, 17.104458013763818`, 9.689078962792465, 1.1773979084752502`, 0, 
+          12.877555559624424`, 10.656540936513155`, 0, 0, 0, 9.43454791050446,
+           10.83469742854466, 10.470567805273696`, 0, 1.2713183049597059`, 
+          2.805236139197957, 0, 0, 5.26644958442342, 0, 0, 0, 
+          7.029723611815701, 2.0084057047790913`, 2.320591214972848, 
+          4.893187301159991, 0, 0, 3.3723840196203274`, 21.197340061994566`, 
+          3.2436102085370004`, 15.703626687536776`, 2.263495975159661, 
+          7.286737840506848, 9.604542502944012, 0, 0, 0, 0, 0, 
+          11.348562383216247`, 0, 0, 6.106169213268627, 0, 
+          26.007481810749688`, 2.623033387861438, 0.8068791500082179, 
+          6.3951360438836815`, 0, 0, 0, 0, 8.8649968859146, 
+          13.714190799742681`, 2.522491825381018, 10.421255546298132`, 
+          4.567547623099662, 0, 0, 0, 1.3667591801086114`, 2.644433914135064, 
+          19.44844619685378, 12.073617563213677`, 5.291414997827757, 
+          12.083931193823023`, 0, 0, 1.451442483050227, 0, 
+          13.067118834461096`, 0, 2.400044723523486, 0, 0, 0, 
+          9.280740972020906, 0, 18.335633508639162`, 7.099095649438722, 
+          4.0296470690806325`, 7.858559153937957, 0, 0, 0, 0, 0, 
+          19.436019512775896`, 0, 11.994902548370936`, 0, 1.8374423283527255`,
+           0, 0, 13.290978825103075`, 1.9624303344509098`, 17.64123109425533, 
+          0, 0.4330751180518859, 0, 5.839228625172971, 9.494778187891045, 
+          3.5851519325546697`, 0, 0, 0, 3.6563755768202055`, 0, 
+          19.379669838300238`, 0, 9.303383732734682, 5.762230350149483, 
+          0.17307655066348424`, 15.967216642805516`, 11.016353577461668`, 
+          18.114486118095094`, 25.032662564653144`, 4.917891657523143, 0, 
+          15.790275118410525`, 1.7979616871896744`, 4.841256712996523, 0, 
+          14.249903434437272`, 9.018529689920506, 0, 0, 14.593397339691323`, 
+          0, 10.122975614018289`, 0.03470635859655189, 6.890996195263331, 0, 
+          35.23392844740095, 0, 0, 1.1131780119319994`, 1.402610192698759, 
+          19.79246857194948, 0, 0, 0, 0, 11.274379653387296`, 0, 0, 0, 0, 
+          9.309988062648841, 0, 0, 0, 9.915486490779305, 0, 0, 
+          10.104267567331389`, 6.813060605322281, 9.574117246806983, 0, 
+          9.817139815790274, 12.488883335648893`, 0, 11.136156954232861`, 0, 
+          3.1952433524967216`, 0, 0, 0, 0, 0, 0, 0, 0, 1.961848656799521, 0, 
+          0, 0, 18.093859702236383`, 0, 0, 0, 3.8906517507060716`, 0, 
+          7.989535774090113, 0, 0, 0, 0, 12.210568282729126`, 
+          4.105199465870322, 0, 6.537344802804334, 4.237933263346383, 
+          1.1174868438374386`, 3.5055209084139487`, 2.7186303703721255`, 
+          1.079360624141982, 0.0695386609298178, 0, 6.441621045641629, 
+          4.952144625123904, 7.283288245986593, 0, 0, 0, 12.551556304663416`, 
+          0, 0, 0, 5.314201094594525, 9.43593769728826, 0, 7.202446034357704, 
+          0, 17.63668978851915, 0, 0, 0, 0, 14.306014641097573`, 0, 
+          4.874836015741676}, $CellContext`distND = 
+        NormalDistribution[0, 1], $CellContext`PerspectiveDisplay[
+          Pattern[$CellContext`ST, 
+           Blank[]], 
+          Pattern[$CellContext`K0, 
+           Blank[]], 
+          Pattern[$CellContext`r, 
+           Blank[]], 
+          Pattern[$CellContext`\[Sigma], 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]], 
+          Pattern[$CellContext`FVMC, 
+           Blank[]], 
+          Pattern[$CellContext`errorMC, 
+           Blank[]], 
+          Pattern[$CellContext`summary, 
+           Blank[]]] := 
+        Module[{$CellContext`min = 0.6 $CellContext`K0, $CellContext`max = 
+           1.4 $CellContext`K0}, 
+          Plot[{
+            Tooltip[
+             $CellContext`BlackScholesCall[$CellContext`ST, 
+              K, $CellContext`r, $CellContext`\[Sigma], $CellContext`T], 
+             Style["Black Scholes theory", Bold]], 
+            Tooltip[
+             Max[$CellContext`ST - K, 0], 
+             Style["Value at expiration", Bold]]}, {
+           K, $CellContext`min, $CellContext`max}, PlotStyle -> {Black, 
+             Directive[Black, Thick]}, AxesLabel -> {
+             Style["strike ($)", Bold], 
+             Style["Fair value ($)", Bold]}, LabelStyle -> 
+           Directive[Bold, FontFamily -> "Helvetica"], Epilog -> {
+             Tooltip[{
+               Directive[Red, Thick], 
+               
+               Line[{{$CellContext`K0, $CellContext`FVMC - 
+                  2 $CellContext`errorMC}, {$CellContext`K0, \
+$CellContext`FVMC + 2 $CellContext`errorMC}}]}, 
+              Style["95% confidence band", Bold]], 
+             Inset[
+              Framed[
+               Column[
+                Table[
+                 Style[
+                  Part[$CellContext`summary, $CellContext`i], Bold, 
+                  Smaller], {$CellContext`i, 1, 
+                  Length[$CellContext`summary]}]], Background -> 
+               GrayLevel[0.99]], {110, 20}, {-1, 
+              0}]}]], $CellContext`PerspectiveDisplay[
+          Pattern[$CellContext`ST, 
+           Blank[]], 
+          Pattern[$CellContext`K0, 
+           Blank[]], 
+          Pattern[$CellContext`r, 
+           Blank[]], 
+          Pattern[$CellContext`\[Sigma], 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]], 
+          Pattern[$CellContext`FVMC, 
+           Blank[]], 
+          Pattern[$CellContext`errorMC, 
+           Blank[]], 
+          Pattern[$CellContext`summary, 
+           Blank[]], 
+          Pattern[$CellContext`opts, 
+           BlankNullSequence[]]] := 
+        Module[{$CellContext`min = 0.6 $CellContext`K0, $CellContext`max = 
+           1.4 $CellContext`K0}, 
+          Plot[{
+            Tooltip[
+             $CellContext`BlackScholesCall[$CellContext`ST, 
+              K, $CellContext`r, $CellContext`\[Sigma], $CellContext`T], 
+             "Black Scholes theory"], 
+            Tooltip[
+             Max[$CellContext`ST - K, 0], "value at expiration"]}, {
+           K, $CellContext`min, $CellContext`max}, $CellContext`opts, 
+           PlotStyle -> {Black, 
+             Directive[Black, Thick]}, 
+           AxesLabel -> {"strike ($)", "fair value ($)"}, Epilog -> {
+             Tooltip[{
+               Directive[Red, Thick], 
+               
+               Line[{{$CellContext`K0, $CellContext`FVMC - 
+                  2 $CellContext`errorMC}, {$CellContext`K0, \
+$CellContext`FVMC + 2 $CellContext`errorMC}}]}, "95% confidence band"], 
+             Inset[
+              Framed[
+               Column[
+                Table[
+                 
+                 Part[$CellContext`summary, $CellContext`i], {$CellContext`i, 
+                  1, 
+                  Length[$CellContext`summary]}]], Background -> 
+               GrayLevel[0.99]], {110, 20}, {-1, 0}]}]], 
+        Attributes[Thick] = {ReadProtected}, $CellContext`DetailedDisplay[
+          Pattern[$CellContext`S0, 
+           Blank[]], 
+          Pattern[$CellContext`K0, 
+           Blank[]], 
+          Pattern[$CellContext`r, 
+           Blank[]], 
+          Pattern[$CellContext`\[Sigma], 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]], 
+          Pattern[$CellContext`fPrice, 
+           Blank[]], 
+          Pattern[$CellContext`fOption, 
+           Blank[]], 
+          Pattern[$CellContext`summary, 
+           Blank[]]] := 
+        Module[{$CellContext`min = 0.6 $CellContext`K0, $CellContext`max = 
+           1.4 $CellContext`K0, $CellContext`dist, $CellContext`LNCurve, \
+$CellContext`dx, $CellContext`nBins = 
+           40, $CellContext`OTMpercent, $CellContext`OTMlabel, \
+$CellContext`g1, $CellContext`g2}, $CellContext`dx = ($CellContext`max - \
+$CellContext`min)/$CellContext`nBins; $CellContext`dist = 
+           LogNormalDistribution[($CellContext`r - $CellContext`\[Sigma]^2/
+              2) $CellContext`T, $CellContext`\[Sigma] 
+             Sqrt[$CellContext`T]]; $CellContext`LNCurve = 
+           Table[{$CellContext`ST, 
+              100 (PDF[$CellContext`dist, \
+$CellContext`ST/$CellContext`S0]/$CellContext`S0)}, {$CellContext`ST, \
+$CellContext`min, $CellContext`max, 
+              1}]; $CellContext`g1 = \
+$CellContext`PlotDistribution[$CellContext`fPrice, {$CellContext`min, \
+$CellContext`max, $CellContext`dx}, {
+             PlotLabel -> Style["Price Distribution", Bold], LabelStyle -> 
+              Directive[Bold, FontFamily -> "Helvetica"], AxesLabel -> {
+                Style["\!\(\*SubscriptBox[\(S\), \(T\)]\)", Bold], 
+                Style["", Bold]}, Epilog -> {
+                Tooltip[
+                 Line[$CellContext`LNCurve], 
+                 Style[
+                 "Lognormal distribution", Bold]]}}]; $CellContext`OTMpercent = 
+           100. (Length[
+               Select[$CellContext`fOption, # <= 0& ]]/
+             Length[$CellContext`fOption]); $CellContext`OTMlabel = ToString[
+             StringForm["OTM  ``%", 
+              
+              NumberForm[$CellContext`OTMpercent, {5, 
+               1}]]]; $CellContext`g2 = \
+$CellContext`PlotDistribution[$CellContext`fOption, {$CellContext`min - \
+$CellContext`K0 + 0.0001, $CellContext`max - $CellContext`K0 + 
+              0.0001, $CellContext`dx}, {
+             PlotLabel -> Style["Option Payoff Distribution", Bold], 
+              LabelStyle -> Directive[Bold, FontFamily -> "Helvetica"], 
+              AxesLabel -> {
+                Style["\!\(\*SubscriptBox[\(S\), \(T\)]\)-K", Bold], 
+                Style["%", Bold]}, 
+              AxesOrigin -> {$CellContext`min - $CellContext`K0, 0}, 
+              Epilog -> {
+                Inset[
+                 Framed[
+                  Column[
+                   Table[
+                    Style[
+                    Part[$CellContext`summary, $CellContext`i], Bold, 
+                    Smaller], {$CellContext`i, 1, 
+                    Length[$CellContext`summary]}]], Background -> 
+                  GrayLevel[0.99]], {10, 10}, {-1, 0}], 
+                $CellContext`LabeledArrow[
+                 Style[$CellContext`OTMlabel, Bold, Smaller], {-1, 15}, {-20, 
+                 0}]}}]; 
+          GraphicsColumn[{$CellContext`g1, $CellContext`g2}]], \
+$CellContext`DetailedDisplay[
+          Pattern[$CellContext`S0, 
+           Blank[]], 
+          Pattern[$CellContext`K0, 
+           Blank[]], 
+          Pattern[$CellContext`r, 
+           Blank[]], 
+          Pattern[$CellContext`\[Sigma], 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]], 
+          Pattern[$CellContext`fPrice, 
+           Blank[]], 
+          Pattern[$CellContext`fOption, 
+           Blank[]], 
+          Pattern[$CellContext`summary, 
+           Blank[]], 
+          Pattern[$CellContext`opts, 
+           BlankNullSequence[]]] := 
+        Module[{$CellContext`min = 0.6 $CellContext`K0, $CellContext`max = 
+           1.4 $CellContext`K0, $CellContext`dist, $CellContext`LNCurve, \
+$CellContext`dx, $CellContext`nBins = 
+           40, $CellContext`OTMpercent, $CellContext`OTMlabel, \
+$CellContext`g1, $CellContext`g2}, $CellContext`dx = ($CellContext`max - \
+$CellContext`min)/$CellContext`nBins; $CellContext`dist = 
+           LogNormalDistribution[($CellContext`r - $CellContext`\[Sigma]^2/
+              2) $CellContext`T, $CellContext`\[Sigma] 
+             Sqrt[$CellContext`T]]; $CellContext`LNCurve = 
+           Table[{$CellContext`ST, 
+              100 (PDF[$CellContext`dist, \
+$CellContext`ST/$CellContext`S0]/$CellContext`S0)}, {$CellContext`ST, \
+$CellContext`min, $CellContext`max, 
+              1}]; $CellContext`g1 = \
+$CellContext`PlotDistribution[$CellContext`fPrice, {$CellContext`min, \
+$CellContext`max, $CellContext`dx}, {
+             PlotLabel -> "price distribution", 
+              AxesLabel -> {"\!\(\*SubscriptBox[\(S\), \(T\)]\)", ""}, 
+              Epilog -> {
+                Tooltip[
+                 Line[$CellContext`LNCurve], 
+                 "lognormal distribution"]}}]; $CellContext`OTMpercent = 
+           100. (Length[
+               Select[$CellContext`fOption, # <= 0& ]]/
+             Length[$CellContext`fOption]); $CellContext`OTMlabel = ToString[
+             StringForm["OTM  ``%", 
+              
+              NumberForm[$CellContext`OTMpercent, {5, 
+               1}]]]; $CellContext`g2 = \
+$CellContext`PlotDistribution[$CellContext`fOption, {$CellContext`min - \
+$CellContext`K0 + 0.0001, $CellContext`max - $CellContext`K0 + 
+              0.0001, $CellContext`dx}, {
+             PlotLabel -> "option payoff distribution", 
+              AxesLabel -> {"\!\(\*SubscriptBox[\(S\), \(T\)]\)-K", "%"}, 
+              AxesOrigin -> {$CellContext`min - $CellContext`K0, 0}, 
+              Epilog -> {
+                Inset[
+                 Framed[
+                  Column[
+                   Table[
+                    Style[
+                    Part[$CellContext`summary, $CellContext`i], 
+                    Smaller], {$CellContext`i, 1, 
+                    Length[$CellContext`summary]}]], Background -> 
+                  GrayLevel[0.99]], {10, 10}, {-1, 0}], 
+                $CellContext`LabeledArrow[
+                 Style[$CellContext`OTMlabel, Smaller], {-1, 15}, {-20, 
+                 0}]}}]; 
+          GraphicsColumn[{$CellContext`g1, $CellContext`g2}, \
+$CellContext`opts]], $CellContext`PlotDistribution[
+          Pattern[$CellContext`f, 
+           Blank[]], {
+           Pattern[$CellContext`xMin, 
+            Blank[]], 
+           Pattern[$CellContext`xMax, 
+            Blank[]], 
+           Pattern[$CellContext`dx, 
+            Blank[]]}, 
+          Pattern[$CellContext`ruleList, 
+           Blank[]]] := 
+        Module[{$CellContext`binHeights, $CellContext`binCenters, \
+$CellContext`bars, $CellContext`norm, $CellContext`rectangles, \
+$CellContext`color}, $CellContext`binHeights = 
+           BinCounts[$CellContext`f, {$CellContext`xMin, $CellContext`xMax, \
+$CellContext`dx}]; $CellContext`binCenters = 
+           Range[$CellContext`xMin + $CellContext`dx/
+              2, $CellContext`xMax - $CellContext`dx/
+             2, $CellContext`dx]; $CellContext`norm = 
+           Apply[Plus, $CellContext`binHeights] $CellContext`dx; \
+$CellContext`bars = 
+           MapThread[{#, 
+              100 (#2/$CellContext`norm), $CellContext`dx}& , \
+{$CellContext`binCenters, $CellContext`binHeights}]; $CellContext`rectangles = 
+           Map[($CellContext`color = 
+              If[Part[#, 1] - Part[#, 3]/2 < 0, LightRed, 
+                LightBlue]; {$CellContext`color, 
+               
+               Rectangle[{Part[#, 1] - Part[#, 3]/2, 0}, {
+                Part[#, 1] + Part[#, 3]/2, 
+                 Part[#, 2]}]})& , $CellContext`bars]; Graphics[{{LightBlue, 
+              EdgeForm[Black], $CellContext`rectangles}}, Axes -> Automatic, 
+            AspectRatio -> 
+            0.5, $CellContext`ruleList]], $CellContext`PlotDistribution[
+          Pattern[$CellContext`f, 
+           Blank[]], {
+           Pattern[$CellContext`xMin, 
+            Blank[]], 
+           Pattern[$CellContext`xMax, 
+            Blank[]], 
+           Pattern[$CellContext`dx, 
+            Blank[]]}, 
+          Pattern[$CellContext`ruleList, 
+           Blank[]], 
+          Pattern[$CellContext`opts, 
+           BlankNullSequence[]]] := 
+        Module[{$CellContext`binHeights, $CellContext`binCenters, \
+$CellContext`bars, $CellContext`norm, $CellContext`rectangles, \
+$CellContext`color}, $CellContext`binHeights = 
+           BinCounts[$CellContext`f, {$CellContext`xMin, $CellContext`xMax, \
+$CellContext`dx}]; $CellContext`binCenters = 
+           Range[$CellContext`xMin + $CellContext`dx/
+              2, $CellContext`xMax - $CellContext`dx/
+             2, $CellContext`dx]; $CellContext`norm = 
+           Apply[Plus, $CellContext`binHeights] $CellContext`dx; \
+$CellContext`bars = 
+           MapThread[{#, 
+              100 (#2/$CellContext`norm), $CellContext`dx}& , \
+{$CellContext`binCenters, $CellContext`binHeights}]; $CellContext`rectangles = 
+           Map[($CellContext`color = 
+              If[Part[#, 1] - Part[#, 3]/2 < 0, LightRed, 
+                LightBlue]; {$CellContext`color, 
+               Rectangle[{Part[#, 1] - Part[#, 3]/2, 0}, {
+                Part[#, 1] + Part[#, 3]/2, 
+                 Part[#, 2]}]})& , $CellContext`bars]; Graphics[{{LightBlue, 
+              EdgeForm[Black], $CellContext`rectangles}}, $CellContext`opts, 
+            Axes -> Automatic, AspectRatio -> 
+            0.5, $CellContext`ruleList]], $CellContext`LabeledArrow[
+          Pattern[$CellContext`label, 
+           Blank[]], 
+          Pattern[$CellContext`head, 
+           Blank[]], 
+          Pattern[$CellContext`offset, 
+           Blank[]]] := 
+        With[{$CellContext`tail = $CellContext`head + $CellContext`offset}, {
+           Arrowheads[Small], 
+           Arrow[{$CellContext`tail, $CellContext`head}], 
+           Inset[
+            Framed[$CellContext`label], $CellContext`tail, Background -> 
+            GrayLevel[0.99]]}]}; Typeset`initDone$$ = True); ReleaseHold[
+       HoldComplete[{$CellContext`control[
+           Pattern[$CellContext`nPaths, 
+            Blank[]], 
+           Pattern[$CellContext`Tenor, 
+            Blank[]], 
+           Pattern[$CellContext`detailFlag, 
+            Blank[]], 
+           Pattern[$CellContext`opts, 
+            BlankNullSequence[]]] := 
+         Module[{$CellContext`i, $CellContext`S0 = 100, K = 
+            100, $CellContext`r = 0.05, $CellContext`q = 
+            0, $CellContext`\[Sigma] = 
+            0.2, $CellContext`T, $CellContext`sqT, $CellContext`ND, \
+$CellContext`df, $CellContext`FVBlackScholes, $CellContext`FVMC, \
+$CellContext`errorMC, $CellContext`\[Epsilon], $CellContext`ST, \
+$CellContext`percentDiscrepancy, $CellContext`summary}, $CellContext`T = \
+$CellContext`Tenor/
+             52; $CellContext`FVBlackScholes = \
+$CellContext`BlackScholesCall[$CellContext`S0, 
+              K, $CellContext`r, $CellContext`\[Sigma], $CellContext`T]; \
+{$CellContext`sqT, $CellContext`df} = {$CellContext`T^Rational[1, 2], 
+              
+              Exp[(-$CellContext`r) $CellContext`T]}; $CellContext`fPrice = \
+($CellContext`fOption = 
+             Table[-99, {$CellContext`nPaths}]); $CellContext`distND = 
+            NormalDistribution[0, 1]; 
+           For[$CellContext`i = 1, $CellContext`i <= $CellContext`nPaths, 
+             
+             Increment[$CellContext`i], $CellContext`\[Epsilon] = 
+              RandomReal[$CellContext`distND]; $CellContext`ST = \
+$CellContext`S0 
+               Exp[($CellContext`r - $CellContext`\[Sigma]^2/
+                   2) $CellContext`T + $CellContext`\[Epsilon] $CellContext`\
+\[Sigma] $CellContext`sqT]; 
+             Part[$CellContext`fPrice, $CellContext`i] = $CellContext`ST; 
+             Part[$CellContext`fOption, $CellContext`i] = $CellContext`df 
+               Max[$CellContext`ST - K, 
+                 0]]; {$CellContext`FVMC, $CellContext`errorMC} = {
+              Mean[$CellContext`fOption], 
+              StandardDeviation[$CellContext`fOption]/$CellContext`nPaths^
+              Rational[1, 2]}; $CellContext`percentDiscrepancy = 
+            100 (($CellContext`FVMC - \
+$CellContext`FVBlackScholes)/$CellContext`FVBlackScholes); \
+$CellContext`summary = {
+              ToString[
+               StringForm["theory = $``", 
+                NumberForm[$CellContext`FVBlackScholes, {5, 2}]]], 
+              ToString[
+               StringForm["MC = $`` \[PlusMinus] ``", 
+                NumberForm[$CellContext`FVMC, {5, 2}], 
+                NumberForm[$CellContext`errorMC, {5, 2}]]], 
+              ToString[
+               StringForm["diff = ``%", 
+                NumberForm[$CellContext`percentDiscrepancy, {5, 2}]]]}; If[
+             Not[$CellContext`detailFlag], 
+             $CellContext`PerspectiveDisplay[$CellContext`S0, 
+              K, $CellContext`r, $CellContext`\[Sigma], $CellContext`T, \
+$CellContext`FVMC, $CellContext`errorMC, $CellContext`summary, \
+$CellContext`opts], 
+             $CellContext`DetailedDisplay[$CellContext`S0, 
+              K, $CellContext`r, $CellContext`\[Sigma], $CellContext`T, \
+$CellContext`fPrice, $CellContext`fOption, $CellContext`summary, \
+$CellContext`opts]]], $CellContext`PerspectiveDisplay[
+           Pattern[$CellContext`ST, 
+            Blank[]], 
+           Pattern[$CellContext`K0, 
+            Blank[]], 
+           Pattern[$CellContext`r, 
+            Blank[]], 
+           Pattern[$CellContext`\[Sigma], 
+            Blank[]], 
+           Pattern[$CellContext`T, 
+            Blank[]], 
+           Pattern[$CellContext`FVMC, 
+            Blank[]], 
+           Pattern[$CellContext`errorMC, 
+            Blank[]], 
+           Pattern[$CellContext`summary, 
+            Blank[]], 
+           Pattern[$CellContext`opts, 
+            BlankNullSequence[]]] := 
+         Module[{$CellContext`min = 0.6 $CellContext`K0, $CellContext`max = 
+            1.4 $CellContext`K0}, 
+           Plot[{
+             Tooltip[
+              $CellContext`BlackScholesCall[$CellContext`ST, 
+               K, $CellContext`r, $CellContext`\[Sigma], $CellContext`T], 
+              "Black Scholes theory"], 
+             Tooltip[
+              Max[$CellContext`ST - K, 0], "value at expiration"]}, {
+            K, $CellContext`min, $CellContext`max}, $CellContext`opts, 
+            PlotStyle -> {Black, 
+              Directive[Black, Thick]}, 
+            AxesLabel -> {"strike ($)", "fair value ($)"}, Epilog -> {
+              Tooltip[{
+                Directive[Red, Thick], 
+                
+                Line[{{$CellContext`K0, $CellContext`FVMC - 
+                   2 $CellContext`errorMC}, {$CellContext`K0, \
+$CellContext`FVMC + 2 $CellContext`errorMC}}]}, "95% confidence band"], 
+              Inset[
+               Framed[
+                Column[
+                 Table[
+                  
+                  Part[$CellContext`summary, $CellContext`i], {$CellContext`i,
+                    1, 
+                   Length[$CellContext`summary]}]], Background -> 
+                GrayLevel[0.99]], {110, 20}, {-1, 
+               0}]}]], $CellContext`DetailedDisplay[
+           Pattern[$CellContext`S0, 
+            Blank[]], 
+           Pattern[$CellContext`K0, 
+            Blank[]], 
+           Pattern[$CellContext`r, 
+            Blank[]], 
+           Pattern[$CellContext`\[Sigma], 
+            Blank[]], 
+           Pattern[$CellContext`T, 
+            Blank[]], 
+           Pattern[$CellContext`fPrice, 
+            Blank[]], 
+           Pattern[$CellContext`fOption, 
+            Blank[]], 
+           Pattern[$CellContext`summary, 
+            Blank[]], 
+           Pattern[$CellContext`opts, 
+            BlankNullSequence[]]] := 
+         Module[{$CellContext`min = 0.6 $CellContext`K0, $CellContext`max = 
+            1.4 $CellContext`K0, $CellContext`dist, $CellContext`LNCurve, \
+$CellContext`dx, $CellContext`nBins = 
+            40, $CellContext`OTMpercent, $CellContext`OTMlabel, \
+$CellContext`g1, $CellContext`g2}, $CellContext`dx = ($CellContext`max - \
+$CellContext`min)/$CellContext`nBins; $CellContext`dist = 
+            LogNormalDistribution[($CellContext`r - $CellContext`\[Sigma]^2/
+               2) $CellContext`T, $CellContext`\[Sigma] $CellContext`T^
+               Rational[1, 2]]; $CellContext`LNCurve = 
+            Table[{$CellContext`ST, 
+               100 (PDF[$CellContext`dist, \
+$CellContext`ST/$CellContext`S0]/$CellContext`S0)}, {$CellContext`ST, \
+$CellContext`min, $CellContext`max, 
+               1}]; $CellContext`g1 = \
+$CellContext`PlotDistribution[$CellContext`fPrice, {$CellContext`min, \
+$CellContext`max, $CellContext`dx}, {
+              PlotLabel -> "price distribution", 
+               AxesLabel -> {"\!\(\*SubscriptBox[\(S\), \(T\)]\)", ""}, 
+               Epilog -> {
+                 Tooltip[
+                  Line[$CellContext`LNCurve], 
+                  "lognormal distribution"]}}]; $CellContext`OTMpercent = 
+            100. (Length[
+                Select[$CellContext`fOption, # <= 0& ]]/
+              Length[$CellContext`fOption]); $CellContext`OTMlabel = 
+            ToString[
+              StringForm["OTM  ``%", 
+               
+               NumberForm[$CellContext`OTMpercent, {5, 
+                1}]]]; $CellContext`g2 = \
+$CellContext`PlotDistribution[$CellContext`fOption, {$CellContext`min - \
+$CellContext`K0 + 0.0001, $CellContext`max - $CellContext`K0 + 
+               0.0001, $CellContext`dx}, {
+              PlotLabel -> "option payoff distribution", 
+               AxesLabel -> {"\!\(\*SubscriptBox[\(S\), \(T\)]\)-K", "%"}, 
+               AxesOrigin -> {$CellContext`min - $CellContext`K0, 0}, 
+               Epilog -> {
+                 Inset[
+                  Framed[
+                   Column[
+                    Table[
+                    Style[
+                    Part[$CellContext`summary, $CellContext`i], 
+                    Smaller], {$CellContext`i, 1, 
+                    Length[$CellContext`summary]}]], Background -> 
+                   GrayLevel[0.99]], {10, 10}, {-1, 0}], 
+                 $CellContext`LabeledArrow[
+                  Style[$CellContext`OTMlabel, Smaller], {-1, 15}, {-20, 
+                  0}]}}]; 
+           GraphicsColumn[{$CellContext`g1, $CellContext`g2}, \
+$CellContext`opts]], $CellContext`PlotDistribution[
+           Pattern[$CellContext`f, 
+            Blank[]], {
+            Pattern[$CellContext`xMin, 
+             Blank[]], 
+            Pattern[$CellContext`xMax, 
+             Blank[]], 
+            Pattern[$CellContext`dx, 
+             Blank[]]}, 
+           Pattern[$CellContext`ruleList, 
+            Blank[]], 
+           Pattern[$CellContext`opts, 
+            BlankNullSequence[]]] := 
+         Module[{$CellContext`binHeights, $CellContext`binCenters, \
+$CellContext`bars, $CellContext`norm, $CellContext`rectangles, \
+$CellContext`color}, $CellContext`binHeights = 
+            BinCounts[$CellContext`f, {$CellContext`xMin, $CellContext`xMax, \
+$CellContext`dx}]; $CellContext`binCenters = 
+            Range[$CellContext`xMin + $CellContext`dx/
+               2, $CellContext`xMax - $CellContext`dx/
+              2, $CellContext`dx]; $CellContext`norm = 
+            Apply[Plus, $CellContext`binHeights] $CellContext`dx; \
+$CellContext`bars = 
+            MapThread[{#, 
+               100 (#2/$CellContext`norm), $CellContext`dx}& , \
+{$CellContext`binCenters, $CellContext`binHeights}]; $CellContext`rectangles = 
+            Map[($CellContext`color = 
+               If[Part[#, 1] - Part[#, 3]/2 < 0, LightRed, 
+                 LightBlue]; {$CellContext`color, 
+                
+                Rectangle[{Part[#, 1] - Part[#, 3]/2, 0}, {
+                 Part[#, 1] + Part[#, 3]/2, 
+                  Part[#, 2]}]})& , $CellContext`bars]; 
+           Graphics[{{LightBlue, 
+               EdgeForm[Black], $CellContext`rectangles}}, $CellContext`opts, 
+             Axes -> Automatic, AspectRatio -> 
+             0.5, $CellContext`ruleList]], $CellContext`BlackScholesCall[
+           Pattern[$CellContext`S, 
+            Blank[]], 
+           Pattern[K, 
+            Blank[]], 
+           Pattern[$CellContext`r, 
+            Blank[]], 
+           Pattern[$CellContext`\[Sigma], 
+            Blank[]], 
+           Pattern[$CellContext`T, 
+            Blank[]]] := 
+         Module[{$CellContext`s, $CellContext`\[CapitalPhi]}, $CellContext`d = \
+(Log[$CellContext`S/
+                K] + ($CellContext`r + $CellContext`\[Sigma]^2/
+                 2) $CellContext`T)/($CellContext`\[Sigma] $CellContext`T^
+              Rational[1, 2]); $CellContext`\[CapitalPhi][
+              Pattern[$CellContext`z, 
+               Blank[]]] := (1/2) (1 + 
+              Erf[$CellContext`z/2^
+                Rational[
+                 1, 2]]); $CellContext`S \
+$CellContext`\[CapitalPhi][$CellContext`d] - K 
+            Exp[(-$CellContext`r) $CellContext`T] \
+$CellContext`\[CapitalPhi][$CellContext`d - $CellContext`\[Sigma] \
+$CellContext`T^Rational[1, 2]]], $CellContext`LabeledArrow[
+           Pattern[$CellContext`label, 
+            Blank[]], 
+           Pattern[$CellContext`head, 
+            Blank[]], 
+           Pattern[$CellContext`offset, 
+            Blank[]]] := 
+         With[{$CellContext`tail = $CellContext`head + $CellContext`offset}, {
+           
+            Arrowheads[Small], 
+            Arrow[{$CellContext`tail, $CellContext`head}], 
+            Inset[
+             Framed[$CellContext`label], $CellContext`tail, Background -> 
+             GrayLevel[0.99]]}]}]]; Typeset`initDone$$ = True),
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellID->365890465],
+
+Cell[CellGroupData[{
+
+Cell["THIS NOTEBOOK IS THE SOURCE CODE FROM", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[TextData[{
+ "\"",
+ ButtonBox["Monte Carlo Valuation of an Option",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/MonteCarloValuationOfAnOption/"], 
+    None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/MonteCarloValuationOfAnOption/"],
+ "\"",
+ " from ",
+ ButtonBox["The Wolfram Demonstrations Project",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+ "\[ParagraphSeparator]\[NonBreakingSpace]",
+ ButtonBox["http://demonstrations.wolfram.com/MonteCarloValuationOfAnOption/",
+  
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/MonteCarloValuationOfAnOption/"], 
+    None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/MonteCarloValuationOfAnOption/"]
+}], "Text",
+ CellMargins->{{48, Inherited}, {0, Inherited}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.5]],
+
+Cell[" ", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[TextData[{
+ "Contributed by: ",
+ ButtonBox["N. T. Gladd",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/author.html?author=N.+T.+Gladd"], 
+    None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/author.html?author=N.+T.+Gladd"]
+}], "Text",
+ CellDingbat->"\[FilledSmallSquare]",
+ CellMargins->{{66, 48}, {2, 4}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.6]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "A full-function Wolfram ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " 6 system is required to edit this notebook.\n",
+ StyleBox[ButtonBox["GET WOLFRAM MATHEMATICA 6 \[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://www.wolfram.com/products/mathematica/"], None},
+  ButtonNote->"http://www.wolfram.com/products/mathematica/"],
+  FontFamily->"Helvetica",
+  FontWeight->"Bold",
+  FontSlant->"Italic",
+  FontColor->RGBColor[1, 0.42, 0]]
+}], "Text",
+ CellFrame->True,
+ CellMargins->{{48, 68}, {8, 28}},
+ CellFrameMargins->12,
+ CellFrameColor->RGBColor[0.865507, 0.90634, 0.680751],
+ CellChangeTimes->{3.3750111182355957`*^9},
+ ParagraphSpacing->{1., 1.},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.411765],
+ Background->RGBColor[0.986023, 0.991363, 0.969818]],
+
+Cell[TextData[{
+ "\[Copyright] ",
+ StyleBox[ButtonBox["The Wolfram Demonstrations Project & Contributors",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Terms of Use",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/termsofuse.html"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/termsofuse.html"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Make a new version of this Demonstration \
+\[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/participate/upload.jsp?id=\
+MonteCarloValuationOfAnOption"], None},
+  ButtonNote->None],
+  FontColor->GrayLevel[0.6]]
+}], "Text",
+ CellFrame->{{0, 0}, {0, 0.5}},
+ CellMargins->{{48, 10}, {20, 50}},
+ CellFrameMargins->{{6, 0}, {6, 6}},
+ CellFrameColor->GrayLevel[0.6],
+ FontFamily->"Verdana",
+ FontSize->9,
+ FontColor->GrayLevel[0.6]]
+}, Open  ]]
+}, Open  ]]
+},
+Editable->True,
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{710, 650},
+WindowMargins->{{Inherited, Inherited}, {Inherited, 0}},
+WindowElements->{
+ "StatusArea", "MemoryMonitor", "MagnificationPopUp", "VerticalScrollBar", 
+  "MenuBar"},
+WindowTitle->"Monte Carlo Valuation of an Option - Source",
+DockedCells->{},
+CellContext->Notebook,
+FrontEndVersion->"6.0 for Microsoft Windows (32-bit) (May 21, 2008)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[590, 23, 226, 4, 70, "Section"],
+Cell[819, 29, 7907, 174, 70, "Input",
+ InitializationCell->True,
+ CellID->984939923],
+Cell[8729, 205, 5225, 116, 70, "Input",
+ InitializationCell->True,
+ CellID->129434786],
+Cell[13957, 323, 10067, 219, 70, "Input",
+ InitializationCell->True,
+ CellID->49973686],
+Cell[24027, 544, 5579, 128, 70, "Input",
+ InitializationCell->True,
+ CellID->21436022],
+Cell[29609, 674, 2117, 57, 70, "Input",
+ InitializationCell->True,
+ CellID->116415328],
+Cell[31729, 733, 1644, 37, 70, "Input",
+ InitializationCell->True,
+ CellID->267408252],
+Cell[33376, 772, 1727, 38, 70, "Input",
+ CellID->159999646]
+}, Open  ]],
+Cell[35118, 813, 56415, 1064, 70, "Output",
+ CellID->365890465],
+Cell[CellGroupData[{
+Cell[91558, 1881, 373, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[91934, 1892, 977, 29, 70, "Text"],
+Cell[92914, 1923, 337, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[93254, 1934, 430, 14, 70, "Text"],
+Cell[CellGroupData[{
+Cell[93709, 1952, 829, 24, 70, "Text"],
+Cell[94541, 1978, 1205, 33, 70, "Text"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+(* NotebookSignature xTNRUumA3GlFbDpxg5c3k@yP *)

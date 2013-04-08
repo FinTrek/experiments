@@ -1,0 +1,1798 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 6.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[     74735,       1788]
+NotebookOptionsPosition[     73387,       1739]
+NotebookOutlinePosition[     74005,       1763]
+CellTagsIndexPosition[     73962,       1760]
+WindowFrame->Normal
+ContainsDynamic->True *)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["American Call and Put Option ", "Section",
+ CellFrameColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108],
+ FontColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"AmericanOptionBinomialTree", "[", 
+   RowBox[{
+   "S0_", ",", "n_", ",", "\[Sigma]_", ",", "T_", ",", "Rf_", ",", "div_", 
+    ",", "exercise_Function", ",", "opts___"}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"u", "=", 
+       RowBox[{"N", "[", 
+        RowBox[{"Exp", "[", 
+         RowBox[{
+          RowBox[{"Sqrt", "[", 
+           RowBox[{"T", "/", "n"}], "]"}], " ", "\[Sigma]"}], "]"}], "]"}]}], 
+      ",", "d", ",", 
+      RowBox[{"r", "=", 
+       RowBox[{"N", "[", 
+        RowBox[{"Exp", "[", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"Rf", "-", "div"}], ")"}], " ", 
+          RowBox[{"T", "/", "n"}]}], "]"}], "]"}]}], ",", 
+      RowBox[{"disc", "=", 
+       RowBox[{"N", "[", 
+        RowBox[{"Exp", "[", 
+         RowBox[{
+          RowBox[{"-", "Rf"}], " ", 
+          RowBox[{"T", "/", "n"}]}], "]"}], "]"}]}], ",", "vert", ",", "m", 
+      ",", "exers", ",", "AdjFun", ",", "VertNumber", ",", "Successors", ",", 
+      "Predecessors", ",", "Adjoints", ",", "AdjLists", ",", "stocklabels", 
+      ",", "options", ",", "optionvalues", ",", "optionlabels", ",", 
+      RowBox[{"vect1", "=", 
+       RowBox[{"N", "[", 
+        RowBox[{"{", 
+         RowBox[{"0.5", ",", 
+          RowBox[{
+           RowBox[{"Sqrt", "[", "3", "]"}], "/", "2"}]}], "}"}], "]"}]}], ",",
+       
+      RowBox[{"vect2", "=", 
+       RowBox[{"N", "[", 
+        RowBox[{"{", 
+         RowBox[{"0.5", ",", 
+          RowBox[{
+           RowBox[{"-", 
+            RowBox[{"Sqrt", "[", "3", "]"}]}], "/", "2"}]}], "}"}], "]"}]}], 
+      ",", "p", ",", "q", ",", "fx", ",", "initial"}], "}"}], ",", 
+    RowBox[{
+     RowBox[{"d", "=", 
+      RowBox[{"1", "/", "u"}]}], ";", 
+     RowBox[{"p", "=", 
+      RowBox[{"N", "[", 
+       FractionBox[
+        RowBox[{"disc", "*", 
+         RowBox[{"(", 
+          RowBox[{"r", "-", "d"}], ")"}]}], 
+        RowBox[{"(", 
+         RowBox[{"u", "-", "d"}], ")"}]], "]"}]}], ";", 
+     RowBox[{"q", "=", 
+      RowBox[{"N", "[", 
+       RowBox[{"disc", "-", "p"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"vert", "[", "level_", "]"}], ":=", 
+      RowBox[{"Flatten", "[", 
+       RowBox[{
+        RowBox[{"Table", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"k", " ", "vect2"}], "+", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"i", "-", "k"}], ")"}], " ", "vect1"}]}], ",", 
+          RowBox[{"{", 
+           RowBox[{"i", ",", "0", ",", "level"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"k", ",", "0", ",", "i"}], "}"}]}], "]"}], ",", "1"}], 
+       "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"m", "=", 
+      RowBox[{"Length", "[", 
+       RowBox[{"vert", "[", "n", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"VertNumber", "[", 
+       RowBox[{"node_", ",", "level_"}], "]"}], ":=", 
+      RowBox[{
+       RowBox[{"level", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"level", "+", "1"}], ")"}], "/", "2"}]}], "+", "node", "+", 
+       "1"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Successors", "[", 
+        RowBox[{"node_", ",", "level_"}], "]"}], "/;", 
+       RowBox[{"level", "<", "n"}]}], ":=", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"VertNumber", "[", 
+         RowBox[{"node", ",", 
+          RowBox[{"level", "+", "1"}]}], "]"}], ",", 
+        RowBox[{"VertNumber", "[", 
+         RowBox[{
+          RowBox[{"node", "+", "1"}], ",", 
+          RowBox[{"level", "+", "1"}]}], "]"}]}], "}"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"Successors", "[", 
+       RowBox[{"node_", ",", "n"}], "]"}], ":=", 
+      RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Predecessors", "[", 
+        RowBox[{"node_", ",", "level_"}], "]"}], "/;", 
+       RowBox[{"0", "<", "node", "<", "level"}]}], ":=", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"VertNumber", "[", 
+         RowBox[{
+          RowBox[{"node", "-", "1"}], ",", 
+          RowBox[{"level", "-", "1"}]}], "]"}], ",", 
+        RowBox[{"VertNumber", "[", 
+         RowBox[{"node", ",", 
+          RowBox[{"level", "-", "1"}]}], "]"}]}], "}"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Predecessors", "[", 
+        RowBox[{"0", ",", "level_"}], "]"}], "/;", 
+       RowBox[{"level", ">", "0"}]}], ":=", 
+      RowBox[{"{", 
+       RowBox[{"VertNumber", "[", 
+        RowBox[{"0", ",", 
+         RowBox[{"level", "-", "1"}]}], "]"}], "}"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Predecessors", "[", 
+        RowBox[{"level_", ",", "level_"}], "]"}], "/;", 
+       RowBox[{"level", ">", "0"}]}], ":=", 
+      RowBox[{"{", 
+       RowBox[{"VertNumber", "[", 
+        RowBox[{
+         RowBox[{"level", "-", "1"}], ",", 
+         RowBox[{"level", "-", "1"}]}], "]"}], "}"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"Predecessors", "[", 
+       RowBox[{"0", ",", "0"}], "]"}], "=", 
+      RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Adjoints", "[", 
+        RowBox[{"node_", ",", "level_"}], "]"}], "/;", 
+       RowBox[{"level", "<", "n"}]}], ":=", 
+      RowBox[{"Join", "[", 
+       RowBox[{
+        RowBox[{"Predecessors", "[", 
+         RowBox[{"node", ",", "level"}], "]"}], ",", 
+        RowBox[{"Successors", "[", 
+         RowBox[{"node", ",", "level"}], "]"}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"Adjoints", "[", 
+       RowBox[{"node_", ",", "n"}], "]"}], ":=", 
+      RowBox[{"Predecessors", "[", 
+       RowBox[{"node", ",", "n"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"AdjLists", "=", 
+      RowBox[{"Flatten", "[", 
+       RowBox[{
+        RowBox[{"Append", "[", 
+         RowBox[{
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{"Adjoints", "[", 
+             RowBox[{"node", ",", "level"}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"level", ",", "0", ",", 
+              RowBox[{"n", "-", "1"}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"node", ",", "0", ",", "level"}], "}"}]}], "]"}], ",", 
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{"Predecessors", "[", 
+             RowBox[{"node", ",", "n"}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"node", ",", "0", ",", "n"}], "}"}]}], "]"}]}], "]"}], 
+        ",", "1"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"AdjFun", "[", 
+        RowBox[{"i_", ",", "j_"}], "]"}], "/;", 
+       RowBox[{"i", "\[LessEqual]", "j"}]}], ":=", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"MemberQ", "[", 
+         RowBox[{
+          RowBox[{"AdjLists", "[", 
+           RowBox[{"[", "i", "]"}], "]"}], ",", "j"}], "]"}], ",", "1", ",", 
+        "0"}], "]"}]}], ";", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"AdjFun", "[", 
+        RowBox[{"i_", ",", "j_"}], "]"}], "/;", 
+       RowBox[{"i", ">", "j"}]}], ":=", 
+      RowBox[{"AdjFun", "[", 
+       RowBox[{"j", ",", "i"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"initial", "=", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"exercise", "[", 
+         RowBox[{"S0", " ", 
+          RowBox[{"d", "^", "node"}], " ", 
+          RowBox[{"u", "^", 
+           RowBox[{"(", 
+            RowBox[{"n", "-", "node"}], ")"}]}]}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"node", ",", "0", ",", "n"}], "}"}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"options", "=", 
+      RowBox[{"Reverse", "[", 
+       RowBox[{"NestList", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Max", "/@", 
+           RowBox[{"Transpose", "[", " ", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"Table", "[", 
+               RowBox[{
+                RowBox[{"exercise", "[", 
+                 RowBox[{"S0", " ", 
+                  RowBox[{"d", "^", "r"}], " ", 
+                  RowBox[{"u", "^", 
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"Length", "[", "#", "]"}], "-", "2", "-", "r"}], 
+                    ")"}]}]}], "]"}], ",", 
+                RowBox[{"{", 
+                 RowBox[{"r", ",", "0", ",", 
+                  RowBox[{
+                   RowBox[{"Length", "[", "#", "]"}], "-", "2"}]}], "}"}]}], 
+               "]"}], ",", " ", 
+              RowBox[{
+               RowBox[{"p", "*", 
+                RowBox[{"Drop", "[", 
+                 RowBox[{"#", ",", 
+                  RowBox[{"-", "1"}]}], "]"}]}], " ", "+", " ", 
+               RowBox[{"q", "*", 
+                RowBox[{"Drop", "[", 
+                 RowBox[{
+                  RowBox[{"RotateLeft", "[", "#", "]"}], ",", " ", 
+                  RowBox[{"-", "1"}]}], "]"}]}]}]}], "}"}], "]"}]}], "&"}], 
+         ",", "initial", ",", 
+         RowBox[{
+          RowBox[{"Length", "[", "initial", "]"}], "-", "1"}]}], "]"}], 
+       "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"fx", "[", 
+        RowBox[{"node_", ",", "level_"}], "]"}], "/;", 
+       RowBox[{
+        RowBox[{"level", "<", "n"}], "&&", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"p", ",", "q"}], "}"}], ".", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"options", "[", 
+             RowBox[{"[", 
+              RowBox[{
+               RowBox[{"level", "+", "2"}], ",", 
+               RowBox[{"node", "+", "1"}]}], "]"}], "]"}], ",", 
+            RowBox[{"options", "[", 
+             RowBox[{"[", 
+              RowBox[{
+               RowBox[{"level", "+", "2"}], ",", 
+               RowBox[{"node", "+", "2"}]}], "]"}], "]"}]}], "}"}]}], "<", 
+         RowBox[{"exercise", "[", 
+          RowBox[{"S0", " ", 
+           RowBox[{"d", "^", "node"}], " ", 
+           RowBox[{"u", "^", 
+            RowBox[{"(", 
+             RowBox[{"level", "-", "node"}], ")"}]}]}], "]"}]}]}]}], ":=", 
+      RowBox[{"VertNumber", "[", 
+       RowBox[{"node", ",", "level"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"fx", "[", 
+        RowBox[{"node_", ",", "n"}], "]"}], "/;", 
+       RowBox[{
+        RowBox[{"options", "[", 
+         RowBox[{"[", 
+          RowBox[{
+           RowBox[{"n", "+", "1"}], ",", 
+           RowBox[{"node", "+", "1"}]}], "]"}], "]"}], ">", "0"}]}], ":=", 
+      RowBox[{"VertNumber", "[", 
+       RowBox[{"node", ",", "n"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"fx", "[", 
+       RowBox[{"node_", ",", "level_"}], "]"}], ":=", 
+      RowBox[{"Sequence", "[", "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"exers", "=", 
+      RowBox[{"Flatten", "[", 
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{"fx", "[", 
+          RowBox[{"i", ",", "k"}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"k", ",", "0", ",", "n"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"i", ",", "0", ",", "k"}], "}"}]}], "]"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"optionlabels", "=", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"NumberForm", "[", 
+         RowBox[{"#", ",", "4"}], "]"}], "&"}], "/@", 
+       RowBox[{"Flatten", "[", "options", "]"}]}]}], ";", 
+     RowBox[{"stocklabels", "=", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"NumberForm", "[", 
+         RowBox[{"#", ",", "4"}], "]"}], "&"}], "/@", 
+       RowBox[{"Flatten", "[", 
+        RowBox[{"Table", "[", 
+         RowBox[{
+          RowBox[{"S0", " ", 
+           RowBox[{"d", "^", "i"}], " ", 
+           RowBox[{"u", "^", 
+            RowBox[{"(", 
+             RowBox[{"k", "-", "i"}], ")"}]}]}], ",", 
+          RowBox[{"{", 
+           RowBox[{"k", ",", "0", ",", "n"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"i", ",", "0", ",", "k"}], "}"}]}], "]"}], "]"}]}]}], ";", 
+     
+     RowBox[{
+      RowBox[{"GraphPlot", "[", 
+       RowBox[{
+        RowBox[{"Table", "[", 
+         RowBox[{
+          RowBox[{"AdjFun", "[", 
+           RowBox[{"i", ",", "j"}], "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"j", ",", "1", ",", 
+            RowBox[{"Length", "[", 
+             RowBox[{"vert", "[", "n", "]"}], "]"}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"i", ",", "1", ",", 
+            RowBox[{"Length", "[", 
+             RowBox[{"vert", "[", "n", "]"}], "]"}]}], "}"}]}], "]"}], ",", 
+        "opts", ",", 
+        RowBox[{"VertexCoordinateRules", "->", 
+         RowBox[{"MapThread", "[", 
+          RowBox[{"Rule", ",", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"Range", "[", 
+              RowBox[{"Length", "[", 
+               RowBox[{"vert", "[", "n", "]"}], "]"}], "]"}], ",", 
+             RowBox[{"vert", "[", "n", "]"}]}], "}"}]}], "]"}]}], ",", 
+        RowBox[{"EdgeRenderingFunction", "\[Rule]", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"OrderedQ", "[", "#2", "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"Arrowheads", "[", "0.03", "]"}], ",", 
+               RowBox[{"Arrow", "[", 
+                RowBox[{"#1", ",", "0.2"}], "]"}]}], "}"}], ",", 
+             RowBox[{"Line", "[", "#1", "]"}]}], "]"}], "&"}], ")"}]}], ",", 
+        RowBox[{"AspectRatio", "\[Rule]", "1"}]}], "]"}], "/.", 
+      RowBox[{
+       RowBox[{"Tooltip", "[", 
+        RowBox[{
+         RowBox[{"Point", "[", "i_", "]"}], ",", "i_"}], "]"}], 
+       "\[RuleDelayed]", 
+       RowBox[{"Tooltip", "[", 
+        RowBox[{
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"MemberQ", "[", 
+            RowBox[{"exers", ",", "i"}], "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"Red", ",", 
+             RowBox[{"Text", "[", 
+              RowBox[{
+               RowBox[{"stocklabels", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], ",", "i"}], "]"}]}], "}"}], 
+           ",", 
+           RowBox[{"{", 
+            RowBox[{"Black", ",", 
+             RowBox[{"Text", "[", 
+              RowBox[{
+               RowBox[{"stocklabels", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], ",", "i"}], "]"}]}], "}"}]}], 
+          "]"}], ",", 
+         RowBox[{"optionlabels", "[", 
+          RowBox[{"[", "i", "]"}], "]"}]}], "]"}]}]}]}]}], "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.423240820082388*^9, 3.4232408280841885`*^9}},
+ CellID->1070568967],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"CompiledAmer", "=", 
+   RowBox[{"Compile", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"initial", ",", "_Real", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"p", ",", "_Real", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"q", ",", "_Real", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"S", ",", "_Real", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"u", ",", "_Real", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"d", ",", "_Real", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"K", ",", "_Real", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"l", ",", "_Integer"}], "}"}]}], "}"}], ",", 
+     RowBox[{"Last", "[", 
+      RowBox[{"Nest", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Max", "/@", 
+          RowBox[{"Transpose", "[", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"Table", "[", 
+              RowBox[{
+               RowBox[{"Max", "[", 
+                RowBox[{
+                 RowBox[{"l", "*", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"S", " ", 
+                    SuperscriptBox["d", "r"], " ", 
+                    SuperscriptBox["u", 
+                    RowBox[{
+                    RowBox[{"Length", "[", "#1", "]"}], "-", "2", "-", 
+                    "r"}]]}], "-", "K"}], ")"}]}], ",", "0"}], "]"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"r", ",", "0", ",", 
+                 RowBox[{
+                  RowBox[{"Length", "[", "#1", "]"}], "-", "2"}]}], "}"}]}], 
+              "]"}], ",", 
+             RowBox[{
+              RowBox[{"p", " ", 
+               RowBox[{"Drop", "[", 
+                RowBox[{"#1", ",", 
+                 RowBox[{"-", "1"}]}], "]"}]}], "+", 
+              RowBox[{"q", " ", 
+               RowBox[{"Drop", "[", 
+                RowBox[{
+                 RowBox[{"RotateLeft", "[", "#1", "]"}], ",", 
+                 RowBox[{"-", "1"}]}], "]"}]}]}]}], "}"}], "]"}]}], "&"}], 
+        ",", "initial", ",", 
+        RowBox[{
+         RowBox[{"Length", "[", "initial", "]"}], "-", "1"}]}], "]"}], 
+      "]"}]}], "]"}]}], ";"}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.402704082129197*^9, 3.40270411850776*^9}, {
+  3.402709369271147*^9, 3.4027093697753077`*^9}, {3.423240686748056*^9, 
+  3.4232406915945406`*^9}},
+ CellID->394393666],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"AmericanOption", "[", 
+   RowBox[{
+   "S0_", ",", "n_", ",", "\[Sigma]_", ",", "T_", ",", "Rf_", ",", "div_", 
+    ",", "K_", ",", 
+    RowBox[{"l_Integer:", "1"}]}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"initial", ",", 
+      RowBox[{"u", "=", 
+       RowBox[{"N", "[", 
+        RowBox[{"Exp", "[", 
+         RowBox[{
+          RowBox[{"Sqrt", "[", 
+           RowBox[{"T", "/", "n"}], "]"}], " ", "\[Sigma]"}], "]"}], "]"}]}], 
+      ",", "d", ",", 
+      RowBox[{"r", "=", 
+       RowBox[{"N", "[", 
+        RowBox[{"Exp", "[", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"Rf", "-", "div"}], ")"}], " ", 
+          RowBox[{"T", "/", "n"}]}], "]"}], "]"}]}], ",", 
+      RowBox[{"disc", "=", 
+       RowBox[{"N", "[", 
+        RowBox[{"Exp", "[", 
+         RowBox[{
+          RowBox[{"-", "Rf"}], " ", 
+          RowBox[{"T", "/", "n"}]}], "]"}], "]"}]}], ",", "p", ",", "q"}], 
+     "}"}], ",", 
+    RowBox[{
+     RowBox[{"d", "=", 
+      RowBox[{"1", "/", "u"}]}], ";", 
+     RowBox[{"p", "=", 
+      RowBox[{"N", "[", 
+       FractionBox[
+        RowBox[{"disc", "*", 
+         RowBox[{"(", 
+          RowBox[{"r", "-", "d"}], ")"}]}], 
+        RowBox[{"(", 
+         RowBox[{"u", "-", "d"}], ")"}]], "]"}]}], ";", 
+     RowBox[{"q", "=", 
+      RowBox[{"N", "[", 
+       RowBox[{"disc", "-", "p"}], "]"}]}], ";", 
+     RowBox[{"initial", "=", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"Max", "[", 
+         RowBox[{
+          RowBox[{"l", "*", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"S0", " ", 
+              SuperscriptBox["d", "node"], " ", 
+              SuperscriptBox["u", 
+               RowBox[{"n", "-", "node"}]]}], "-", "K"}], ")"}]}], ",", "0"}],
+          "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"node", ",", "0", ",", "n"}], "}"}]}], "]"}]}], ";", 
+     RowBox[{"CompiledAmer", "[", 
+      RowBox[{
+      "initial", ",", "p", ",", "q", ",", "S0", ",", "u", ",", "d", ",", "K", 
+       ",", "l"}], "]"}]}]}], "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{
+  3.400707109614994*^9, {3.40084422235492*^9, 3.4008442474777718`*^9}, {
+   3.400879442832326*^9, 3.400879446771593*^9}, {3.400879493894478*^9, 
+   3.400879513775433*^9}, {3.4008795760688066`*^9, 3.400879775110127*^9}, {
+   3.400883017910861*^9, 3.40088309504456*^9}, 3.400883127559951*^9, {
+   3.4008852517449007`*^9, 3.4008852559318523`*^9}, {3.400885441701253*^9, 
+   3.400885495408593*^9}, {3.40088566810496*^9, 3.400885701186129*^9}, {
+   3.4008862828019733`*^9, 3.4008862834412003`*^9}, {3.400886653411665*^9, 
+   3.400886655774364*^9}, {3.4008878963436832`*^9, 3.4008879121427193`*^9}, {
+   3.400907491223155*^9, 3.400907491783216*^9}, 3.400907523233192*^9, {
+   3.400907555916069*^9, 3.400907678507544*^9}, {3.400907820453515*^9, 
+   3.400907834959799*^9}, 3.400926089612267*^9, {3.401922679244318*^9, 
+   3.4019226851108303`*^9}, {3.4019527963205147`*^9, 3.4019528537155247`*^9}, 
+   3.4019552607242603`*^9, {3.401955343818321*^9, 3.4019553797091*^9}, {
+   3.4019554161977167`*^9, 3.401955421848569*^9}, {3.401955937617318*^9, 
+   3.401955960602091*^9}, {3.40195599587011*^9, 3.401956034088707*^9}, 
+   3.40195648810209*^9, {3.402018380147666*^9, 3.402018428404739*^9}, {
+   3.402018506937591*^9, 3.402018553523735*^9}, {3.402027608014401*^9, 
+   3.402027649799427*^9}, {3.402027708496026*^9, 3.402027714365272*^9}, {
+   3.4020277948617287`*^9, 3.402027847084341*^9}, 3.402027880850729*^9, {
+   3.402094454748893*^9, 3.4020944569486*^9}, {3.402094532638064*^9, 
+   3.40209453629456*^9}, {3.402096652987773*^9, 3.402096653353657*^9}, {
+   3.402110200364478*^9, 3.402110204102487*^9}, 3.402110251134338*^9, {
+   3.402111153188002*^9, 3.402111157188079*^9}, 3.402112030947485*^9, {
+   3.402116634392441*^9, 3.4021166453803253`*^9}, {3.402175867352893*^9, 
+   3.402175915025031*^9}, {3.40217594745363*^9, 3.402175993947947*^9}, {
+   3.40217613681113*^9, 3.4021761704140463`*^9}, {3.4021762594235077`*^9, 
+   3.4021763374462442`*^9}, {3.4021763962438183`*^9, 3.402176405941578*^9}, {
+   3.4021765037353067`*^9, 3.402176578243463*^9}, 3.402176680522299*^9, {
+   3.402255614781336*^9, 3.402255630894232*^9}, 3.402441454615613*^9, {
+   3.402526712087875*^9, 3.402526739362276*^9}, {3.402528143381838*^9, 
+   3.402528146793325*^9}, {3.402708812782482*^9, 3.4027090474916353`*^9}, {
+   3.4027091837131147`*^9, 3.4027092250680656`*^9}, 3.402709312612626*^9},
+ CellID->1439809820],
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"Grid", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Function", "[", 
+       RowBox[{"l", ",", 
+        RowBox[{"Column", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"AmericanOptionBinomialTree", "[", 
+            RowBox[{
+            "price", ",", "steps", ",", "volatility", ",", "time", ",", 
+             "riskfree", ",", "dividend", ",", 
+             RowBox[{
+              RowBox[{"Max", "[", 
+               RowBox[{
+                RowBox[{"l", "*", 
+                 RowBox[{"(", 
+                  RowBox[{"#", "-", "strike"}], ")"}]}], ",", "0"}], "]"}], 
+              "&"}], ",", 
+             RowBox[{"ImageSize", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"300", ",", "300"}], "}"}]}]}], "]"}], ",", 
+           RowBox[{"Text", "@", 
+            RowBox[{"Row", "[", 
+             RowBox[{"{", 
+              RowBox[{"\"\<accurate option price: \>\"", ",", 
+               RowBox[{"NumberForm", "[", 
+                RowBox[{
+                 RowBox[{"AmericanOption", "[", 
+                  RowBox[{
+                  "price", ",", "100", ",", "volatility", ",", "time", ",", 
+                   "riskfree", ",", "dividend", ",", "strike", ",", "l"}], 
+                  "]"}], ",", "3"}], "]"}]}], "}"}], "]"}]}]}], "}"}], 
+         "]"}]}], "]"}], "/@", "\[Lambda]"}], "}"}], "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\[Lambda]", ",", 
+       RowBox[{"{", "1", "}"}], ",", "\"\<\>\""}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"{", "1", "}"}], "\[Rule]", "\"\<call option\>\""}], ",", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"-", "1"}], "}"}], "\[Rule]", "\"\<put option\>\""}]}], 
+      "}"}], ",", 
+     RowBox[{"ControlPlacement", "\[Rule]", "Top"}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"price", ",", "50", ",", "\"\<price of stock\>\""}], "}"}], ",",
+      "10", ",", "100", ",", ".01", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Tiny"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"strike", ",", "50", ",", "\"\<option strike price\>\""}], 
+      "}"}], ",", "10", ",", "100", ",", ".1", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Tiny"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"time", ",", "0.5", ",", "\"\<time to expiry\>\""}], "}"}], ",",
+      "0.01", ",", "1", ",", ".01", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Tiny"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"dividend", ",", "0", ",", "\"\<continuous dividend rate\>\""}],
+       "}"}], ",", "0", ",", "1", ",", ".01", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Tiny"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"volatility", ",", "0.4", ",", "\"\<volatility of stock\>\""}], 
+      "}"}], ",", "0.001", ",", "0.99", ",", ".001", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Tiny"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "riskfree", ",", "0.1", ",", "\"\<risk-free interest rate\>\""}], "}"}],
+      ",", "0", ",", "1", ",", ".01", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Tiny"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"steps", ",", "3", ",", "\"\<number of steps\>\""}], "}"}], ",",
+      "1", ",", "10", ",", "1", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Tiny"}]}], "}"}], ",", 
+   RowBox[{"SaveDefinitions", "\[Rule]", "True"}], ",", 
+   RowBox[{"ControlPlacement", "\[Rule]", "Left"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.4025437903236217`*^9, 3.4025438192638083`*^9}, {
+   3.402543864358502*^9, 3.402543874538433*^9}, 3.4025444946700563`*^9, {
+   3.402544528222896*^9, 3.402544579187405*^9}, {3.4025447105928097`*^9, 
+   3.402544712010256*^9}, {3.402568177731789*^9, 3.4025682983198757`*^9}, {
+   3.402568339491783*^9, 3.4025683531824827`*^9}, {3.40256838968717*^9, 
+   3.4025683957535553`*^9}, {3.402568446701346*^9, 3.402568454814452*^9}, {
+   3.402568559355071*^9, 3.40256856246717*^9}, {3.402710500873255*^9, 
+   3.402710505342379*^9}, {3.4027105726085663`*^9, 3.40271059241063*^9}, {
+   3.402710634219204*^9, 3.4027106670593987`*^9}, {3.402710710776807*^9, 
+   3.402710820218055*^9}, {3.402710887098115*^9, 3.402710892349786*^9}, 
+   3.4027110022910023`*^9, {3.4027110433147697`*^9, 3.402711113302343*^9}, {
+   3.402711809645903*^9, 3.402711822024342*^9}, {3.40271189344092*^9, 
+   3.4027118951933537`*^9}, {3.402715470324024*^9, 3.402715495495269*^9}, {
+   3.4027155441862307`*^9, 3.402715550555975*^9}, {3.402715699986071*^9, 
+   3.402715719144779*^9}, 3.402799190778412*^9, {3.420968409646287*^9, 
+   3.420968428410841*^9}, {3.4209684792039337`*^9, 3.420968507623048*^9}, {
+   3.4211257498591347`*^9, 3.421126075116507*^9}, 3.421126509139331*^9, 
+   3.421141608151828*^9, {3.421401020233583*^9, 3.421401068931065*^9}, {
+   3.42293633178697*^9, 3.422936452238061*^9}, {3.423240709507332*^9, 
+   3.4232407928516655`*^9}, {3.4232408352489047`*^9, 
+   3.4232408622906084`*^9}, {3.4232410953529124`*^9, 
+   3.4232411136437416`*^9}, {3.423355325791025*^9, 3.4233553939958963`*^9}, {
+   3.423608223796908*^9, 3.423608232853758*^9}, 3.424380728315857*^9, {
+   3.4246132687848797`*^9, 3.4246132689708986`*^9}},
+ CellID->1037910344]
+}, Open  ]],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`dividend$$ = 0, $CellContext`price$$ = 
+    50, $CellContext`riskfree$$ = 0.1, $CellContext`steps$$ = 
+    3, $CellContext`strike$$ = 50, $CellContext`time$$ = 
+    0.5, $CellContext`volatility$$ = 0.4, $CellContext`\[Lambda]$$ = {1}, 
+    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`\[Lambda]$$], {1}, ""}, {{1} -> "call option", {-1} -> 
+       "put option"}}, {{
+       Hold[$CellContext`price$$], 50, "price of stock"}, 10, 100, 0.01}, {{
+       Hold[$CellContext`strike$$], 50, "option strike price"}, 10, 100, 
+      0.1}, {{
+       Hold[$CellContext`time$$], 0.5, "time to expiry"}, 0.01, 1, 0.01}, {{
+       Hold[$CellContext`dividend$$], 0, "continuous dividend rate"}, 0, 1, 
+      0.01}, {{
+       Hold[$CellContext`volatility$$], 0.4, "volatility of stock"}, 0.001, 
+      0.99, 0.001}, {{
+       Hold[$CellContext`riskfree$$], 0.1, "risk-free interest rate"}, 0, 1, 
+      0.01}, {{
+       Hold[$CellContext`steps$$], 3, "number of steps"}, 1, 10, 1}}, 
+    Typeset`size$$ = {300., {158., 163.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    False, $CellContext`\[Lambda]$451465$$ = 
+    False, $CellContext`price$451466$$ = 0, $CellContext`strike$451467$$ = 
+    0, $CellContext`time$451468$$ = 0, $CellContext`dividend$451469$$ = 
+    0, $CellContext`volatility$451470$$ = 0, $CellContext`riskfree$451471$$ = 
+    0, $CellContext`steps$451472$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`dividend$$ = 0, $CellContext`price$$ = 
+        50, $CellContext`riskfree$$ = 0.1, $CellContext`steps$$ = 
+        3, $CellContext`strike$$ = 50, $CellContext`time$$ = 
+        0.5, $CellContext`volatility$$ = 0.4, $CellContext`\[Lambda]$$ = {1}},
+       "ControllerVariables" :> {
+        Hold[$CellContext`\[Lambda]$$, $CellContext`\[Lambda]$451465$$, 
+         False], 
+        Hold[$CellContext`price$$, $CellContext`price$451466$$, 0], 
+        Hold[$CellContext`strike$$, $CellContext`strike$451467$$, 0], 
+        Hold[$CellContext`time$$, $CellContext`time$451468$$, 0], 
+        Hold[$CellContext`dividend$$, $CellContext`dividend$451469$$, 0], 
+        Hold[$CellContext`volatility$$, $CellContext`volatility$451470$$, 0], 
+        
+        Hold[$CellContext`riskfree$$, $CellContext`riskfree$451471$$, 0], 
+        Hold[$CellContext`steps$$, $CellContext`steps$451472$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> Grid[{
+         Map[
+          Function[$CellContext`l$, 
+           Column[{
+             $CellContext`AmericanOptionBinomialTree[$CellContext`price$$, \
+$CellContext`steps$$, $CellContext`volatility$$, $CellContext`time$$, \
+$CellContext`riskfree$$, $CellContext`dividend$$, 
+              Max[$CellContext`l$ (# - $CellContext`strike$$), 0]& , 
+              ImageSize -> {300, 300}], 
+             Text[
+              Row[{"accurate option price: ", 
+                NumberForm[
+                 $CellContext`AmericanOption[$CellContext`price$$, 
+                  100, $CellContext`volatility$$, $CellContext`time$$, \
+$CellContext`riskfree$$, $CellContext`dividend$$, $CellContext`strike$$, \
+$CellContext`l$], 3]}]]}]], $CellContext`\[Lambda]$$]}], 
+      "Specifications" :> {{{$CellContext`\[Lambda]$$, {1}, ""}, {{1} -> 
+          "call option", {-1} -> "put option"}, ControlPlacement -> 
+         Top}, {{$CellContext`price$$, 50, "price of stock"}, 10, 100, 0.01, 
+         Appearance -> "Labeled", ImageSize -> 
+         Tiny}, {{$CellContext`strike$$, 50, "option strike price"}, 10, 100, 
+         0.1, Appearance -> "Labeled", ImageSize -> 
+         Tiny}, {{$CellContext`time$$, 0.5, "time to expiry"}, 0.01, 1, 0.01, 
+         Appearance -> "Labeled", ImageSize -> 
+         Tiny}, {{$CellContext`dividend$$, 0, "continuous dividend rate"}, 0, 
+         1, 0.01, Appearance -> "Labeled", ImageSize -> 
+         Tiny}, {{$CellContext`volatility$$, 0.4, "volatility of stock"}, 
+         0.001, 0.99, 0.001, Appearance -> "Labeled", ImageSize -> 
+         Tiny}, {{$CellContext`riskfree$$, 0.1, "risk-free interest rate"}, 0,
+          1, 0.01, Appearance -> "Labeled", ImageSize -> 
+         Tiny}, {{$CellContext`steps$$, 3, "number of steps"}, 1, 10, 1, 
+         Appearance -> "Labeled", ImageSize -> Tiny}}, 
+      "Options" :> {ControlPlacement -> Left}, 
+      "DefaultOptions" :> {ControllerLinking -> True}],
+     ImageSizeCache->{583., {200., 205.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    Initialization:>(({$CellContext`AmericanOptionBinomialTree[
+          Pattern[$CellContext`S0, 
+           Blank[]], 
+          Pattern[$CellContext`n, 
+           Blank[]], 
+          Pattern[$CellContext`\[Sigma], 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]], 
+          Pattern[$CellContext`Rf, 
+           Blank[]], 
+          Pattern[$CellContext`div, 
+           Blank[]], 
+          Pattern[$CellContext`exercise, 
+           Blank[Function]]] := Module[{$CellContext`u = N[
+             Exp[
+             Sqrt[$CellContext`T/$CellContext`n] $CellContext`\[Sigma]]], \
+$CellContext`d, $CellContext`r = N[
+             
+             Exp[($CellContext`Rf - $CellContext`div) \
+($CellContext`T/$CellContext`n)]], $CellContext`disc = N[
+             
+             Exp[(-$CellContext`Rf) ($CellContext`T/$CellContext`n)]], \
+$CellContext`vert, $CellContext`m, $CellContext`exers, $CellContext`AdjFun, \
+$CellContext`VertNumber, $CellContext`Successors, $CellContext`Predecessors, \
+$CellContext`Adjoints, $CellContext`AdjLists, $CellContext`stocklabels, \
+$CellContext`options, $CellContext`optionvalues, $CellContext`optionlabels, \
+$CellContext`vect1 = N[{0.5, Sqrt[3]/2}], $CellContext`vect2 = 
+           N[{0.5, -(Sqrt[3]/
+               2)}], $CellContext`p, $CellContext`q, $CellContext`fx, \
+$CellContext`initial}, $CellContext`d = 1/$CellContext`u; $CellContext`p = 
+           N[($CellContext`disc ($CellContext`r - \
+$CellContext`d))/($CellContext`u - $CellContext`d)]; $CellContext`q = 
+           N[$CellContext`disc - $CellContext`p]; $CellContext`vert[
+             Pattern[$CellContext`level, 
+              Blank[]]] := Flatten[
+             
+             Table[$CellContext`k $CellContext`vect2 + ($CellContext`i - \
+$CellContext`k) $CellContext`vect1, {$CellContext`i, 
+               0, $CellContext`level}, {$CellContext`k, 0, $CellContext`i}], 
+             1]; $CellContext`m = Length[
+             $CellContext`vert[$CellContext`n]]; $CellContext`VertNumber[
+             Pattern[$CellContext`node, 
+              Blank[]], 
+             Pattern[$CellContext`level, 
+              Blank[]]] := $CellContext`level (($CellContext`level + 1)/
+              2) + $CellContext`node + 1; Condition[
+             $CellContext`Successors[
+              Pattern[$CellContext`node, 
+               Blank[]], 
+              Pattern[$CellContext`level, 
+               Blank[]]], $CellContext`level < $CellContext`n] := {
+             $CellContext`VertNumber[$CellContext`node, $CellContext`level + 
+              1], 
+             $CellContext`VertNumber[$CellContext`node + 
+              1, $CellContext`level + 1]}; $CellContext`Successors[
+             Pattern[$CellContext`node, 
+              Blank[]], $CellContext`n] := {}; Condition[
+             $CellContext`Predecessors[
+              Pattern[$CellContext`node, 
+               Blank[]], 
+              Pattern[$CellContext`level, 
+               Blank[]]], 0 < $CellContext`node < $CellContext`level] := {
+             $CellContext`VertNumber[$CellContext`node - 
+              1, $CellContext`level - 1], 
+             $CellContext`VertNumber[$CellContext`node, $CellContext`level - 
+              1]}; Condition[
+             $CellContext`Predecessors[0, 
+              Pattern[$CellContext`level, 
+               Blank[]]], $CellContext`level > 0] := {
+             $CellContext`VertNumber[0, $CellContext`level - 1]}; Condition[
+             $CellContext`Predecessors[
+              Pattern[$CellContext`level, 
+               Blank[]], 
+              Pattern[$CellContext`level, 
+               Blank[]]], $CellContext`level > 0] := {
+             $CellContext`VertNumber[$CellContext`level - 
+              1, $CellContext`level - 1]}; $CellContext`Predecessors[
+            0, 0] = {}; Condition[
+             $CellContext`Adjoints[
+              Pattern[$CellContext`node, 
+               Blank[]], 
+              Pattern[$CellContext`level, 
+               Blank[]]], $CellContext`level < $CellContext`n] := Join[
+             $CellContext`Predecessors[$CellContext`node, \
+$CellContext`level], 
+             $CellContext`Successors[$CellContext`node, $CellContext`level]]; \
+$CellContext`Adjoints[
+             Pattern[$CellContext`node, 
+              
+              Blank[]], $CellContext`n] := \
+$CellContext`Predecessors[$CellContext`node, $CellContext`n]; \
+$CellContext`AdjLists = Flatten[
+             Append[
+              Table[
+               $CellContext`Adjoints[$CellContext`node, $CellContext`level], \
+{$CellContext`level, 0, $CellContext`n - 1}, {$CellContext`node, 
+                0, $CellContext`level}], 
+              Table[
+               $CellContext`Predecessors[$CellContext`node, $CellContext`n], \
+{$CellContext`node, 0, $CellContext`n}]], 1]; Condition[
+             $CellContext`AdjFun[
+              Pattern[$CellContext`i, 
+               Blank[]], 
+              Pattern[$CellContext`j, 
+               Blank[]]], $CellContext`i <= $CellContext`j] := If[
+             MemberQ[
+              Part[$CellContext`AdjLists, $CellContext`i], $CellContext`j], 1,
+              0]; Condition[
+             $CellContext`AdjFun[
+              Pattern[$CellContext`i, 
+               Blank[]], 
+              Pattern[$CellContext`j, 
+               
+               Blank[]]], $CellContext`i > $CellContext`j] := \
+$CellContext`AdjFun[$CellContext`j, $CellContext`i]; $CellContext`initial = 
+           Table[
+             $CellContext`exercise[($CellContext`S0 \
+$CellContext`d^$CellContext`node) $CellContext`u^($CellContext`n - \
+$CellContext`node)], {$CellContext`node, 
+              0, $CellContext`n}]; $CellContext`options = Reverse[
+             NestList[Map[Max, 
+               Transpose[{
+                 Table[
+                  $CellContext`exercise[($CellContext`S0 \
+$CellContext`d^$CellContext`r) $CellContext`u^(Length[#] - 
+                    2 - $CellContext`r)], {$CellContext`r, 0, Length[#] - 
+                   2}], $CellContext`p Drop[#, -1] + $CellContext`q Drop[
+                    RotateLeft[#], -1]}]]& , $CellContext`initial, 
+              Length[$CellContext`initial] - 1]]; Condition[
+             $CellContext`fx[
+              Pattern[$CellContext`node, 
+               Blank[]], 
+              Pattern[$CellContext`level, 
+               Blank[]]], 
+             
+             And[$CellContext`level < $CellContext`n, 
+              Dot[{$CellContext`p, $CellContext`q}, {
+                 
+                 Part[$CellContext`options, $CellContext`level + 
+                  2, $CellContext`node + 1], 
+                 
+                 Part[$CellContext`options, $CellContext`level + 
+                  2, $CellContext`node + 
+                  2]}] < $CellContext`exercise[($CellContext`S0 \
+$CellContext`d^$CellContext`node) $CellContext`u^($CellContext`level - \
+$CellContext`node)]]] := $CellContext`VertNumber[$CellContext`node, \
+$CellContext`level]; Condition[
+             $CellContext`fx[
+              Pattern[$CellContext`node, 
+               Blank[]], $CellContext`n], 
+             Part[$CellContext`options, $CellContext`n + 1, $CellContext`node + 
+               1] > 0] := $CellContext`VertNumber[$CellContext`node, \
+$CellContext`n]; $CellContext`fx[
+             Pattern[$CellContext`node, 
+              Blank[]], 
+             Pattern[$CellContext`level, 
+              Blank[]]] := Sequence[]; $CellContext`exers = Flatten[
+             Table[
+              $CellContext`fx[$CellContext`i, $CellContext`k], \
+{$CellContext`k, 0, $CellContext`n}, {$CellContext`i, 
+               0, $CellContext`k}]]; $CellContext`optionlabels = 
+           Map[NumberForm[#, 4]& , 
+             Flatten[$CellContext`options]]; $CellContext`stocklabels = 
+           Map[NumberForm[#, 4]& , 
+             Flatten[
+              
+              Table[($CellContext`S0 $CellContext`d^$CellContext`i) \
+$CellContext`u^($CellContext`k - $CellContext`i), {$CellContext`k, 
+                0, $CellContext`n}, {$CellContext`i, 0, $CellContext`k}]]]; 
+          ReplaceAll[
+            GraphPlot[
+             Table[
+              $CellContext`AdjFun[$CellContext`i, $CellContext`j], \
+{$CellContext`j, 1, 
+               Length[
+                $CellContext`vert[$CellContext`n]]}, {$CellContext`i, 1, 
+               Length[
+                $CellContext`vert[$CellContext`n]]}], VertexCoordinateRules -> 
+             MapThread[Rule, {
+                Range[
+                 Length[
+                  $CellContext`vert[$CellContext`n]]], 
+                $CellContext`vert[$CellContext`n]}], 
+             EdgeRenderingFunction -> (If[
+               OrderedQ[#2], {
+                Arrowheads[0.03], 
+                Arrow[#, 0.2]}, 
+               Line[#]]& ), AspectRatio -> 1], Tooltip[
+              Point[
+               Pattern[$CellContext`i, 
+                Blank[]]], 
+              Pattern[$CellContext`i, 
+               Blank[]]] :> Tooltip[
+              If[
+               MemberQ[$CellContext`exers, $CellContext`i], {Red, 
+                Text[
+                 
+                 Part[$CellContext`stocklabels, $CellContext`i], \
+$CellContext`i]}, {Black, 
+                Text[
+                 
+                 Part[$CellContext`stocklabels, $CellContext`i], \
+$CellContext`i]}], 
+              
+              Part[$CellContext`optionlabels, $CellContext`i]]]], \
+$CellContext`AmericanOptionBinomialTree[
+          Pattern[$CellContext`S0, 
+           Blank[]], 
+          Pattern[$CellContext`n, 
+           Blank[]], 
+          Pattern[$CellContext`\[Sigma], 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]], 
+          Pattern[$CellContext`Rf, 
+           Blank[]], 
+          Pattern[$CellContext`div, 
+           Blank[]], 
+          Pattern[$CellContext`exercise, 
+           Blank[Function]], 
+          Pattern[$CellContext`opts, 
+           BlankNullSequence[]]] := Module[{$CellContext`u = N[
+             Exp[
+             Sqrt[$CellContext`T/$CellContext`n] $CellContext`\[Sigma]]], \
+$CellContext`d, $CellContext`r = N[
+             
+             Exp[($CellContext`Rf - $CellContext`div) \
+($CellContext`T/$CellContext`n)]], $CellContext`disc = N[
+             
+             Exp[(-$CellContext`Rf) ($CellContext`T/$CellContext`n)]], \
+$CellContext`vert, $CellContext`m, $CellContext`exers, $CellContext`AdjFun, \
+$CellContext`VertNumber, $CellContext`Successors, $CellContext`Predecessors, \
+$CellContext`Adjoints, $CellContext`AdjLists, $CellContext`stocklabels, \
+$CellContext`options, $CellContext`optionvalues, $CellContext`optionlabels, \
+$CellContext`vect1 = N[{0.5, Sqrt[3]/2}], $CellContext`vect2 = 
+           N[{0.5, -(Sqrt[3]/
+               2)}], $CellContext`p, $CellContext`q, $CellContext`fx, \
+$CellContext`initial}, $CellContext`d = 1/$CellContext`u; $CellContext`p = 
+           N[($CellContext`disc ($CellContext`r - \
+$CellContext`d))/($CellContext`u - $CellContext`d)]; $CellContext`q = 
+           N[$CellContext`disc - $CellContext`p]; $CellContext`vert[
+             Pattern[$CellContext`level, 
+              Blank[]]] := Flatten[
+             
+             Table[$CellContext`k $CellContext`vect2 + ($CellContext`i - \
+$CellContext`k) $CellContext`vect1, {$CellContext`i, 
+               0, $CellContext`level}, {$CellContext`k, 0, $CellContext`i}], 
+             1]; $CellContext`m = Length[
+             $CellContext`vert[$CellContext`n]]; $CellContext`VertNumber[
+             Pattern[$CellContext`node, 
+              Blank[]], 
+             Pattern[$CellContext`level, 
+              Blank[]]] := $CellContext`level (($CellContext`level + 1)/
+              2) + $CellContext`node + 1; Condition[
+             $CellContext`Successors[
+              Pattern[$CellContext`node, 
+               Blank[]], 
+              Pattern[$CellContext`level, 
+               Blank[]]], $CellContext`level < $CellContext`n] := {
+             $CellContext`VertNumber[$CellContext`node, $CellContext`level + 
+              1], 
+             $CellContext`VertNumber[$CellContext`node + 
+              1, $CellContext`level + 1]}; $CellContext`Successors[
+             Pattern[$CellContext`node, 
+              Blank[]], $CellContext`n] := {}; Condition[
+             $CellContext`Predecessors[
+              Pattern[$CellContext`node, 
+               Blank[]], 
+              Pattern[$CellContext`level, 
+               Blank[]]], 0 < $CellContext`node < $CellContext`level] := {
+             $CellContext`VertNumber[$CellContext`node - 
+              1, $CellContext`level - 1], 
+             $CellContext`VertNumber[$CellContext`node, $CellContext`level - 
+              1]}; Condition[
+             $CellContext`Predecessors[0, 
+              Pattern[$CellContext`level, 
+               Blank[]]], $CellContext`level > 0] := {
+             $CellContext`VertNumber[0, $CellContext`level - 1]}; Condition[
+             $CellContext`Predecessors[
+              Pattern[$CellContext`level, 
+               Blank[]], 
+              Pattern[$CellContext`level, 
+               Blank[]]], $CellContext`level > 0] := {
+             $CellContext`VertNumber[$CellContext`level - 
+              1, $CellContext`level - 1]}; $CellContext`Predecessors[
+            0, 0] = {}; Condition[
+             $CellContext`Adjoints[
+              Pattern[$CellContext`node, 
+               Blank[]], 
+              Pattern[$CellContext`level, 
+               Blank[]]], $CellContext`level < $CellContext`n] := Join[
+             $CellContext`Predecessors[$CellContext`node, \
+$CellContext`level], 
+             $CellContext`Successors[$CellContext`node, $CellContext`level]]; \
+$CellContext`Adjoints[
+             Pattern[$CellContext`node, 
+              
+              Blank[]], $CellContext`n] := \
+$CellContext`Predecessors[$CellContext`node, $CellContext`n]; \
+$CellContext`AdjLists = Flatten[
+             Append[
+              Table[
+               $CellContext`Adjoints[$CellContext`node, $CellContext`level], \
+{$CellContext`level, 0, $CellContext`n - 1}, {$CellContext`node, 
+                0, $CellContext`level}], 
+              Table[
+               $CellContext`Predecessors[$CellContext`node, $CellContext`n], \
+{$CellContext`node, 0, $CellContext`n}]], 1]; Condition[
+             $CellContext`AdjFun[
+              Pattern[$CellContext`i, 
+               Blank[]], 
+              Pattern[$CellContext`j, 
+               Blank[]]], $CellContext`i <= $CellContext`j] := If[
+             MemberQ[
+              Part[$CellContext`AdjLists, $CellContext`i], $CellContext`j], 1,
+              0]; Condition[
+             $CellContext`AdjFun[
+              Pattern[$CellContext`i, 
+               Blank[]], 
+              Pattern[$CellContext`j, 
+               
+               Blank[]]], $CellContext`i > $CellContext`j] := \
+$CellContext`AdjFun[$CellContext`j, $CellContext`i]; $CellContext`initial = 
+           Table[
+             $CellContext`exercise[($CellContext`S0 \
+$CellContext`d^$CellContext`node) $CellContext`u^($CellContext`n - \
+$CellContext`node)], {$CellContext`node, 
+              0, $CellContext`n}]; $CellContext`options = Reverse[
+             NestList[Map[Max, 
+               Transpose[{
+                 Table[
+                  $CellContext`exercise[($CellContext`S0 \
+$CellContext`d^$CellContext`r) $CellContext`u^(Length[#] - 
+                    2 - $CellContext`r)], {$CellContext`r, 0, Length[#] - 
+                   2}], $CellContext`p Drop[#, -1] + $CellContext`q Drop[
+                    RotateLeft[#], -1]}]]& , $CellContext`initial, 
+              Length[$CellContext`initial] - 1]]; Condition[
+             $CellContext`fx[
+              Pattern[$CellContext`node, 
+               Blank[]], 
+              Pattern[$CellContext`level, 
+               Blank[]]], 
+             
+             And[$CellContext`level < $CellContext`n, 
+              Dot[{$CellContext`p, $CellContext`q}, {
+                 
+                 Part[$CellContext`options, $CellContext`level + 
+                  2, $CellContext`node + 1], 
+                 
+                 Part[$CellContext`options, $CellContext`level + 
+                  2, $CellContext`node + 
+                  2]}] < $CellContext`exercise[($CellContext`S0 \
+$CellContext`d^$CellContext`node) $CellContext`u^($CellContext`level - \
+$CellContext`node)]]] := $CellContext`VertNumber[$CellContext`node, \
+$CellContext`level]; Condition[
+             $CellContext`fx[
+              Pattern[$CellContext`node, 
+               Blank[]], $CellContext`n], 
+             Part[$CellContext`options, $CellContext`n + 1, $CellContext`node + 
+               1] > 0] := $CellContext`VertNumber[$CellContext`node, \
+$CellContext`n]; $CellContext`fx[
+             Pattern[$CellContext`node, 
+              Blank[]], 
+             Pattern[$CellContext`level, 
+              Blank[]]] := Sequence[]; $CellContext`exers = Flatten[
+             Table[
+              $CellContext`fx[$CellContext`i, $CellContext`k], \
+{$CellContext`k, 0, $CellContext`n}, {$CellContext`i, 
+               0, $CellContext`k}]]; $CellContext`optionlabels = 
+           Map[NumberForm[#, 4]& , 
+             Flatten[$CellContext`options]]; $CellContext`stocklabels = 
+           Map[NumberForm[#, 4]& , 
+             Flatten[
+              
+              Table[($CellContext`S0 $CellContext`d^$CellContext`i) \
+$CellContext`u^($CellContext`k - $CellContext`i), {$CellContext`k, 
+                0, $CellContext`n}, {$CellContext`i, 0, $CellContext`k}]]]; 
+          ReplaceAll[
+            GraphPlot[
+             Table[
+              $CellContext`AdjFun[$CellContext`i, $CellContext`j], \
+{$CellContext`j, 1, 
+               Length[
+                $CellContext`vert[$CellContext`n]]}, {$CellContext`i, 1, 
+               Length[
+                $CellContext`vert[$CellContext`n]]}], $CellContext`opts, 
+             VertexCoordinateRules -> MapThread[Rule, {
+                Range[
+                 Length[
+                  $CellContext`vert[$CellContext`n]]], 
+                $CellContext`vert[$CellContext`n]}], 
+             EdgeRenderingFunction -> (If[
+               OrderedQ[#2], {
+                Arrowheads[0.03], 
+                Arrow[#, 0.2]}, 
+               Line[#]]& ), AspectRatio -> 1], Tooltip[
+              Point[
+               Pattern[$CellContext`i, 
+                Blank[]]], 
+              Pattern[$CellContext`i, 
+               Blank[]]] :> Tooltip[
+              If[
+               MemberQ[$CellContext`exers, $CellContext`i], {Red, 
+                Text[
+                 
+                 Part[$CellContext`stocklabels, $CellContext`i], \
+$CellContext`i]}, {Black, 
+                Text[
+                 
+                 Part[$CellContext`stocklabels, $CellContext`i], \
+$CellContext`i]}], 
+              
+              Part[$CellContext`optionlabels, $CellContext`i]]]], \
+$CellContext`AmericanOption[
+          Pattern[$CellContext`S0, 
+           Blank[]], 
+          Pattern[$CellContext`n, 
+           Blank[]], 
+          Pattern[$CellContext`\[Sigma], 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]], 
+          Pattern[$CellContext`Rf, 
+           Blank[]], 
+          Pattern[$CellContext`div, 
+           Blank[]], 
+          Pattern[K, 
+           Blank[]], 
+          Optional[
+           Pattern[$CellContext`l, 
+            Blank[Integer]], 1]] := 
+        Module[{$CellContext`initial, $CellContext`u = N[
+             Exp[
+             Sqrt[$CellContext`T/$CellContext`n] $CellContext`\[Sigma]]], \
+$CellContext`d, $CellContext`r = N[
+             
+             Exp[($CellContext`Rf - $CellContext`div) \
+($CellContext`T/$CellContext`n)]], $CellContext`disc = N[
+             
+             Exp[(-$CellContext`Rf) ($CellContext`T/$CellContext`n)]], \
+$CellContext`p, $CellContext`q}, $CellContext`d = 
+           1/$CellContext`u; $CellContext`p = 
+           N[($CellContext`disc ($CellContext`r - \
+$CellContext`d))/($CellContext`u - $CellContext`d)]; $CellContext`q = 
+           N[$CellContext`disc - $CellContext`p]; $CellContext`initial = 
+           Table[
+             
+             Max[$CellContext`l (($CellContext`S0 \
+$CellContext`d^$CellContext`node) $CellContext`u^($CellContext`n - \
+$CellContext`node) - K), 0], {$CellContext`node, 
+              0, $CellContext`n}]; \
+$CellContext`CompiledAmer[$CellContext`initial, $CellContext`p, \
+$CellContext`q, $CellContext`S0, $CellContext`u, $CellContext`d, 
+            K, $CellContext`l]], K = 100, $CellContext`CompiledAmer = 
+        CompiledFunction[{{
+            Blank[Real], 1}, 
+           Blank[Real], 
+           Blank[Real], 
+           Blank[Real], 
+           Blank[Real], 
+           Blank[Real], 
+           Blank[Real], 
+           Blank[Integer]}, {{3, 1, 0}, {3, 0, 0}, {3, 0, 1}, {3, 0, 2}, {3, 
+          0, 3}, {3, 0, 4}, {3, 0, 5}, {2, 0, 0}, {3, 0, 6}}, {1, 16, 11, 0, 
+          8}, {{1, 5}, {8, 0., 8}, {94, 257, 3, 0, 8, 3, 1, 0, 3, 1, 1}, {44, 
+           0, 2}, {7, -1, 3}, {17, 2, 3, 2}, {7, 0, 3}, {4, 73}, {44, 1, 6}, {
+           7, -2, 8}, {17, 6, 8, 6}, {7, 0, 9}, {7, -1, 10}, {94, 258, 2, 0, 
+           6, 2, 0, 10, 2, 0, 11}, {64, 11, 3, 6}, {7, -1, 10}, {11, 10, 8}, {
+           4, 28}, {94, 264, 3, 0, 4, 2, 0, 8, 3, 0, 7}, {44, 1, 12}, {7, -2, 
+           13}, {23, 8, 14}, {17, 12, 13, 14, 12}, {94, 264, 3, 0, 3, 2, 0, 
+           12, 3, 0, 10}, {21, 2, 7, 10, 9}, {24, 5, 7}, {18, 9, 7, 9}, {15, 
+           1, 0, 7}, {21, 7, 9, 7}, {67, 7, 3, 4}, {45, {0}, 2, 1, 5}, {47, 0,
+            5, 3}, {95, 0, 4, 3, 7}, {7, 1, 12}, {70, 7, 0, 12, 0, 7}, {44, 7,
+            14}, {7, 0, 15}, {4, 6}, {70, 7, 0, 15, 0, 9}, {37, 7, 9, 0}, {3, 
+           0, 3}, {12, 9, 7}, {4, 1}, {5, 15, 14, -5}, {65, 9, 7, 6}, {5, 8, 
+           6, -27}, {7, -1, 5}, {73, 1, 5, 0, 7}, {94, 273, 3, 0, 0, 3, 1, 7, 
+           3, 1, 4}, {7, 1, 5}, {67, 5, 2, 7}, {78, 1, 7, -1, 5}, {7, -1, 
+           5}, {73, 5, 5, 0, 7}, {94, 273, 3, 0, 1, 3, 1, 7, 3, 1, 5}, {51, 4,
+            5, 4}, {68, 6, 4, 5}, {45, {2, 1}, 2, 2, 6}, {90, 5, 6, 4, 2, 
+           0}, {44, 4, 9}, {7, 0, 6}, {64, 9, 3, 5}, {7, 0, 8}, {11, 8, 11}, {
+           4, 14}, {70, 4, 0, 11, 1, 7}, {7, 1, 8}, {70, 7, 0, 8, 0, 7}, {44, 
+           7, 12}, {7, 0, 13}, {4, 6}, {70, 7, 0, 13, 0, 8}, {37, 7, 8, 0}, {
+           3, 0, 3}, {12, 8, 7}, {4, 1}, {5, 13, 12, -5}, {65, 6, 7, 5}, {5, 
+           11, 9, -13}, {46, 5, 1}, {5, 3, 2, -72}, {7, -1, 7}, {70, 1, 0, 7, 
+           0, 6}, {2}}, 
+          
+          Function[{$CellContext`initial, $CellContext`p, $CellContext`q, \
+$CellContext`S, $CellContext`u, $CellContext`d, K, $CellContext`l}, 
+           Last[
+            Nest[Map[Max, 
+              Transpose[{
+                Table[
+                 
+                 Max[$CellContext`l (($CellContext`S \
+$CellContext`d^$CellContext`r) $CellContext`u^(Length[#] - 
+                    2 - $CellContext`r) - K), 0], {$CellContext`r, 0, 
+                  Length[#] - 2}], $CellContext`p 
+                 Drop[#, -1] + $CellContext`q Drop[
+                   RotateLeft[#], -1]}]]& , $CellContext`initial, 
+             Length[$CellContext`initial] - 1]]], Evaluate]}; 
+      Typeset`initDone$$ = True); ReleaseHold[
+       HoldComplete[{$CellContext`AmericanOptionBinomialTree[
+           Pattern[$CellContext`S0, 
+            Blank[]], 
+           Pattern[$CellContext`n, 
+            Blank[]], 
+           Pattern[$CellContext`\[Sigma], 
+            Blank[]], 
+           Pattern[$CellContext`T, 
+            Blank[]], 
+           Pattern[$CellContext`Rf, 
+            Blank[]], 
+           Pattern[$CellContext`div, 
+            Blank[]], 
+           Pattern[$CellContext`exercise, 
+            Blank[Function]], 
+           Pattern[$CellContext`opts, 
+            BlankNullSequence[]]] := Module[{$CellContext`u = N[
+              Exp[
+              Sqrt[$CellContext`T/$CellContext`n] $CellContext`\[Sigma]]], \
+$CellContext`d, $CellContext`r = N[
+              
+              Exp[($CellContext`Rf - $CellContext`div) \
+($CellContext`T/$CellContext`n)]], $CellContext`disc = N[
+              
+              Exp[(-$CellContext`Rf) ($CellContext`T/$CellContext`n)]], \
+$CellContext`vert, $CellContext`m, $CellContext`exers, $CellContext`AdjFun, \
+$CellContext`VertNumber, $CellContext`Successors, $CellContext`Predecessors, \
+$CellContext`Adjoints, $CellContext`AdjLists, $CellContext`stocklabels, \
+$CellContext`options, $CellContext`optionvalues, $CellContext`optionlabels, \
+$CellContext`vect1 = N[{0.5, Sqrt[3]/2}], $CellContext`vect2 = 
+            N[{0.5, (-Sqrt[3])/
+               2}], $CellContext`p, $CellContext`q, $CellContext`fx, \
+$CellContext`initial}, $CellContext`d = 1/$CellContext`u; $CellContext`p = 
+            N[$CellContext`disc ($CellContext`r - \
+$CellContext`d)/($CellContext`u - $CellContext`d)]; $CellContext`q = 
+            N[$CellContext`disc - $CellContext`p]; $CellContext`vert[
+              Pattern[$CellContext`level, 
+               Blank[]]] := Flatten[
+              
+              Table[$CellContext`k $CellContext`vect2 + ($CellContext`i - \
+$CellContext`k) $CellContext`vect1, {$CellContext`i, 
+                0, $CellContext`level}, {$CellContext`k, 0, $CellContext`i}], 
+              1]; $CellContext`m = Length[
+              $CellContext`vert[$CellContext`n]]; $CellContext`VertNumber[
+              Pattern[$CellContext`node, 
+               Blank[]], 
+              Pattern[$CellContext`level, 
+               Blank[]]] := $CellContext`level (($CellContext`level + 1)/
+               2) + $CellContext`node + 1; Condition[
+              $CellContext`Successors[
+               Pattern[$CellContext`node, 
+                Blank[]], 
+               Pattern[$CellContext`level, 
+                Blank[]]], $CellContext`level < $CellContext`n] := {
+              $CellContext`VertNumber[$CellContext`node, $CellContext`level + 
+               1], 
+              $CellContext`VertNumber[$CellContext`node + 
+               1, $CellContext`level + 1]}; $CellContext`Successors[
+              Pattern[$CellContext`node, 
+               Blank[]], $CellContext`n] := {}; Condition[
+              $CellContext`Predecessors[
+               Pattern[$CellContext`node, 
+                Blank[]], 
+               Pattern[$CellContext`level, 
+                Blank[]]], 0 < $CellContext`node < $CellContext`level] := {
+              $CellContext`VertNumber[$CellContext`node - 
+               1, $CellContext`level - 1], 
+              $CellContext`VertNumber[$CellContext`node, $CellContext`level - 
+               1]}; Condition[
+              $CellContext`Predecessors[0, 
+               Pattern[$CellContext`level, 
+                Blank[]]], $CellContext`level > 0] := {
+              $CellContext`VertNumber[0, $CellContext`level - 1]}; Condition[
+              $CellContext`Predecessors[
+               Pattern[$CellContext`level, 
+                Blank[]], 
+               Pattern[$CellContext`level, 
+                Blank[]]], $CellContext`level > 0] := {
+              $CellContext`VertNumber[$CellContext`level - 
+               1, $CellContext`level - 1]}; $CellContext`Predecessors[
+             0, 0] = {}; Condition[
+              $CellContext`Adjoints[
+               Pattern[$CellContext`node, 
+                Blank[]], 
+               Pattern[$CellContext`level, 
+                Blank[]]], $CellContext`level < $CellContext`n] := Join[
+              $CellContext`Predecessors[$CellContext`node, \
+$CellContext`level], 
+              $CellContext`Successors[$CellContext`node, $CellContext`level]]; \
+$CellContext`Adjoints[
+              Pattern[$CellContext`node, 
+               
+               Blank[]], $CellContext`n] := \
+$CellContext`Predecessors[$CellContext`node, $CellContext`n]; \
+$CellContext`AdjLists = Flatten[
+              Append[
+               Table[
+                $CellContext`Adjoints[$CellContext`node, $CellContext`level], \
+{$CellContext`level, 0, $CellContext`n - 1}, {$CellContext`node, 
+                 0, $CellContext`level}], 
+               Table[
+                $CellContext`Predecessors[$CellContext`node, $CellContext`n], \
+{$CellContext`node, 0, $CellContext`n}]], 1]; Condition[
+              $CellContext`AdjFun[
+               Pattern[$CellContext`i, 
+                Blank[]], 
+               Pattern[$CellContext`j, 
+                Blank[]]], $CellContext`i <= $CellContext`j] := If[
+              MemberQ[
+               Part[$CellContext`AdjLists, $CellContext`i], $CellContext`j], 
+              1, 0]; Condition[
+              $CellContext`AdjFun[
+               Pattern[$CellContext`i, 
+                Blank[]], 
+               Pattern[$CellContext`j, 
+                
+                Blank[]]], $CellContext`i > $CellContext`j] := \
+$CellContext`AdjFun[$CellContext`j, $CellContext`i]; $CellContext`initial = 
+            Table[
+              $CellContext`exercise[$CellContext`S0 \
+$CellContext`d^$CellContext`node $CellContext`u^($CellContext`n - \
+$CellContext`node)], {$CellContext`node, 
+               0, $CellContext`n}]; $CellContext`options = Reverse[
+              NestList[Map[Max, 
+                Transpose[{
+                  Table[
+                   $CellContext`exercise[$CellContext`S0 \
+$CellContext`d^$CellContext`r $CellContext`u^(Length[#] - 
+                    2 - $CellContext`r)], {$CellContext`r, 0, Length[#] - 
+                    2}], $CellContext`p Drop[#, -1] + $CellContext`q Drop[
+                    RotateLeft[#], -1]}]]& , $CellContext`initial, 
+               Length[$CellContext`initial] - 1]]; Condition[
+              $CellContext`fx[
+               Pattern[$CellContext`node, 
+                Blank[]], 
+               Pattern[$CellContext`level, 
+                Blank[]]], 
+              
+              And[$CellContext`level < $CellContext`n, 
+               Dot[{$CellContext`p, $CellContext`q}, {
+                  
+                  Part[$CellContext`options, $CellContext`level + 
+                   2, $CellContext`node + 1], 
+                  
+                  Part[$CellContext`options, $CellContext`level + 
+                   2, $CellContext`node + 
+                   2]}] < $CellContext`exercise[$CellContext`S0 \
+$CellContext`d^$CellContext`node $CellContext`u^($CellContext`level - \
+$CellContext`node)]]] := $CellContext`VertNumber[$CellContext`node, \
+$CellContext`level]; Condition[
+              $CellContext`fx[
+               Pattern[$CellContext`node, 
+                Blank[]], $CellContext`n], 
+              Part[$CellContext`options, $CellContext`n + 
+                1, $CellContext`node + 1] > 
+              0] := $CellContext`VertNumber[$CellContext`node, \
+$CellContext`n]; $CellContext`fx[
+              Pattern[$CellContext`node, 
+               Blank[]], 
+              Pattern[$CellContext`level, 
+               Blank[]]] := Sequence[]; $CellContext`exers = Flatten[
+              Table[
+               $CellContext`fx[$CellContext`i, $CellContext`k], \
+{$CellContext`k, 0, $CellContext`n}, {$CellContext`i, 
+                0, $CellContext`k}]]; $CellContext`optionlabels = 
+            Map[NumberForm[#, 4]& , 
+              Flatten[$CellContext`options]]; $CellContext`stocklabels = 
+            Map[NumberForm[#, 4]& , 
+              Flatten[
+               
+               Table[$CellContext`S0 $CellContext`d^$CellContext`i \
+$CellContext`u^($CellContext`k - $CellContext`i), {$CellContext`k, 
+                 0, $CellContext`n}, {$CellContext`i, 0, $CellContext`k}]]]; 
+           ReplaceAll[
+             GraphPlot[
+              Table[
+               $CellContext`AdjFun[$CellContext`i, $CellContext`j], \
+{$CellContext`j, 1, 
+                Length[
+                 $CellContext`vert[$CellContext`n]]}, {$CellContext`i, 1, 
+                Length[
+                 $CellContext`vert[$CellContext`n]]}], $CellContext`opts, 
+              VertexCoordinateRules -> MapThread[Rule, {
+                 Range[
+                  Length[
+                   $CellContext`vert[$CellContext`n]]], 
+                 $CellContext`vert[$CellContext`n]}], 
+              EdgeRenderingFunction -> (If[
+                OrderedQ[#2], {
+                 Arrowheads[0.03], 
+                 Arrow[#, 0.2]}, 
+                Line[#]]& ), AspectRatio -> 1], Tooltip[
+               Point[
+                Pattern[$CellContext`i, 
+                 Blank[]]], 
+               Pattern[$CellContext`i, 
+                Blank[]]] :> Tooltip[
+               If[
+                MemberQ[$CellContext`exers, $CellContext`i], {Red, 
+                 Text[
+                  
+                  Part[$CellContext`stocklabels, $CellContext`i], \
+$CellContext`i]}, {Black, 
+                 Text[
+                  
+                  Part[$CellContext`stocklabels, $CellContext`i], \
+$CellContext`i]}], 
+               
+               Part[$CellContext`optionlabels, $CellContext`i]]]], \
+$CellContext`CompiledAmer = Compile[{{$CellContext`initial, 
+              Blank[Real], 1}, {$CellContext`p, 
+              Blank[Real], 0}, {$CellContext`q, 
+              Blank[Real], 0}, {$CellContext`S, 
+              Blank[Real], 0}, {$CellContext`u, 
+              Blank[Real], 0}, {$CellContext`d, 
+              Blank[Real], 0}, {K, 
+              Blank[Real], 0}, {$CellContext`l, 
+              Blank[Integer]}}, 
+            Last[
+             Nest[Map[Max, 
+               Transpose[{
+                 Table[
+                  
+                  Max[$CellContext`l ($CellContext`S \
+$CellContext`d^$CellContext`r $CellContext`u^(Length[#] - 2 - $CellContext`r) - 
+                    K), 0], {$CellContext`r, 0, Length[#] - 
+                   2}], $CellContext`p Drop[#, -1] + $CellContext`q Drop[
+                    RotateLeft[#], -1]}]]& , $CellContext`initial, 
+              Length[$CellContext`initial] - 1]]]; 
+         Null, $CellContext`AmericanOption[
+           Pattern[$CellContext`S0, 
+            Blank[]], 
+           Pattern[$CellContext`n, 
+            Blank[]], 
+           Pattern[$CellContext`\[Sigma], 
+            Blank[]], 
+           Pattern[$CellContext`T, 
+            Blank[]], 
+           Pattern[$CellContext`Rf, 
+            Blank[]], 
+           Pattern[$CellContext`div, 
+            Blank[]], 
+           Pattern[K, 
+            Blank[]], 
+           Optional[
+            Pattern[$CellContext`l, 
+             Blank[Integer]], 1]] := 
+         Module[{$CellContext`initial, $CellContext`u = N[
+              Exp[
+              Sqrt[$CellContext`T/$CellContext`n] $CellContext`\[Sigma]]], \
+$CellContext`d, $CellContext`r = N[
+              
+              Exp[($CellContext`Rf - $CellContext`div) \
+($CellContext`T/$CellContext`n)]], $CellContext`disc = N[
+              
+              Exp[(-$CellContext`Rf) ($CellContext`T/$CellContext`n)]], \
+$CellContext`p, $CellContext`q}, $CellContext`d = 
+            1/$CellContext`u; $CellContext`p = 
+            N[$CellContext`disc ($CellContext`r - \
+$CellContext`d)/($CellContext`u - $CellContext`d)]; $CellContext`q = 
+            N[$CellContext`disc - $CellContext`p]; $CellContext`initial = 
+            Table[
+              
+              Max[$CellContext`l ($CellContext`S0 \
+$CellContext`d^$CellContext`node $CellContext`u^($CellContext`n - \
+$CellContext`node) - K), 0], {$CellContext`node, 
+               0, $CellContext`n}]; \
+$CellContext`CompiledAmer[$CellContext`initial, $CellContext`p, \
+$CellContext`q, $CellContext`S0, $CellContext`u, $CellContext`d, 
+             K, $CellContext`l]]}]]; Typeset`initDone$$ = True),
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellID->541445853],
+
+Cell[CellGroupData[{
+
+Cell["THIS NOTEBOOK IS THE SOURCE CODE FROM", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[TextData[{
+ "\"",
+ ButtonBox["American Call and Put Option ",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/AmericanCallAndPutOption/"], None},
+  
+  ButtonNote->"http://demonstrations.wolfram.com/AmericanCallAndPutOption/"],
+ "\"",
+ " from ",
+ ButtonBox["The Wolfram Demonstrations Project",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+ "\[ParagraphSeparator]\[NonBreakingSpace]",
+ ButtonBox["http://demonstrations.wolfram.com/AmericanCallAndPutOption/",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/AmericanCallAndPutOption/"], None},
+  
+  ButtonNote->"http://demonstrations.wolfram.com/AmericanCallAndPutOption/"]
+}], "Text",
+ CellMargins->{{48, Inherited}, {0, Inherited}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.5]],
+
+Cell[" ", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[TextData[{
+ "Contributed by: ",
+ ButtonBox["Andrzej Kozlowski",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/author.html?author=Andrzej+\
+Kozlowski"], None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/author.html?author=Andrzej+Kozlowski"]
+}], "Text",
+ CellDingbat->"\[FilledSmallSquare]",
+ CellMargins->{{66, 48}, {2, 4}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.6]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "A full-function Wolfram ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " 6 system is required to edit this notebook.\n",
+ StyleBox[ButtonBox["GET WOLFRAM MATHEMATICA 6 \[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://www.wolfram.com/products/mathematica/"], None},
+  ButtonNote->"http://www.wolfram.com/products/mathematica/"],
+  FontFamily->"Helvetica",
+  FontWeight->"Bold",
+  FontSlant->"Italic",
+  FontColor->RGBColor[1, 0.42, 0]]
+}], "Text",
+ CellFrame->True,
+ CellMargins->{{48, 68}, {8, 28}},
+ CellFrameMargins->12,
+ CellFrameColor->RGBColor[0.865507, 0.90634, 0.680751],
+ CellChangeTimes->{3.3750111182355957`*^9},
+ ParagraphSpacing->{1., 1.},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.411765],
+ Background->RGBColor[0.986023, 0.991363, 0.969818]],
+
+Cell[TextData[{
+ "\[Copyright] ",
+ StyleBox[ButtonBox["The Wolfram Demonstrations Project & Contributors",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Terms of Use",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/termsofuse.html"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/termsofuse.html"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Make a new version of this Demonstration \
+\[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/participate/upload.jsp?id=\
+AmericanCallAndPutOption"], None},
+  ButtonNote->None],
+  FontColor->GrayLevel[0.6]]
+}], "Text",
+ CellFrame->{{0, 0}, {0, 0.5}},
+ CellMargins->{{48, 10}, {20, 50}},
+ CellFrameMargins->{{6, 0}, {6, 6}},
+ CellFrameColor->GrayLevel[0.6],
+ FontFamily->"Verdana",
+ FontSize->9,
+ FontColor->GrayLevel[0.6]]
+}, Open  ]]
+}, Open  ]]
+},
+Editable->True,
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{763, 650},
+WindowMargins->{{Inherited, Inherited}, {Inherited, 0}},
+WindowElements->{
+ "StatusArea", "MemoryMonitor", "MagnificationPopUp", "VerticalScrollBar", 
+  "MenuBar"},
+WindowTitle->"American Call and Put Option  - Source",
+DockedCells->{},
+CellContext->Notebook,
+FrontEndVersion->"6.0 for Microsoft Windows (32-bit) (June 19, 2007)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[590, 23, 221, 4, 70, "Section"],
+Cell[814, 29, 14740, 405, 70, "Input",
+ InitializationCell->True,
+ CellID->1070568967],
+Cell[15557, 436, 2508, 67, 70, "Input",
+ InitializationCell->True,
+ CellID->394393666],
+Cell[18068, 505, 4530, 99, 70, "Input",
+ InitializationCell->True,
+ CellID->1439809820],
+Cell[22601, 606, 5905, 128, 70, "Input",
+ CellID->1037910344]
+}, Open  ]],
+Cell[28521, 737, 40660, 867, 70, "Output",
+ CellID->541445853],
+Cell[CellGroupData[{
+Cell[69206, 1608, 373, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[69582, 1619, 932, 26, 70, "Text"],
+Cell[70517, 1647, 337, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[70857, 1658, 445, 14, 70, "Text"],
+Cell[CellGroupData[{
+Cell[71327, 1676, 829, 24, 70, "Text"],
+Cell[72159, 1702, 1200, 33, 70, "Text"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+(* NotebookSignature LRjRWfsY85#86DTH9flQ2pOl *)

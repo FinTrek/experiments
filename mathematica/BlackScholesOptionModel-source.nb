@@ -1,0 +1,678 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 6.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[     24468,        668]
+NotebookOptionsPosition[     23090,        617]
+NotebookOutlinePosition[     23708,        641]
+CellTagsIndexPosition[     23665,        638]
+WindowFrame->Normal
+ContainsDynamic->True *)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Black-Scholes Option Model", "Section",
+ CellFrameColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108],
+ FontColor->RGBColor[
+  0.6449835965514611, 0.758632791638056, 0.2516823071641108]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"d1", "[", 
+    RowBox[{
+    "S_", ",", "k_", ",", "r_", ",", "\[Delta]_", ",", "\[Sigma]_", ",", 
+     "T_"}], "]"}], "=", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"Log", "[", 
+       RowBox[{"S", "/", "k"}], "]"}], "+", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"r", "-", "\[Delta]", "+", 
+         RowBox[{
+          SuperscriptBox["\[Sigma]", "2"], "/", "2"}]}], ")"}], " ", "T"}]}], 
+     ")"}], "/", 
+    RowBox[{"(", 
+     RowBox[{"\[Sigma]", " ", 
+      SqrtBox["T"]}], ")"}]}]}], ";"}]], "Input",
+ CellChangeTimes->{
+  3.35696210375764*^9, 3.372882475734375*^9, {3.372882554265625*^9, 
+   3.37288255546875*^9}, {3.3998969495255365`*^9, 3.3998969516817865`*^9}},
+ CellID->4075082],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"d2", "[", 
+    RowBox[{
+    "S_", ",", "k_", ",", "r_", ",", "\[Delta]_", ",", "\[Sigma]_", ",", 
+     "T_"}], "]"}], "=", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"Log", "[", 
+       RowBox[{"S", "/", "k"}], "]"}], "+", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"r", "-", "\[Delta]", "-", 
+         RowBox[{
+          SuperscriptBox["\[Sigma]", "2"], "/", "2"}]}], ")"}], " ", "T"}]}], 
+     ")"}], "/", 
+    RowBox[{"(", 
+     RowBox[{"\[Sigma]", " ", 
+      SqrtBox["T"]}], ")"}]}]}], ";"}]], "Input",
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.372882475734375*^9, 3.372882477265625*^9}, {
+   3.399896957509912*^9, 3.3998969596192865`*^9}},
+ CellID->79985652],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"\[ScriptCapitalN]", "[", "z_", "]"}], "=", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"1", "+", 
+       RowBox[{"Erf", "[", 
+        RowBox[{"z", "/", 
+         SqrtBox["2"]}], "]"}]}], ")"}], "/", "2"}]}], " ", ";"}], 
+  " "}]], "Input",
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.372882475734375*^9, 3.37288247971875*^9}},
+ CellID->412525709],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"BSCall", "[", 
+    RowBox[{
+    "S_", ",", "k_", ",", "r_", ",", "\[Delta]_", ",", "\[Sigma]_", ",", 
+     "T_"}], "]"}], ":=", 
+   RowBox[{
+    RowBox[{"S", " ", 
+     SuperscriptBox["\[ExponentialE]", 
+      RowBox[{
+       RowBox[{"-", "\[Delta]"}], " ", "T"}]], " ", 
+     RowBox[{"\[ScriptCapitalN]", "[", 
+      RowBox[{"d1", "[", 
+       RowBox[{
+       "S", ",", "k", ",", "r", ",", "\[Delta]", ",", "\[Sigma]", ",", "T"}], 
+       "]"}], "]"}]}], "-", 
+    RowBox[{"k", " ", 
+     SuperscriptBox["\[ExponentialE]", 
+      RowBox[{
+       RowBox[{"-", "r"}], " ", "T"}]], " ", 
+     RowBox[{"\[ScriptCapitalN]", "[", 
+      RowBox[{"d2", "[", 
+       RowBox[{
+       "S", ",", "k", ",", "r", ",", "\[Delta]", ",", "\[Sigma]", ",", "T"}], 
+       "]"}], "]"}]}]}]}], ";"}]], "Input",
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.372882475734375*^9, 3.372882482421875*^9}, {
+   3.399896965759912*^9, 3.3998969868692865`*^9}},
+ CellID->34177612],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"BSPut", "[", 
+    RowBox[{
+    "S_", ",", "k_", ",", "r_", ",", "\[Delta]_", ",", "\[Sigma]_", ",", 
+     "T_"}], "]"}], ":=", 
+   RowBox[{
+    RowBox[{"k", " ", 
+     SuperscriptBox["\[ExponentialE]", 
+      RowBox[{
+       RowBox[{"-", "r"}], " ", "T"}]], " ", 
+     RowBox[{"\[ScriptCapitalN]", "[", 
+      RowBox[{"-", 
+       RowBox[{"d2", "[", 
+        RowBox[{
+        "S", ",", "k", ",", "r", ",", "\[Delta]", ",", "\[Sigma]", ",", "T"}],
+         "]"}]}], "]"}]}], "-", 
+    RowBox[{"S", " ", 
+     SuperscriptBox["\[ExponentialE]", 
+      RowBox[{
+       RowBox[{"-", "\[Delta]"}], " ", "T"}]], " ", 
+     RowBox[{"\[ScriptCapitalN]", "[", 
+      RowBox[{"-", 
+       RowBox[{"d1", "[", 
+        RowBox[{
+        "S", ",", "k", ",", "r", ",", "\[Delta]", ",", "\[Sigma]", ",", "T"}],
+         "]"}]}], "]"}]}]}]}], ";"}]], "Input",
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.372882475734375*^9, 3.372882481453125*^9}, {
+   3.399896975166162*^9, 3.399896983041162*^9}},
+ CellID->380955044],
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{
+   "d1", ";", "d2", ";", "\[ScriptCapitalN]", ";", "BSCall", ";", "BSPut", 
+    ";", 
+    RowBox[{"Plot", "[", 
+     RowBox[{
+      RowBox[{"BSOption", "[", 
+       RowBox[{
+       "S", ",", " ", "annotation", ",", " ", "r", ",", " ", "\[Delta]", ",", 
+        " ", "\[Sigma]", ",", " ", "t"}], "]"}], ",", " ", 
+      RowBox[{"{", 
+       RowBox[{"S", ",", " ", "70.", ",", " ", "140."}], "}"}], ",", " ", 
+      RowBox[{"AxesLabel", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"\"\<stock price\>\"", ",", " ", "\"\<option price\>\""}], 
+        "}"}]}], ",", 
+      RowBox[{"ImageSize", "\[Rule]", "400"}], ",", 
+      RowBox[{"ImagePadding", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"25", ",", "55"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"25", ",", "25"}], "}"}]}], "}"}]}], ",", 
+      RowBox[{"AxesOrigin", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"Automatic", ",", "0"}], "}"}]}]}], "]"}]}], ",", " ", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"BSOption", ",", "BSCall", ",", "\"\<option\>\""}], "}"}], ",", 
+     " ", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"BSCall", "\[Rule]", "\"\<call\>\""}], ",", " ", 
+       RowBox[{"BSPut", "\[Rule]", "\"\<put\>\""}]}], "}"}]}], "}"}], ",", 
+   " ", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"annotation", ",", " ", "100.", ",", "\"\<strike price\>\""}], 
+      "}"}], ",", "50.", ",", "150.", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"r", ",", ".05", ",", "\"\<interest rate\>\""}], "}"}], ",", 
+     ".02", ",", ".1", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\[Delta]", ",", ".004", ",", "\"\<dividend yield\>\""}], "}"}],
+      ",", " ", ".002", ",", " ", ".05", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\[Sigma]", ",", ".3", ",", " ", "\"\<volatility\>\""}], "}"}], 
+     ",", " ", ".2", ",", " ", ".5", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", " ", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"t", ",", ".1", ",", "\"\<time to maturity\>\""}], "}"}], ",", 
+     " ", ".001", ",", "1.", ",", 
+     RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+   "\[IndentingNewLine]", " ", 
+   RowBox[{"SaveDefinitions", "\[Rule]", "True"}], ",", 
+   RowBox[{"AutorunSequencing", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "2", ",", "5", ",", "6"}], "}"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{
+  3.35696210375764*^9, {3.372880151390625*^9, 3.372880192140625*^9}, {
+   3.372880484375*^9, 3.372880487078125*^9}, {3.372880548578125*^9, 
+   3.372880569859375*^9}, {3.3728806570625*^9, 3.372880662640625*^9}, {
+   3.37288081*^9, 3.372880820546875*^9}, {3.372882345109375*^9, 
+   3.372882397953125*^9}, {3.372882737875*^9, 3.37288274690625*^9}, {
+   3.372882818453125*^9, 3.37288282253125*^9}, {3.379881087985731*^9, 
+   3.379881218201147*^9}, {3.381364439140625*^9, 3.38136443953125*^9}, {
+   3.381364561015625*^9, 3.381364569046875*^9}, {3.399896991853662*^9, 
+   3.399896991853662*^9}, {3.399905221072412*^9, 3.399905233197412*^9}, {
+   3.399906321103662*^9, 3.399906328384912*^9}},
+ CellID->453220963]
+}, Open  ]],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`annotation$$ = 
+    100., $CellContext`BSOption$$ = $CellContext`BSCall, $CellContext`r$$ = 
+    0.05, $CellContext`t$$ = 0.1, $CellContext`\[Delta]$$ = 
+    0.004, $CellContext`\[Sigma]$$ = 0.3, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`BSOption$$], $CellContext`BSCall, 
+       "option"}, {$CellContext`BSCall -> "call", $CellContext`BSPut -> 
+       "put"}}, {{
+       Hold[$CellContext`annotation$$], 100., "strike price"}, 50., 150.}, {{
+       Hold[$CellContext`r$$], 0.05, "interest rate"}, 0.02, 0.1}, {{
+       Hold[$CellContext`\[Delta]$$], 0.004, "dividend yield"}, 0.002, 
+      0.05}, {{
+       Hold[$CellContext`\[Sigma]$$], 0.3, "volatility"}, 0.2, 0.5}, {{
+       Hold[$CellContext`t$$], 0.1, "time to maturity"}, 0.001, 1.}}, 
+    Typeset`size$$ = {400., {122., 126.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    False, $CellContext`BSOption$479021$$ = 
+    False, $CellContext`annotation$479022$$ = 0, $CellContext`r$479023$$ = 
+    0, $CellContext`\[Delta]$479024$$ = 0, $CellContext`\[Sigma]$479025$$ = 
+    0, $CellContext`t$479026$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`annotation$$ = 
+        100., $CellContext`BSOption$$ = $CellContext`BSCall, $CellContext`r$$ = 
+        0.05, $CellContext`t$$ = 0.1, $CellContext`\[Delta]$$ = 
+        0.004, $CellContext`\[Sigma]$$ = 0.3}, "ControllerVariables" :> {
+        Hold[$CellContext`BSOption$$, $CellContext`BSOption$479021$$, False], 
+        
+        Hold[$CellContext`annotation$$, $CellContext`annotation$479022$$, 0], 
+        
+        Hold[$CellContext`r$$, $CellContext`r$479023$$, 0], 
+        Hold[$CellContext`\[Delta]$$, $CellContext`\[Delta]$479024$$, 0], 
+        Hold[$CellContext`\[Sigma]$$, $CellContext`\[Sigma]$479025$$, 0], 
+        Hold[$CellContext`t$$, $CellContext`t$479026$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`d1; $CellContext`d2; $CellContext`\
+\[ScriptCapitalN]; $CellContext`BSCall; $CellContext`BSPut; Plot[
+         $CellContext`BSOption$$[$CellContext`S, $CellContext`annotation$$, \
+$CellContext`r$$, $CellContext`\[Delta]$$, $CellContext`\[Sigma]$$, \
+$CellContext`t$$], {$CellContext`S, 70., 140.}, 
+         AxesLabel -> {"stock price", "option price"}, ImageSize -> 400, 
+         ImagePadding -> {{25, 55}, {25, 25}}, AxesOrigin -> {Automatic, 0}]),
+       "Specifications" :> {{{$CellContext`BSOption$$, $CellContext`BSCall, 
+          "option"}, {$CellContext`BSCall -> "call", $CellContext`BSPut -> 
+          "put"}}, {{$CellContext`annotation$$, 100., "strike price"}, 50., 
+         150., Appearance -> 
+         "Labeled"}, {{$CellContext`r$$, 0.05, "interest rate"}, 0.02, 0.1, 
+         Appearance -> 
+         "Labeled"}, {{$CellContext`\[Delta]$$, 0.004, "dividend yield"}, 
+         0.002, 0.05, Appearance -> 
+         "Labeled"}, {{$CellContext`\[Sigma]$$, 0.3, "volatility"}, 0.2, 0.5, 
+         Appearance -> 
+         "Labeled"}, {{$CellContext`t$$, 0.1, "time to maturity"}, 0.001, 1., 
+         Appearance -> "Labeled"}}, 
+      "Options" :> {AutorunSequencing -> {1, 2, 5, 6}}, 
+      "DefaultOptions" :> {ControllerLinking -> True}],
+     ImageSizeCache->{444., {232., 237.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    Initialization:>(({$CellContext`d1[
+          Pattern[$CellContext`S, 
+           Blank[]], 
+          Pattern[$CellContext`k, 
+           Blank[]], 
+          Pattern[$CellContext`r, 
+           Blank[]], 
+          Pattern[$CellContext`\[Delta], 
+           Blank[]], 
+          Pattern[$CellContext`\[Sigma], 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           
+           Blank[]]] = ($CellContext`T ($CellContext`r - \
+$CellContext`\[Delta] + $CellContext`\[Sigma]^2/2) + 
+          Log[$CellContext`S/$CellContext`k])/(
+         Sqrt[$CellContext`T] $CellContext`\[Sigma]), $CellContext`d2[
+          Pattern[$CellContext`S, 
+           Blank[]], 
+          Pattern[$CellContext`k, 
+           Blank[]], 
+          Pattern[$CellContext`r, 
+           Blank[]], 
+          Pattern[$CellContext`\[Delta], 
+           Blank[]], 
+          Pattern[$CellContext`\[Sigma], 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           
+           Blank[]]] = ($CellContext`T ($CellContext`r - \
+$CellContext`\[Delta] - $CellContext`\[Sigma]^2/2) + 
+          Log[$CellContext`S/$CellContext`k])/(
+         Sqrt[$CellContext`T] $CellContext`\[Sigma]), $CellContext`\
+\[ScriptCapitalN][
+          Pattern[$CellContext`z, 
+           Blank[]]] = (1 + Erf[$CellContext`z/Sqrt[2]])/
+         2, $CellContext`BSCall[
+          Pattern[$CellContext`S, 
+           Blank[]], 
+          Pattern[$CellContext`k, 
+           Blank[]], 
+          Pattern[$CellContext`r, 
+           Blank[]], 
+          Pattern[$CellContext`\[Delta], 
+           Blank[]], 
+          Pattern[$CellContext`\[Sigma], 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           Blank[]]] := ($CellContext`S $CellContext`\[ScriptCapitalN][
+             $CellContext`d1[$CellContext`S, $CellContext`k, $CellContext`r, \
+$CellContext`\[Delta], $CellContext`\[Sigma], $CellContext`T]])/
+          E^($CellContext`\[Delta] $CellContext`T) - ($CellContext`k \
+$CellContext`\[ScriptCapitalN][
+            $CellContext`d2[$CellContext`S, $CellContext`k, $CellContext`r, \
+$CellContext`\[Delta], $CellContext`\[Sigma], $CellContext`T]])/
+         E^($CellContext`r $CellContext`T), $CellContext`BSPut[
+          Pattern[$CellContext`S, 
+           Blank[]], 
+          Pattern[$CellContext`k, 
+           Blank[]], 
+          Pattern[$CellContext`r, 
+           Blank[]], 
+          Pattern[$CellContext`\[Delta], 
+           Blank[]], 
+          Pattern[$CellContext`\[Sigma], 
+           Blank[]], 
+          Pattern[$CellContext`T, 
+           
+           Blank[]]] := ($CellContext`k \
+$CellContext`\[ScriptCapitalN][-$CellContext`d2[$CellContext`S, \
+$CellContext`k, $CellContext`r, $CellContext`\[Delta], $CellContext`\[Sigma], \
+$CellContext`T]])/
+          E^($CellContext`r $CellContext`T) - ($CellContext`S $CellContext`\
+\[ScriptCapitalN][-$CellContext`d1[$CellContext`S, $CellContext`k, \
+$CellContext`r, $CellContext`\[Delta], $CellContext`\[Sigma], \
+$CellContext`T]])/E^($CellContext`\[Delta] $CellContext`T)}; 
+      Typeset`initDone$$ = True); ReleaseHold[
+       HoldComplete[{$CellContext`d1[
+            Pattern[$CellContext`S, 
+             Blank[]], 
+            Pattern[$CellContext`k, 
+             Blank[]], 
+            Pattern[$CellContext`r, 
+             Blank[]], 
+            Pattern[$CellContext`\[Delta], 
+             Blank[]], 
+            Pattern[$CellContext`\[Sigma], 
+             Blank[]], 
+            Pattern[$CellContext`T, 
+             Blank[]]] = (
+            Log[$CellContext`S/$CellContext`k] + ($CellContext`r - \
+$CellContext`\[Delta] + $CellContext`\[Sigma]^2/
+               2) $CellContext`T)/($CellContext`\[Sigma] $CellContext`T^
+            Rational[1, 2]); Null, $CellContext`d2[
+            Pattern[$CellContext`S, 
+             Blank[]], 
+            Pattern[$CellContext`k, 
+             Blank[]], 
+            Pattern[$CellContext`r, 
+             Blank[]], 
+            Pattern[$CellContext`\[Delta], 
+             Blank[]], 
+            Pattern[$CellContext`\[Sigma], 
+             Blank[]], 
+            Pattern[$CellContext`T, 
+             Blank[]]] = (
+            Log[$CellContext`S/$CellContext`k] + ($CellContext`r - \
+$CellContext`\[Delta] - $CellContext`\[Sigma]^2/
+              2) $CellContext`T)/($CellContext`\[Sigma] $CellContext`T^
+            Rational[1, 2]); Null, $CellContext`\[ScriptCapitalN][
+            Pattern[$CellContext`z, 
+             Blank[]]] = (1 + Erf[$CellContext`z/2^Rational[1, 2]])/2; 
+         Null, $CellContext`BSCall[
+            Pattern[$CellContext`S, 
+             Blank[]], 
+            Pattern[$CellContext`k, 
+             Blank[]], 
+            Pattern[$CellContext`r, 
+             Blank[]], 
+            Pattern[$CellContext`\[Delta], 
+             Blank[]], 
+            Pattern[$CellContext`\[Sigma], 
+             Blank[]], 
+            Pattern[$CellContext`T, 
+             Blank[]]] := $CellContext`S 
+            E^((-$CellContext`\[Delta]) $CellContext`T) $CellContext`\
+\[ScriptCapitalN][
+              $CellContext`d1[$CellContext`S, $CellContext`k, $CellContext`r, \
+$CellContext`\[Delta], $CellContext`\[Sigma], $CellContext`T]] - \
+$CellContext`k 
+           E^((-$CellContext`r) $CellContext`T) \
+$CellContext`\[ScriptCapitalN][
+             $CellContext`d2[$CellContext`S, $CellContext`k, $CellContext`r, \
+$CellContext`\[Delta], $CellContext`\[Sigma], $CellContext`T]]; 
+         Null, $CellContext`BSPut[
+            Pattern[$CellContext`S, 
+             Blank[]], 
+            Pattern[$CellContext`k, 
+             Blank[]], 
+            Pattern[$CellContext`r, 
+             Blank[]], 
+            Pattern[$CellContext`\[Delta], 
+             Blank[]], 
+            Pattern[$CellContext`\[Sigma], 
+             Blank[]], 
+            Pattern[$CellContext`T, 
+             Blank[]]] := $CellContext`k 
+            E^((-$CellContext`r) $CellContext`T) $CellContext`\
+\[ScriptCapitalN][-$CellContext`d2[$CellContext`S, $CellContext`k, \
+$CellContext`r, $CellContext`\[Delta], $CellContext`\[Sigma], \
+$CellContext`T]] - $CellContext`S 
+           E^((-$CellContext`\[Delta]) $CellContext`T) $CellContext`\
+\[ScriptCapitalN][-$CellContext`d1[$CellContext`S, $CellContext`k, \
+$CellContext`r, $CellContext`\[Delta], $CellContext`\[Sigma], \
+$CellContext`T]]; Null}]]; Typeset`initDone$$ = True),
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellID->67371817],
+
+Cell[CellGroupData[{
+
+Cell["THIS NOTEBOOK IS THE SOURCE CODE FROM", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[TextData[{
+ "\"",
+ ButtonBox["Black-Scholes Option Model",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/BlackScholesOptionModel/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/BlackScholesOptionModel/"],
+ "\"",
+ " from ",
+ ButtonBox["The Wolfram Demonstrations Project",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+ "\[ParagraphSeparator]\[NonBreakingSpace]",
+ ButtonBox["http://demonstrations.wolfram.com/BlackScholesOptionModel/",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/BlackScholesOptionModel/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/BlackScholesOptionModel/"]
+}], "Text",
+ CellMargins->{{48, Inherited}, {0, Inherited}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.5]],
+
+Cell[" ", "Text",
+ CellFrame->{{0, 0}, {0, 1}},
+ CellMargins->{{48, 10}, {4, 28}},
+ CellGroupingRules->{"SectionGrouping", 25},
+ CellFrameMargins->{{48, 48}, {6, 5}},
+ CellFrameColor->RGBColor[0.691905, 0.790311, 0.300252],
+ FontFamily->"Helvetica",
+ FontSize->10,
+ FontWeight->"Bold",
+ FontColor->RGBColor[0.691905, 0.790311, 0.300252]],
+
+Cell[TextData[{
+ "Contributed by: ",
+ ButtonBox["Michael Kelly",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/author.html?author=Michael+Kelly"],
+     None}],
+ " (Stuart GSB, Illinois Institute of Technology)"
+}], "Text",
+ CellDingbat->"\[FilledSmallSquare]",
+ CellMargins->{{66, 48}, {2, 4}},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.6],
+ CellID->65550805],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "A full-function Wolfram ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " 6 system is required to edit this notebook.\n",
+ StyleBox[ButtonBox["GET WOLFRAM MATHEMATICA 6 \[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://www.wolfram.com/products/mathematica/"], None},
+  ButtonNote->"http://www.wolfram.com/products/mathematica/"],
+  FontFamily->"Helvetica",
+  FontWeight->"Bold",
+  FontSlant->"Italic",
+  FontColor->RGBColor[1, 0.42, 0]]
+}], "Text",
+ CellFrame->True,
+ CellMargins->{{48, 68}, {8, 28}},
+ CellFrameMargins->12,
+ CellFrameColor->RGBColor[0.865507, 0.90634, 0.680751],
+ CellChangeTimes->{3.3750111182355957`*^9},
+ ParagraphSpacing->{1., 1.},
+ FontFamily->"Verdana",
+ FontSize->10,
+ FontColor->GrayLevel[0.411765],
+ Background->RGBColor[0.986023, 0.991363, 0.969818]],
+
+Cell[TextData[{
+ "\[Copyright] ",
+ StyleBox[ButtonBox["The Wolfram Demonstrations Project & Contributors",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Terms of Use",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/termsofuse.html"], None},
+  ButtonNote->"http://demonstrations.wolfram.com/termsofuse.html"],
+  FontColor->GrayLevel[0.6]],
+ "\[ThickSpace]\[ThickSpace]\[ThickSpace]|\[ThickSpace]\[ThickSpace]\
+\[ThickSpace]",
+ StyleBox[ButtonBox["Make a new version of this Demonstration \
+\[RightGuillemet]",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/participate/upload.jsp?id=\
+BlackScholesOptionModel"], None},
+  ButtonNote->None],
+  FontColor->GrayLevel[0.6]]
+}], "Text",
+ CellFrame->{{0, 0}, {0, 0.5}},
+ CellMargins->{{48, 10}, {20, 50}},
+ CellFrameMargins->{{6, 0}, {6, 6}},
+ CellFrameColor->GrayLevel[0.6],
+ FontFamily->"Verdana",
+ FontSize->9,
+ FontColor->GrayLevel[0.6]]
+}, Open  ]]
+}, Open  ]]
+},
+Editable->True,
+Saveable->False,
+ScreenStyleEnvironment->"Working",
+WindowSize->{710, 650},
+WindowMargins->{{Inherited, Inherited}, {Inherited, 0}},
+WindowElements->{
+ "StatusArea", "MemoryMonitor", "MagnificationPopUp", "VerticalScrollBar", 
+  "MenuBar"},
+WindowTitle->"Black-Scholes Option Model - Source",
+DockedCells->{},
+CellContext->Notebook,
+FrontEndVersion->"6.0 for Microsoft Windows (32-bit) (February 7, 2008)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[590, 23, 218, 4, 70, "Section"],
+Cell[811, 29, 763, 24, 70, "Input",
+ CellID->4075082],
+Cell[1577, 55, 741, 24, 70, "Input",
+ CellID->79985652],
+Cell[2321, 81, 411, 14, 70, "Input",
+ CellID->412525709],
+Cell[2735, 97, 998, 29, 70, "Input",
+ CellID->34177612],
+Cell[3736, 128, 1048, 31, 70, "Input",
+ CellID->380955044],
+Cell[4787, 161, 3727, 90, 70, "Input",
+ CellID->453220963]
+}, Open  ]],
+Cell[8529, 254, 10396, 230, 70, "Output",
+ CellID->67371817],
+Cell[CellGroupData[{
+Cell[18950, 488, 373, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[19326, 499, 918, 24, 70, "Text"],
+Cell[20247, 525, 337, 9, 70, "Text",
+ CellGroupingRules->{"SectionGrouping", 25}],
+Cell[20587, 536, 419, 14, 70, "Text",
+ CellID->65550805],
+Cell[CellGroupData[{
+Cell[21031, 554, 829, 24, 70, "Text"],
+Cell[21863, 580, 1199, 33, 70, "Text"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+(* NotebookSignature UTj1Ah#j5aEKTCTKAOs4CRXp *)
